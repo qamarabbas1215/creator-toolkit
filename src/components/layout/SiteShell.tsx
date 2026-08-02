@@ -1,9 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { CommandMenu } from "@/components/layout/CommandMenu";
+
+const CommandMenu = dynamic(() =>
+  import("@/components/layout/CommandMenu").then((m) => m.CommandMenu),
+  { ssr: false }
+);
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);

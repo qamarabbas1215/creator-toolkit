@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { categories } from "@/data/tools";
@@ -23,8 +24,14 @@ export function Navbar({ onSearch }: { onSearch: () => void }) {
           href="/"
           className="flex shrink-0 items-center gap-2 font-bold tracking-tight"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 text-base text-white shadow-sm">
-            ⚡
+          <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg shadow-sm">
+            <Image
+              src="/logo.webp"
+              alt={`${SITE_NAME} logo`}
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain"
+            />
           </span>
           <span className="hidden md:inline">{SITE_NAME}</span>
         </Link>

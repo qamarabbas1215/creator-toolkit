@@ -31,13 +31,19 @@ export const metadata: Metadata = {
     "SEO tools",
     "JSON formatter",
   ],
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
     url: SITE_URL,
+    images: [{ url: "/logo.webp", width: 256, height: 256, alt: SITE_NAME }],
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/logo.webp"],
   },
 };
 
