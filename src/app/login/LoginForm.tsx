@@ -109,6 +109,16 @@ export function LoginForm() {
           minLength={mode === "register" ? 8 : undefined}
           required
         />
+        {mode === "login" && (
+          <div className="flex justify-end pt-0.5">
+            <a
+              href="/forgot-password"
+              className="text-xs font-medium text-violet-600 hover:underline dark:text-violet-400"
+            >
+              Forgot password?
+            </a>
+          </div>
+        )}
       </div>
 
       {error && (

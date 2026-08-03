@@ -52,6 +52,10 @@ export function deleteSessionToken(token: string): void {
   db.prepare("DELETE FROM sessions WHERE token = ?").run(token);
 }
 
+export function deleteAllSessionsForUser(userId: number): void {
+  db.prepare("DELETE FROM sessions WHERE user_id = ?").run(userId);
+}
+
 export function sessionCookieOptions(expiresAt?: number) {
   return {
     httpOnly: true,
