@@ -104,6 +104,21 @@ import {
   PromptLibrary,
   PromptOptimizer,
 } from "./ai-extra";
+import {
+  CompressPdf,
+  MergePdf,
+  PdfToWord,
+  SplitPdf,
+  WordToPdf,
+} from "./pdf-tools";
+import {
+  AudioConverter,
+  BulkRenamer,
+  FileCompressor,
+  ImageConverter,
+  VideoConverter,
+  ZipCompressor,
+} from "./file-tools";
 
 export const toolComponents: Record<string, ComponentType> = {
   "character-counter": CharacterCounter,
@@ -188,4 +203,15 @@ export const toolComponents: Record<string, ComponentType> = {
   "ai-chat-export-cleaner": AiChatExportCleaner,
   "ai-prompt-translator": AiPromptTranslator,
   "ai-prompt-shortener": AiPromptShortener,
+  "pdf-merge": MergePdf,
+  "pdf-split": SplitPdf,
+  "pdf-compress": CompressPdf,
+  "pdf-to-word": PdfToWord,
+  "word-to-pdf": WordToPdf,
+  "zip-compressor": ZipCompressor,
+  "file-compressor": FileCompressor,
+  "bulk-renamer": BulkRenamer,
+  "image-converter": ImageConverter,
+  "video-converter": VideoConverter,
+  "audio-converter": AudioConverter,
 };

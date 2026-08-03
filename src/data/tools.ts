@@ -57,6 +57,20 @@ export const categories: Category[] = [
     color: "#6366f1",
     description: "JSON, Base64, URL encoding, and UUID generators.",
   },
+  {
+    slug: "pdf",
+    name: "PDF",
+    icon: "📄",
+    color: "#f43f5e",
+    description: "Merge, split, compress, and convert PDF documents.",
+  },
+  {
+    slug: "file",
+    name: "File",
+    icon: "🗜️",
+    color: "#84cc16",
+    description: "Zip, compress, rename, and convert your files.",
+  },
 ];
 
 export const tools: ToolMeta[] = [
@@ -1101,6 +1115,159 @@ export const tools: ToolMeta[] = [
       "compact prompt",
     ],
     popularity: 61,
+  },
+  {
+    slug: "pdf-merge",
+    name: "Merge PDF",
+    category: "pdf",
+    icon: "🔗",
+    description:
+      "Combine multiple PDF files into one document in the order you choose.",
+    keywords: [
+      "merge pdf",
+      "combine pdf",
+      "join pdf",
+      "pdf merger",
+      "merge files",
+    ],
+    featured: true,
+    trending: true,
+    popularity: 92,
+  },
+  {
+    slug: "pdf-split",
+    name: "Split PDF",
+    category: "pdf",
+    icon: "✂️",
+    description:
+      "Split a PDF into separate pages or extract a page range as a new file.",
+    keywords: ["split pdf", "extract pages", "pdf splitter", "separate pdf"],
+    popularity: 86,
+  },
+  {
+    slug: "pdf-compress",
+    name: "Compress PDF",
+    category: "pdf",
+    icon: "🗜️",
+    description:
+      "Reduce PDF file size by optimizing the structure and stripping metadata.",
+    keywords: ["compress pdf", "shrink pdf", "reduce pdf size", "optimize pdf"],
+    isNew: true,
+    popularity: 88,
+  },
+  {
+    slug: "pdf-to-word",
+    name: "PDF to Word",
+    category: "pdf",
+    icon: "📝",
+    description:
+      "Extract text from a PDF and export it as an editable Word (.docx) file.",
+    keywords: [
+      "pdf to word",
+      "pdf to docx",
+      "convert pdf",
+      "extract pdf text",
+    ],
+    popularity: 85,
+  },
+  {
+    slug: "word-to-pdf",
+    name: "Word to PDF",
+    category: "pdf",
+    icon: "📃",
+    description:
+      "Convert Word documents to PDF with a clean preview and print-to-PDF.",
+    keywords: ["word to pdf", "docx to pdf", "doc to pdf", "convert word"],
+    isNew: true,
+    popularity: 83,
+  },
+  {
+    slug: "zip-compressor",
+    name: "ZIP Compressor",
+    category: "file",
+    icon: "🗜️",
+    description:
+      "Compress files into a ZIP archive or list and extract ZIP contents.",
+    keywords: ["zip files", "compress files", "zip archive", "extract zip"],
+    featured: true,
+    popularity: 84,
+  },
+  {
+    slug: "file-compressor",
+    name: "File Compressor",
+    category: "file",
+    icon: "🧊",
+    description:
+      "Gzip-compress or decompress any file entirely in your browser.",
+    keywords: ["gzip", "compress file", "decompress", "file compressor"],
+    popularity: 72,
+  },
+  {
+    slug: "bulk-renamer",
+    name: "Bulk Renamer",
+    category: "file",
+    icon: "🏷️",
+    description:
+      "Rename multiple files with prefixes, suffixes, find & replace, or patterns.",
+    keywords: [
+      "rename files",
+      "bulk rename",
+      "batch rename",
+      "file renamer",
+    ],
+    popularity: 76,
+  },
+  {
+    slug: "image-converter",
+    name: "Image Converter",
+    category: "file",
+    icon: "🖼️",
+    description:
+      "Convert images between PNG, JPEG, and WebP with quality control.",
+    keywords: [
+      "image converter",
+      "jpg to png",
+      "png to webp",
+      "convert image",
+    ],
+    isNew: true,
+    trending: true,
+    popularity: 87,
+  },
+  {
+    slug: "video-converter",
+    name: "Video Converter",
+    category: "file",
+    icon: "🎥",
+    description:
+      "Convert videos to MP4, WebM, MOV, MKV, or GIF right in the browser.",
+    keywords: [
+      "video converter",
+      "mp4 converter",
+      "mp4 to webm",
+      "convert video",
+      "video to gif",
+    ],
+    isNew: true,
+    trending: true,
+    popularity: 90,
+  },
+  {
+    slug: "audio-converter",
+    name: "Audio Converter",
+    category: "file",
+    icon: "🎵",
+    description:
+      "Convert audio between MP3, WAV, OGG, M4A, FLAC, and AAC formats.",
+    keywords: [
+      "audio converter",
+      "mp3 converter",
+      "wav to mp3",
+      "convert audio",
+      "flac converter",
+    ],
+    isNew: true,
+    popularity: 86,
   },
 ];
 

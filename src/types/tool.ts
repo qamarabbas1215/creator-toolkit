@@ -6,7 +6,9 @@ export type CategorySlug =
   | "social"
   | "image"
   | "text"
-  | "developer";
+  | "developer"
+  | "pdf"
+  | "file";
 
 export interface Category {
   slug: CategorySlug;
