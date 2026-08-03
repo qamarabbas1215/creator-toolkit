@@ -8,6 +8,15 @@ import {
   WordCounter,
 } from "./writing";
 import {
+  ExpandText,
+  GrammarChecker,
+  OutlineGenerator,
+  RewriteTool,
+  ShortenText,
+  Summarizer,
+  TextStatistics,
+} from "./writing-extra";
+import {
   CaseConverter,
   ExtractEmails,
   ExtractNumbers,
@@ -19,6 +28,7 @@ import {
   RemoveEmptyLines,
   ReverseText,
 } from "./text-tools";
+import { RemoveEmojis, RemoveSpecialCharacters } from "./text-extra";
 import {
   ThumbnailTextChecker,
   YoutubeHookGenerator,
@@ -26,24 +36,74 @@ import {
   YoutubeTitleGenerator,
 } from "./youtube";
 import {
+  ChapterGenerator,
+  CtaGenerator,
+  CtrAnalyzer,
+  ScriptTimer,
+  ShortsIdeaGenerator,
+  YoutubeDescriptionGenerator,
+  YoutubeKeywordFinder,
+} from "./youtube-extra";
+import {
   KeywordDensity,
   MetaDescriptionGenerator,
   MetaTitleGenerator,
   SlugGenerator,
 } from "./seo";
+import {
+  InternalLinkSuggestions,
+  RobotsTxtGenerator,
+  SerpPreview,
+  SitemapGenerator,
+} from "./seo-extra";
 import { BioGenerator, HashtagGenerator } from "./social";
+import {
+  CaptionGenerator,
+  EmojiPicker,
+  InstagramCaptionOptimizer,
+  LinkedinFormatter,
+  ThreadGenerator,
+  TweetFormatter,
+} from "./social-extra";
 import {
   AspectRatioCalculator,
   ImagePromptEnhancer,
   NegativePromptGenerator,
 } from "./image";
 import {
+  ColorPaletteGenerator,
+  PromptHistory,
+  PromptRandomizer,
+  PromptStyleLibrary,
+} from "./image-extra";
+import {
   Base64Encoder,
   JsonFormatter,
   UrlEncoder,
   UuidGenerator,
 } from "./developer";
+import {
+  CssBeautifier,
+  HtmlFormatter,
+  JsonCompare,
+  JsonValidator,
+  JwtDecoder,
+  RegexTester,
+  SqlFormatter,
+  XmlFormatter,
+} from "./developer-extra";
 import { AiCostCalculator, AiTokenCalculator } from "./ai";
+import {
+  AiChatExportCleaner,
+  AiImagePromptBuilder,
+  AiPromptShortener,
+  AiPromptTester,
+  AiPromptTranslator,
+  PromptFormatter,
+  PromptGenerator,
+  PromptLibrary,
+  PromptOptimizer,
+} from "./ai-extra";
 
 export const toolComponents: Record<string, ComponentType> = {
   "character-counter": CharacterCounter,
@@ -81,4 +141,51 @@ export const toolComponents: Record<string, ComponentType> = {
   "uuid-generator": UuidGenerator,
   "ai-token-calculator": AiTokenCalculator,
   "ai-cost-calculator": AiCostCalculator,
+  "text-statistics": TextStatistics,
+  "grammar-checker": GrammarChecker,
+  "rewrite-tool": RewriteTool,
+  "summarizer": Summarizer,
+  "expand-text": ExpandText,
+  "shorten-text": ShortenText,
+  "outline-generator": OutlineGenerator,
+  "remove-emojis": RemoveEmojis,
+  "remove-special-characters": RemoveSpecialCharacters,
+  "youtube-description-generator": YoutubeDescriptionGenerator,
+  "ctr-analyzer": CtrAnalyzer,
+  "script-timer": ScriptTimer,
+  "shorts-idea-generator": ShortsIdeaGenerator,
+  "cta-generator": CtaGenerator,
+  "chapter-generator": ChapterGenerator,
+  "youtube-keyword-finder": YoutubeKeywordFinder,
+  "robots-txt-generator": RobotsTxtGenerator,
+  "sitemap-generator": SitemapGenerator,
+  "serp-preview": SerpPreview,
+  "internal-link-suggestions": InternalLinkSuggestions,
+  "caption-generator": CaptionGenerator,
+  "tweet-formatter": TweetFormatter,
+  "thread-generator": ThreadGenerator,
+  "linkedin-formatter": LinkedinFormatter,
+  "instagram-caption-optimizer": InstagramCaptionOptimizer,
+  "emoji-picker": EmojiPicker,
+  "prompt-style-library": PromptStyleLibrary,
+  "color-palette-generator": ColorPaletteGenerator,
+  "prompt-randomizer": PromptRandomizer,
+  "prompt-history": PromptHistory,
+  "json-validator": JsonValidator,
+  "json-compare": JsonCompare,
+  "xml-formatter": XmlFormatter,
+  "html-formatter": HtmlFormatter,
+  "css-beautifier": CssBeautifier,
+  "sql-formatter": SqlFormatter,
+  "regex-tester": RegexTester,
+  "jwt-decoder": JwtDecoder,
+  "prompt-formatter": PromptFormatter,
+  "prompt-optimizer": PromptOptimizer,
+  "prompt-generator": PromptGenerator,
+  "prompt-library": PromptLibrary,
+  "ai-prompt-tester": AiPromptTester,
+  "ai-image-prompt-builder": AiImagePromptBuilder,
+  "ai-chat-export-cleaner": AiChatExportCleaner,
+  "ai-prompt-translator": AiPromptTranslator,
+  "ai-prompt-shortener": AiPromptShortener,
 };
