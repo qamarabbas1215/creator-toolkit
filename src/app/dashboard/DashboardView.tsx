@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button, Card, Stat, StatGrid } from "@/components/ui";
 import { emitAuthChange } from "@/lib/auth-events";
 import type { SessionUser } from "@/lib/session-types";
-import { tools } from "@/data/tools";
+import { tools, categories } from "@/data/tools";
 
 function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString(undefined, {
@@ -38,11 +38,14 @@ export function DashboardView({ user }: { user: SessionUser }) {
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-600 text-lg font-semibold text-white">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-600 text-lg font-semibold text-white shadow-glow">
             {initial}
           </span>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+              Dashboard
+            </p>
+            <h1 className="mt-0.5 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
               Welcome back, {user.name.split(" ")[0]}
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -61,14 +64,14 @@ export function DashboardView({ user }: { user: SessionUser }) {
           label="Your plan"
           value={
             user.plan === "pro" ? (
-              <span className="text-violet-600 dark:text-violet-400">Pro</span>
+              <span className="text-violet-600 dark:text-violet-400">⚡ Pro</span>
             ) : (
               "Free"
             )
           }
         />
         <Stat label="Available tools" value={tools.length} accent="#8b5cf6" />
-        <Stat label="Categories" value={10} />
+        <Stat label="Categories" value={categories.length} />
         <Stat label="Storage" value="Browser" />
       </StatGrid>
 

@@ -1,15 +1,28 @@
 import Link from "next/link";
 import { categories, tools } from "@/data/tools";
 import { SITE_NAME } from "@/data/site";
+import {
+  GitHubIcon,
+  InstagramIcon,
+  XSocialIcon,
+  YouTubeIcon,
+} from "@/components/icons";
+
+const socials = [
+  { href: "https://twitter.com/creatortoolkit", label: "X (Twitter)", Icon: XSocialIcon },
+  { href: "https://github.com", label: "GitHub", Icon: GitHubIcon },
+  { href: "https://youtube.com", label: "YouTube", Icon: YouTubeIcon },
+  { href: "https://instagram.com", label: "Instagram", Icon: InstagramIcon },
+];
 
 export function Footer() {
   return (
-    <footer className="border-t border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+    <footer className="border-t border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 md:grid-cols-4">
           <div>
-            <div className="flex items-center gap-2 font-bold tracking-tight">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 text-base text-white">
+            <div className="flex items-center gap-2 font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 text-base text-white shadow-sm">
                 ⚡
               </span>
               {SITE_NAME}
@@ -18,13 +31,27 @@ export function Footer() {
               The all-in-one toolbox for creators, writers, YouTubers, and
               developers. Fast, free, and 100% in your browser.
             </p>
+            <div className="mt-5 flex items-center gap-1.5">
+              {socials.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 transition-colors hover:border-violet-300 hover:text-violet-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-violet-600 dark:hover:text-violet-400"
+                >
+                  <Icon width={16} height={16} />
+                </a>
+              ))}
+            </div>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               Categories
             </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-4 space-y-2.5 text-sm">
               {categories.map((c) => (
                 <li key={c.slug}>
                   <Link
@@ -39,10 +66,10 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               Popular Tools
             </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-4 space-y-2.5 text-sm">
               {tools
                 .filter((t) => t.featured)
                 .slice(0, 6)
@@ -60,10 +87,10 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               Company
             </h3>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <Link
                   href="/tools"
@@ -124,11 +151,14 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-zinc-200 pt-6 text-xs text-zinc-400 sm:flex-row dark:border-zinc-800">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-zinc-200 pt-6 text-xs text-zinc-400 sm:flex-row dark:border-zinc-800">
           <p>
             © {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
           </p>
-          <p>Made for creators. No sign-up. No tracking. No limits.</p>
+          <p className="flex items-center gap-1.5">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            Made for creators. No sign-up. No tracking. No limits.
+          </p>
         </div>
       </div>
     </footer>

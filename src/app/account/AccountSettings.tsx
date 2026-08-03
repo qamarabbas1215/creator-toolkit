@@ -107,7 +107,10 @@ export function AccountSettings({ user }: { user: SessionUser }) {
       >
         ← Back to dashboard
       </Link>
-      <h1 className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+      <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+        Settings
+      </p>
+      <h1 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
         Account settings
       </h1>
 

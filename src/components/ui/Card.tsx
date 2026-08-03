@@ -11,7 +11,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900",
+        "rounded-xl border border-zinc-200/80 bg-white p-5 shadow-card dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none",
         className
       )}
     >
@@ -54,7 +54,7 @@ export function Stat({
   accent?: string;
 }) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-800 dark:bg-zinc-950">
+    <div className="rounded-lg border border-zinc-200/80 bg-gradient-to-b from-zinc-50 to-zinc-100/60 p-3 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-950">
       <div
         className="text-2xl font-semibold tabular-nums tracking-tight"
         style={accent ? { color: accent } : undefined}

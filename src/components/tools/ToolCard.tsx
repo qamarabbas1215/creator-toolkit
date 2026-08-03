@@ -13,11 +13,11 @@ export function ToolCard({
   return (
     <Link
       href={`/tools/${tool.slug}`}
-      className="group flex flex-col rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-700"
+      className="group flex flex-col rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-card transition-all duration-200 hover:-translate-y-1 hover:border-violet-300 hover:shadow-pop dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-violet-700"
     >
       <div className="flex items-start justify-between">
         <span
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-lg"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-lg transition-transform duration-150 group-hover:scale-110"
           style={{ backgroundColor: `${cat.color}1a` }}
           aria-hidden
         >

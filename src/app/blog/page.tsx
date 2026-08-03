@@ -11,9 +11,12 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <main className="mx-auto max-w-4xl flex-1 px-4 py-12 sm:px-6">
+    <main className="mx-auto max-w-4xl flex-1 px-4 py-16 sm:px-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+          Resources
+        </p>
+        <h1 className="mt-1 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-50">
           Blog
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
@@ -26,7 +29,7 @@ export default function BlogPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex flex-col rounded-xl border border-zinc-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+            className="group flex flex-col rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop dark:border-zinc-800 dark:bg-zinc-900"
           >
             <div className="flex items-center gap-3 text-xs text-zinc-400">
               <span className="font-medium text-violet-600 dark:text-violet-400">

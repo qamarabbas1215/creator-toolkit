@@ -46,7 +46,7 @@ export function CommandMenu({ onClose }: { onClose: () => void }) {
         className="fixed inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="animate-fade-in-up relative w-full max-w-xl overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="animate-fade-in-up relative w-full max-w-xl overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-pop dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-center gap-2 border-b border-zinc-200 px-4 dark:border-zinc-800">
           <SearchIcon width={16} height={16} className="text-zinc-400" />
           <input
@@ -77,7 +77,7 @@ export function CommandMenu({ onClose }: { onClose: () => void }) {
                 onMouseEnter={() => setActive(i)}
                 onClick={() => go(tool.slug)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm",
+                  "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors",
                   i === active && "bg-violet-50 dark:bg-zinc-800"
                 )}
               >
@@ -94,7 +94,7 @@ export function CommandMenu({ onClose }: { onClose: () => void }) {
         </ul>
         <div className="flex items-center justify-between border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-400 dark:border-zinc-800">
           <span>{results.length} {results.length === 1 ? "tool" : "tools"}</span>
-          <span>↑↓ to navigate · Enter to open</span>
+          <span className="hidden sm:inline">↑↓ to navigate · Enter to open</span>
         </div>
       </div>
     </div>

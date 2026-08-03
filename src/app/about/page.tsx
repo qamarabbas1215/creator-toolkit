@@ -9,8 +9,11 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto max-w-3xl flex-1 px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+    <main className="mx-auto max-w-3xl flex-1 px-4 py-16 sm:px-6">
+      <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+        Our story
+      </p>
+      <h1 className="mt-1 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
         About {SITE_NAME}
       </h1>
       <div className="mt-6 space-y-5 text-[15px] leading-7 text-zinc-600 dark:text-zinc-300">
@@ -33,7 +36,7 @@ export default function AboutPage() {
       <div className="mt-10">
         <Link
           href="/tools"
-          className="inline-flex h-11 items-center rounded-full bg-violet-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-violet-700"
+          className="inline-flex h-11 items-center rounded-lg bg-gradient-to-b from-violet-600 to-violet-700 px-6 text-sm font-semibold text-white shadow-sm shadow-violet-600/20 transition-all duration-150 hover:from-violet-500 hover:to-violet-600 hover:shadow-violet-600/30"
         >
           Browse all tools
         </Link>
