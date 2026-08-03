@@ -7,6 +7,7 @@ import { categories } from "@/data/tools";
 import { SITE_NAME } from "@/data/site";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { AccountNav } from "@/components/layout/AccountNav";
 import {
   CommandIcon,
   MenuIcon,
@@ -56,6 +57,7 @@ export function Navbar({ onSearch }: { onSearch: () => void }) {
           >
             All Tools
           </Link>
+          <AccountNav />
           <ThemeToggle />
           <button
             type="button"

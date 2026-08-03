@@ -90,6 +90,30 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/pro"
+                  className="text-zinc-500 transition-colors hover:text-violet-600 dark:text-zinc-400 dark:hover:text-violet-400"
+                >
+                  Pro
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="text-zinc-500 transition-colors hover:text-violet-600 dark:text-zinc-400 dark:hover:text-violet-400"
+                >
+                  Sign in / Sign up
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="text-zinc-500 transition-colors hover:text-violet-600 dark:text-zinc-400 dark:hover:text-violet-400"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/privacy"
                   className="text-zinc-500 transition-colors hover:text-violet-600 dark:text-zinc-400 dark:hover:text-violet-400"
                 >
