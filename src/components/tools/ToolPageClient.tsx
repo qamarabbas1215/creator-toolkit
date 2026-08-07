@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { toolComponents } from "@/components/tools";
+import { lazyToolComponents } from "@/components/tools/lazy-tools";
 
 export function ToolPageClient({ slug }: { slug: string }) {
   const reported = useRef<string | null>(null);
@@ -16,7 +16,7 @@ export function ToolPageClient({ slug }: { slug: string }) {
     }).catch(() => {});
   }, [slug]);
 
-  const Component = toolComponents[slug];
+  const Component = lazyToolComponents[slug];
   if (!Component) {
     return (
       <div className="rounded-xl border border-dashed border-zinc-300 p-10 text-center text-sm text-zinc-500 dark:border-zinc-700">

@@ -9,7 +9,6 @@ import {
   CheckIcon,
   ClockIcon,
   SparklesIcon,
-  StarIcon,
 } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -37,27 +36,6 @@ const whyPoints = [
   {
     title: "Fast & reliable",
     description: "Zero waiting, zero page reloads. Type and results appear instantly.",
-  },
-];
-
-const testimonials = [
-  {
-    quote:
-      "Creator Toolkit replaced six bookmarked tools for me. The YouTube title generator alone is worth it.",
-    name: "Maya R.",
-    role: "YouTuber · 250K subscribers",
-  },
-  {
-    quote:
-      "The SEO tools are brilliant for quick content checks. I use the keyword density tool before every blog post.",
-    name: "Daniel K.",
-    role: "Content marketer",
-  },
-  {
-    quote:
-      "Clean, fast, and private. I keep it open in a tab all day for my daily creator workflow.",
-    name: "Priya S.",
-    role: "Instagram creator",
   },
 ];
 
@@ -307,46 +285,6 @@ export default function HomePage() {
               </p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="border-y border-zinc-200 bg-zinc-50/70 dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24">
-          <div className="mb-8 flex items-center gap-2">
-            <StarIcon width={20} height={20} className="text-amber-500" />
-            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
-              Loved by creators
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {testimonials.map((t) => (
-              <figure
-                key={t.name}
-                className="flex flex-col rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-card dark:border-zinc-800 dark:bg-zinc-900"
-              >
-                <div className="flex gap-0.5 text-amber-400">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <StarIcon key={i} width={14} height={14} />
-                  ))}
-                </div>
-                <blockquote className="mt-4 flex-1 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
-                  “{t.quote}”
-                </blockquote>
-                <figcaption className="mt-4 flex items-center gap-3 text-sm">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-xs font-semibold text-white">
-                    {t.name.charAt(0)}
-                  </span>
-                  <span>
-                    <span className="block font-semibold text-zinc-900 dark:text-zinc-100">
-                      {t.name}
-                    </span>
-                    <span className="block text-xs text-zinc-500">{t.role}</span>
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
         </div>
       </section>
 

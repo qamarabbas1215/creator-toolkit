@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button, Card, TextInput } from "@/components/ui";
 import { emitAuthChange } from "@/lib/auth-events";
 import type { SessionUser } from "@/lib/session-types";
+import { ApiKeysManager } from "./ApiKeysManager";
 
 export function AccountSettings({ user }: { user: SessionUser }) {
   const router = useRouter();
@@ -234,6 +235,8 @@ export function AccountSettings({ user }: { user: SessionUser }) {
             </Link>
           </div>
         </Card>
+
+        <ApiKeysManager />
 
         <Card>
           <h2 className="text-sm font-semibold text-red-600 dark:text-red-400">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@/components/layout/Analytics";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/data/site";
 
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <SiteShell>{children}</SiteShell>
+        <Analytics />
       </body>
     </html>
   );

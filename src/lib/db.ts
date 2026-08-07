@@ -65,8 +65,29 @@ db.exec(`
     used_at INTEGER NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS api_keys (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    key_hash TEXT NOT NULL UNIQUE,
+    prefix TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    last_used_at INTEGER
+  );
+
+  CREATE TABLE IF NOT EXISTS api_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    api_key_id INTEGER REFERENCES api_keys(id) ON DELETE CASCADE,
+    tool_slug TEXT NOT NULL,
+    status_code INTEGER NOT NULL,
+    ip TEXT,
+    created_at INTEGER NOT NULL
+  );
+
   CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites (user_id);
   CREATE INDEX IF NOT EXISTS idx_usage_user ON tool_usage (user_id);
   CREATE INDEX IF NOT EXISTS idx_projects_user ON projects (user_id);
   CREATE INDEX IF NOT EXISTS idx_usage_events_user_time ON tool_usage_events (user_id, used_at);
+  CREATE INDEX IF NOT EXISTS idx_api_keys_user ON api_keys (user_id);
+  CREATE INDEX IF NOT EXISTS idx_api_requests_key_time ON api_requests (api_key_id, created_at);
 `);
