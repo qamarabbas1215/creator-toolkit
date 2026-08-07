@@ -1,8 +1,21 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { toolComponents } from "@/components/tools";
 
 export function ToolPageClient({ slug }: { slug: string }) {
+  const reported = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (reported.current === slug) return;
+    reported.current = slug;
+    fetch("/api/usage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ toolSlug: slug }),
+    }).catch(() => {});
+  }, [slug]);
+
   const Component = toolComponents[slug];
   if (!Component) {
     return (

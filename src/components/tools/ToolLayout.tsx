@@ -6,6 +6,7 @@ import {
   toolsByCategory,
 } from "@/data/tools";
 import { ToolCard } from "@/components/tools/ToolCard";
+import { ToolFavorite } from "@/components/tools/ToolFavorite";
 
 export function ToolLayout({
   slug,
@@ -65,6 +66,9 @@ export function ToolLayout({
               <p className="mt-1 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
                 {tool.description}
               </p>
+            </div>
+            <div className="ml-auto">
+              <ToolFavorite slug={slug} />
             </div>
           </header>
           {children}
