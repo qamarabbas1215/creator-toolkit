@@ -7,6 +7,7 @@ import {
 } from "@/data/tools";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ToolFavorite } from "@/components/tools/ToolFavorite";
+import { ToolExtras } from "@/components/tools/ToolExtras";
 
 export function ToolLayout({
   slug,
@@ -72,6 +73,7 @@ export function ToolLayout({
             </div>
           </header>
           {children}
+          <ToolExtras slug={slug} />
         </div>
 
         {sidebarTools.length > 0 && (

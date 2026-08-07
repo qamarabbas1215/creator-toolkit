@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { DownloadButton } from "@/components/ui/DownloadButton";
 import { SaveProjectButton } from "@/components/ui/SaveProjectButton";
+import { ShareButton } from "@/components/ui/ShareButton";
 
 export function OutputArea({
   value,
@@ -31,6 +32,7 @@ export function OutputArea({
         </label>
         <div className="flex items-center gap-2">
           <SaveProjectButton value={value} filename={filename} />
+          <ShareButton />
           <CopyButton text={value} />
           <DownloadButton text={value} filename={filename} />
         </div>

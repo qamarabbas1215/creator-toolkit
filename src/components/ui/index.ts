@@ -5,5 +5,7 @@ export { CopyButton } from "./CopyButton";
 export { DownloadButton } from "./DownloadButton";
 export { FilePicker } from "./FilePicker";
 export { OutputArea } from "./OutputArea";
+export { SaveProjectButton } from "./SaveProjectButton";
+export { ShareButton } from "./ShareButton";
 export { Select, TextInput } from "./Select";
 export { Textarea } from "./Textarea";

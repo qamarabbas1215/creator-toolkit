@@ -563,3 +563,120 @@ export function AudioConverter() {
     />
   );
 }
+
+interface ZipEntry {
+  name: string;
+  size: number;
+  blob: Blob;
+}
+
+export function ZipExtractor() {
+  const [entries, setEntries] = useState<ZipEntry[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState("");
+  const [fileName, setFileName] = useState("");
+
+  async function open(files: File[]) {
+    const file = files[0];
+    if (!file) return;
+    setBusy(true);
+    setStatus("Reading archive…");
+    try {
+      const zip = await JSZip.loadAsync(file);
+      const list: ZipEntry[] = [];
+      const promises = Object.keys(zip.files).map(async (name) => {
+        const entry = zip.files[name];
+        if (entry.dir) return;
+        const blob = await entry.async("blob");
+        list.push({ name, size: blob.size, blob });
+      });
+      await Promise.all(promises);
+      list.sort((a, b) => a.name.localeCompare(b.name));
+      setEntries(list);
+      setFileName(file.name);
+      setStatus(
+        list.length
+          ? `Found ${list.length} file${list.length === 1 ? "" : "s"} in ${file.name}`
+          : "The archive contains no files."
+      );
+    } catch {
+      setStatus("That file is not a valid ZIP archive.");
+      setEntries([]);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function downloadEntry(entry: ZipEntry) {
+    downloadBlob(entry.blob, entry.name.split("/").pop() ?? entry.name);
+  }
+
+  async function extractAll() {
+    if (entries.length === 0) return;
+    setBusy(true);
+    setStatus("Extracting… allow multiple downloads if prompted.");
+    for (const entry of entries) {
+      downloadBlob(entry.blob, entry.name.split("/").pop() ?? entry.name);
+      await new Promise((r) => setTimeout(r, 300));
+    }
+    setBusy(false);
+    setStatus(`Extracted ${entries.length} file${entries.length === 1 ? "" : "s"}.`);
+  }
+
+  return (
+    <div className="space-y-6">
+      <FilePicker
+        accept=".zip,application/zip,application/x-zip-compressed"
+        label="Choose a ZIP archive"
+        hint="List contents and extract files right in your browser — nothing is uploaded."
+        onChange={open}
+      />
+
+      {entries.length > 0 && (
+        <>
+          <StatGrid>
+            <Stat label="Archive" value={fileName} />
+            <Stat label="Files" value={entries.length} accent="#84cc16" />
+            <Stat label="Total size" value={formatBytes(entries.reduce((a, e) => a + e.size, 0))} />
+          </StatGrid>
+
+          <Card>
+            <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              Contents
+            </h3>
+            <ul className="max-h-80 space-y-1 overflow-y-auto">
+              {entries.map((entry) => (
+                <li
+                  key={entry.name}
+                  className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
+                >
+                  <span aria-hidden>📄</span>
+                  <span className="min-w-0 flex-1 truncate text-zinc-800 dark:text-zinc-200">
+                    {entry.name}
+                  </span>
+                  <span className="shrink-0 text-xs text-zinc-400">
+                    {formatBytes(entry.size)}
+                  </span>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => downloadEntry(entry)}
+                  >
+                    Download
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
+          <div className="flex items-center gap-3">
+            <Button onClick={extractAll} disabled={busy}>
+              {busy ? "Extracting…" : `Extract all (${entries.length})`}
+            </Button>
+            {status && <p className="text-sm text-zinc-500 dark:text-zinc-400">{status}</p>}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

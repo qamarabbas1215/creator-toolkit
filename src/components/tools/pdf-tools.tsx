@@ -10,6 +10,7 @@ import {
   Field,
   FilePicker,
   OptionRow,
+  OutputArea,
   Select,
   Stat,
   StatGrid,
@@ -574,4 +575,321 @@ export function WordToPdf() {
       )}
     </div>
   );
+}
+
+function loadImageFile(file: File): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load image"));
+    };
+    img.src = url;
+  });
+}
+
+async function imageBytesForPdf(file: File): Promise<{ bytes: Uint8Array; type: "jpg" | "png" }> {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
+    return { bytes: new Uint8Array(await file.arrayBuffer()), type: "jpg" };
+  }
+  if (name.endsWith(".png")) {
+    return { bytes: new Uint8Array(await file.arrayBuffer()), type: "png" };
+  }
+  const img = await loadImageFile(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("No canvas context");
+  ctx.drawImage(img, 0, 0);
+  const blob = await new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error("Encoding failed"))),
+      "image/png"
+    )
+  );
+  return { bytes: new Uint8Array(await blob.arrayBuffer()), type: "png" };
+}
+
+export function ImageToPdf() {
+  const [files, setFiles] = useState<File[]>([]);
+  const [pageSize, setPageSize] = useState<"fit" | "a4" | "a4l" | "letter">("fit");
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState("");
+
+  function addFiles(next: File[]) {
+    setFiles((prev) => [...prev, ...next]);
+  }
+
+  function move(index: number, dir: -1 | 1) {
+    setFiles((prev) => {
+      const next = [...prev];
+      const to = index + dir;
+      if (to < 0 || to >= next.length) return prev;
+      [next[index], next[to]] = [next[to], next[index]];
+      return next;
+    });
+  }
+
+  async function createPdf() {
+    if (files.length === 0) return;
+    setBusy(true);
+    setStatus("Building PDF…");
+    try {
+      const pdf = await PDFDocument.create();
+      for (const file of files) {
+        const { bytes, type } = await imageBytesForPdf(file);
+        const img = type === "jpg" ? await pdf.embedJpg(bytes) : await pdf.embedPng(bytes);
+        const ratio = img.width / img.height;
+        let width: number;
+        let height: number;
+        if (pageSize === "fit") {
+          width = img.width;
+          height = img.height;
+        } else if (pageSize === "a4") {
+          width = 595;
+          height = 842;
+        } else if (pageSize === "a4l") {
+          width = 842;
+          height = 595;
+        } else {
+          width = 612;
+          height = 792;
+        }
+        if (pageSize !== "fit") {
+          if (ratio > width / height) {
+            height = width / ratio;
+          } else {
+            width = height * ratio;
+          }
+        }
+        const page = pdf.addPage([width, height]);
+        page.drawImage(img, { x: 0, y: 0, width, height });
+      }
+      const out = await pdf.save({ useObjectStreams: true });
+      downloadBlob(new Blob([new Uint8Array(out)], { type: "application/pdf" }), "images.pdf");
+      setStatus(`Created images.pdf with ${files.length} page${files.length === 1 ? "" : "s"} (${formatBytes(out.length)})`);
+    } catch {
+      setStatus("Could not convert these images. Only JPG and PNG are fully supported.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <FilePicker
+        accept="image/*"
+        multiple
+        label="Add images"
+        hint="Pick JPG, PNG, WebP and more. Order them with the arrows below."
+        onChange={addFiles}
+      />
+
+      {files.length > 0 && (
+        <>
+          <Card>
+            <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              Images ({files.length})
+            </h3>
+            <ol className="space-y-2">
+              {files.map((file, i) => (
+                <li
+                  key={`${file.name}-${i}`}
+                  className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
+                >
+                  <span className="w-5 shrink-0 text-right font-mono text-xs text-zinc-400">
+                    {i + 1}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate text-zinc-800 dark:text-zinc-200">
+                    {file.name}
+                  </span>
+                  <span className="shrink-0 text-xs text-zinc-400">{formatBytes(file.size)}</span>
+                  <div className="flex shrink-0 gap-1">
+                    <Button variant="ghost" size="sm" disabled={i === 0} onClick={() => move(i, -1)} aria-label="Move up">
+                      ↑
+                    </Button>
+                    <Button variant="ghost" size="sm" disabled={i === files.length - 1} onClick={() => move(i, 1)} aria-label="Move down">
+                      ↓
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setFiles((prev) => prev.filter((_, j) => j !== i))} aria-label="Remove image">
+                      ✕
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Card>
+
+          <OptionRow>
+            <Field label="Page size" className="min-w-52 flex-1">
+              <Select value={pageSize} onChange={(e) => setPageSize(e.target.value as typeof pageSize)}>
+                <option value="fit">Fit image size</option>
+                <option value="a4">A4 portrait</option>
+                <option value="a4l">A4 landscape</option>
+                <option value="letter">Letter</option>
+              </Select>
+            </Field>
+          </OptionRow>
+
+          <div className="flex items-center gap-3">
+            <Button onClick={createPdf} disabled={busy}>
+              {busy ? "Creating…" : `Create PDF (${files.length})`}
+            </Button>
+            {status && <p className="text-sm text-zinc-500 dark:text-zinc-400">{status}</p>}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+const OCR_LANGUAGES: { code: string; label: string }[] = [
+  { code: "eng", label: "English" },
+  { code: "spa", label: "Spanish" },
+  { code: "fra", label: "French" },
+  { code: "deu", label: "German" },
+  { code: "ita", label: "Italian" },
+  { code: "por", label: "Portuguese" },
+  { code: "nld", label: "Dutch" },
+  { code: "ara", label: "Arabic" },
+  { code: "hin", label: "Hindi" },
+  { code: "jpn", label: "Japanese" },
+  { code: "chi_sim", label: "Chinese (Simplified)" },
+  { code: "kor", label: "Korean" },
+];
+
+export function OcrTool() {
+  const [file, setFile] = useState<File | null>(null);
+  const [lang, setLang] = useState("eng");
+  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("");
+  const [text, setText] = useState("");
+
+  async function run() {
+    if (!file) return;
+    setBusy(true);
+    setText("");
+    setProgress(0);
+    setStatus("Preparing…");
+    const isPdf = file.name.toLowerCase().endsWith(".pdf");
+    try {
+      const pages: string[] = [];
+      if (isPdf) {
+        const data = new Uint8Array(await file.arrayBuffer());
+        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/legacy/build/pdf.worker.min.mjs`;
+        const doc = await pdfjs.getDocument({ data }).promise;
+        const pageCount = Math.min(doc.numPages, 5);
+        for (let i = 1; i <= pageCount; i++) {
+          const page = await doc.getPage(i);
+          const viewport = page.getViewport({ scale: 2 });
+          const canvas = document.createElement("canvas");
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) throw new Error("No canvas context");
+          await page.render({ canvasContext: ctx, viewport }).promise;
+          setStatus(`Reading page ${i} of ${pageCount}…`);
+          const blob = await new Promise<Blob>((resolve, reject) =>
+            canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Encoding failed"))), "image/png")
+          );
+          const result = await TesseractRecognize(blob, lang, (p) => setProgress(Math.round(p)));
+          pages.push(result.trim());
+        }
+        await doc.destroy();
+      } else {
+        setStatus("Reading text…");
+        const result = await TesseractRecognize(file, lang, (p) => setProgress(Math.round(p)));
+        pages.push(result.trim());
+      }
+      const output = pages.map((p, i) => (pages.length > 1 ? `--- Page ${i + 1} ---\n${p}` : p)).join("\n\n");
+      setText(output);
+      setStatus(
+        output.trim()
+          ? `Extracted ${output.trim().split(/\s+/).length} words.`
+          : "No text was detected. Try a sharper image or a different language."
+      );
+    } catch {
+      setStatus("OCR failed. Make sure the image is clear and well-lit.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <FilePicker
+        accept="image/*,.pdf"
+        label="Choose an image or PDF"
+        hint="Extract text from screenshots, scans, and photos. Images are processed in your browser."
+        onChange={(f) => {
+          setFile(f[0] ?? null);
+          setText("");
+          setStatus("");
+        }}
+      />
+
+      {file && (
+        <>
+          <StatGrid>
+            <Stat label="File" value={file.name} />
+            <Stat label="Size" value={formatBytes(file.size)} />
+          </StatGrid>
+          <OptionRow>
+            <Field label="Language" className="min-w-52 flex-1">
+              <Select value={lang} onChange={(e) => setLang(e.target.value)}>
+                {OCR_LANGUAGES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {l.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          </OptionRow>
+          {busy && (
+            <div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+                <div className="h-full bg-violet-600 transition-all" style={{ width: `${progress}%` }} />
+              </div>
+              <p className="mt-1.5 text-xs text-zinc-400">{status}</p>
+            </div>
+          )}
+          <div className="flex items-center gap-3">
+            <Button onClick={run} disabled={busy}>
+              {busy ? "Working…" : "Extract text"}
+            </Button>
+            {!busy && status && <p className="text-sm text-zinc-500 dark:text-zinc-400">{status}</p>}
+          </div>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500">
+            PDFs are converted from the first 5 pages. The OCR engine (~15 MB) downloads on first use.
+          </p>
+          <OutputArea value={text} onChange={setText} filename="ocr-text.txt" rows={12} />
+        </>
+      )}
+    </div>
+  );
+}
+
+async function TesseractRecognize(
+  image: Blob,
+  lang: string,
+  onProgress: (p: number) => void
+): Promise<string> {
+  const Tesseract = (await import("tesseract.js")).default;
+  const result = await Tesseract.recognize(image, lang, {
+    logger: (m: { status?: string; progress?: number }) => {
+      if (m.status === "recognizing text" && typeof m.progress === "number") {
+        onProgress(m.progress * 100);
+      }
+    },
+  });
+  return result.data.text;
 }
