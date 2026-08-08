@@ -227,9 +227,36 @@ export function YoutubeTagGenerator() {
   );
 }
 
+function isQuestionTopic(topic: string): boolean {
+  return (
+    /\?$/.test(topic.trim()) ||
+    /^(what|why|how|does|do|can|could|should|will|would|when|who|is|are|if)\b/i.test(
+      topic.trim()
+    )
+  );
+}
+
 function generateHooks(topic: string): string[] {
-  const t = capFirst(topic.trim());
-  if (!t) return [];
+  const raw = topic.trim();
+  if (!raw) return [];
+
+  if (isQuestionTopic(raw)) {
+    const t = raw.replace(/[?.\s]+$/, "");
+    return [
+      `Everyone's asking “${t}?” — I found the answer.`,
+      `You keep wondering “${t}?” — this is what I discovered.`,
+      `“${t}?” Watch this before you decide.`,
+      `I finally cracked the question: “${t}?”`,
+      `The truth nobody tells you about “${t}?”`,
+      `Stop googling “${t}” — here's the real answer.`,
+      `Why “${t}?” matters more than you think.`,
+      `I was wrong about “${t}?” — here's why.`,
+      `3 answers to “${t}?” you need to hear.`,
+      `The uncomfortable truth behind “${t}?”`,
+    ];
+  }
+
+  const t = capFirst(raw);
   return [
     `Stop scrolling — ${t} is about to change everything.`,
     `Nobody tells you this about ${t}…`,
@@ -259,7 +286,7 @@ export function YoutubeHookGenerator() {
           <TextInput
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g. starting a YouTube channel"
+            placeholder="e.g. starting a channel, or “what if naruto was a girl”"
           />
         </Field>
         <Button onClick={generate} disabled={!topic.trim()} className="h-9">

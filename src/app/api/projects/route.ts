@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { createProject, getProjects } from "@/lib/user-data";
+import { getTool } from "@/data/tools";
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -31,6 +32,12 @@ export async function POST(request: Request) {
   if (!toolSlug || toolSlug.length > 120) {
     return NextResponse.json(
       { error: "A valid tool slug is required." },
+      { status: 400 }
+    );
+  }
+  if (!getTool(toolSlug)) {
+    return NextResponse.json(
+      { error: "Unknown tool slug." },
       { status: 400 }
     );
   }

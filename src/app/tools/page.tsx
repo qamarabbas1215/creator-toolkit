@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { categories, tools } from "@/data/tools";
-import { ToolCard } from "@/components/tools/ToolCard";
-import { cn } from "@/lib/utils";
+import { ToolsExplorer } from "@/components/tools/ToolsExplorer";
 import type { CategorySlug } from "@/types/tool";
 
 export const metadata: Metadata = {
@@ -22,11 +20,14 @@ export default async function ToolsPage({
   const active = categorySlugs.includes(category as CategorySlug)
     ? (category as CategorySlug)
     : null;
-  const filtered = active ? tools.filter((t) => t.category === active) : tools;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <header>
+      <header className="relative overflow-hidden rounded-3xl border border-zinc-200/80 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 px-6 py-10 sm:px-8 dark:border-zinc-800 dark:from-violet-950/30 dark:via-zinc-950 dark:to-fuchsia-950/20">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/15 blur-3xl"
+        />
         <p className="text-xs font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
           Toolbox
         </p>
@@ -35,47 +36,17 @@ export default async function ToolsPage({
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
           {tools.length} fast, free, privacy-friendly tools for creators —
-          everything runs in your browser.
+          everything runs in your browser. Pick a category or search below.
         </p>
       </header>
 
-      <div className="mt-7 flex flex-wrap gap-2">
-        <Link
-          href="/tools"
-          className={cn(
-            "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
-            active === null
-              ? "border-violet-600 bg-violet-600 text-white shadow-sm shadow-violet-600/20"
-              : "border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          )}
-        >
-          All
-        </Link>
-        {categories.map((c) => (
-          <Link
-            key={c.slug}
-            href={`/tools?category=${c.slug}`}
-            className={cn(
-              "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
-              active === c.slug
-                ? "border-violet-600 bg-violet-600 text-white shadow-sm shadow-violet-600/20"
-                : "border-zinc-300 text-zinc-600 hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-            )}
-          >
-            {c.icon} {c.name}
-          </Link>
-        ))}
+      <div className="mt-8">
+        <ToolsExplorer
+          categories={categories}
+          tools={tools}
+          initialCategory={active}
+        />
       </div>
-
-      <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">
-        Showing {filtered.length} {active ? categories.find((c) => c.slug === active)?.name.toLowerCase() : "tools"}
-      </p>
-
-      <section className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map((tool) => (
-          <ToolCard key={tool.slug} tool={tool} showCategory={false} />
-        ))}
-      </section>
     </div>
   );
 }
