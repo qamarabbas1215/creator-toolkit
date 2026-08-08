@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Card, Field, Select, Textarea } from "@/components/ui";
 import { Button } from "@/components/ui/Button";
 import { OutputArea } from "@/components/ui/OutputArea";
+import { splitSentences } from "@/lib/text";
 
 const INPUT_CLS =
   "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500/25 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
@@ -222,7 +223,7 @@ export function AiResponseImprover() {
     const lower = text.toLowerCase();
     const vague = [" very ", " really ", " good ", " bad ", " nice "].filter((w) => lower.includes(w));
     const passive = /\b(is|are|was|were) (being )?\w+ed\b/i.test(text);
-    const longSentences = text.split(/(?<=[.!?])\s+/).filter((s) => s.split(/\s+/).length > 30).length;
+    const longSentences = splitSentences(text).filter((s) => s.split(/\s+/).length > 30).length;
     const suggestions = IMPROVE_RULES.slice(0, 4);
     const flags = [
       passive ? "Uses passive voice in places." : null,

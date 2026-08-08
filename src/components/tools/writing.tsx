@@ -8,6 +8,7 @@ import {
   analyzeText,
   keywordFrequency,
   readingLevelLabel,
+  splitSentences,
 } from "@/lib/text";
 import { formatDurationLong, formatNumber } from "@/lib/utils";
 
@@ -121,11 +122,7 @@ export function SentenceCounter() {
   const stats = useMemo(() => analyzeText(text), [text]);
 
   const sentences = useMemo(
-    () =>
-      text
-        .split(/(?<=[.!?…])\s+/)
-        .map((s) => s.trim())
-        .filter(Boolean),
+    () => splitSentences(text),
     [text]
   );
   const longest = sentences.length

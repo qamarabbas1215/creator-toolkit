@@ -1,23 +1,30 @@
 import { NextResponse } from "next/server";
 import {
   deleteAllSessionsForUser,
+  getUserByEmail,
   hashPassword,
   updateUserPassword,
 } from "@/lib/auth";
-import { consumePasswordResetToken, deletePasswordResetTokensForUser } from "@/lib/reset";
+import { consumeResetOtp, deleteResetOtpsForUser } from "@/lib/reset";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const OTP_RE = /^\d{6}$/;
 
 export async function POST(req: Request) {
-  let body: { token?: unknown; password?: unknown };
+  let body: { email?: unknown; otp?: unknown; password?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const { token, password } = body;
-  if (typeof token !== "string" || !token) {
+  const { email, otp, password } = body;
+  if (typeof email !== "string" || !EMAIL_RE.test(email.trim())) {
+    return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
+  }
+  if (typeof otp !== "string" || !OTP_RE.test(otp)) {
     return NextResponse.json(
-      { error: "This reset link is invalid or has expired." },
+      { error: "This code is invalid or has expired." },
       { status: 400 }
     );
   }
@@ -28,18 +35,39 @@ export async function POST(req: Request) {
     );
   }
 
-  const userId = consumePasswordResetToken(token);
-  if (!userId) {
+  const normalized = email.trim().toLowerCase();
+  const user = getUserByEmail(normalized);
+  if (!user) {
     return NextResponse.json(
-      { error: "This reset link is invalid or has expired." },
+      { error: "This code is invalid or has expired." },
+      { status: 400 }
+    );
+  }
+
+  const result = consumeResetOtp(user.id, otp);
+  if (!result.ok) {
+    if (result.reason === "locked") {
+      return NextResponse.json(
+        { error: "Too many incorrect attempts. Request a new code." },
+        { status: 429 }
+      );
+    }
+    if (result.reason === "expired") {
+      return NextResponse.json(
+        { error: "This code has expired. Request a new one." },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { error: "This code is invalid or has expired." },
       { status: 400 }
     );
   }
 
   const passwordHash = await hashPassword(password);
-  updateUserPassword(userId, passwordHash);
-  deleteAllSessionsForUser(userId);
-  deletePasswordResetTokensForUser(userId);
+  updateUserPassword(user.id, passwordHash);
+  deleteAllSessionsForUser(user.id);
+  deleteResetOtpsForUser(user.id);
 
   return NextResponse.json({ ok: true });
 }

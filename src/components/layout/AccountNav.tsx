@@ -40,7 +40,11 @@ export function AccountNav() {
   }, []);
 
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Proceed with local sign-out even if the network call fails.
+    }
     setUser(null);
     setOpen(false);
     emitAuthChange();

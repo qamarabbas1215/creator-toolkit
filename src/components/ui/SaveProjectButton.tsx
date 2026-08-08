@@ -55,6 +55,8 @@ export function SaveProjectButton({
       setOpen(false);
       setSaved(true);
       window.setTimeout(() => setSaved(false), 2500);
+    } catch {
+      setError("Network error. Please try again.");
     } finally {
       setBusy(false);
     }

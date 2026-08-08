@@ -109,6 +109,9 @@ export default function HomePage() {
   const featured = featuredTools();
   const trending = trendingTools();
   const recent = newTools();
+  const marqueeTools = [...new Map(
+    [...featured, ...trending, ...recent].map((t) => [t.slug, t])
+  ).values()];
 
   return (
     <main className="flex-1">
@@ -117,6 +120,19 @@ export default function HomePage() {
         <div
           aria-hidden
           className="pointer-events-none absolute -top-32 left-1/2 h-96 w-[46rem] -translate-x-1/2 rounded-full bg-gradient-to-r from-violet-500/20 via-fuchsia-500/15 to-violet-500/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="animate-float pointer-events-none absolute -left-24 top-24 h-64 w-64 rounded-full bg-gradient-to-br from-fuchsia-500/15 to-violet-500/15 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="animate-float-slow pointer-events-none absolute -right-28 top-10 h-72 w-72 rounded-full bg-gradient-to-br from-sky-500/15 to-violet-500/15 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="animate-float pointer-events-none absolute bottom-0 left-1/4 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl"
+          style={{ animationDelay: "-4s" }}
         />
         <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 py-24 text-center sm:py-32">
           <span className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-600 shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
@@ -129,7 +145,7 @@ export default function HomePage() {
           </span>
           <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] tracking-tight text-zinc-900 sm:text-6xl lg:text-7xl dark:text-zinc-50">
             Every creator tool you need.
-            <span className="mt-1 block bg-gradient-to-r from-violet-600 via-fuchsia-500 to-violet-600 bg-clip-text text-transparent">
+            <span className="animate-shimmer mt-1 block bg-gradient-to-r from-violet-600 via-fuchsia-500 to-violet-600 bg-[length:200%_auto] bg-clip-text text-transparent">
               One place.
             </span>
           </h1>
@@ -152,12 +168,63 @@ export default function HomePage() {
                 <Link
                   key={slug}
                   href={`/tools/${slug}`}
-                  className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition-colors hover:border-violet-300 hover:text-violet-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-violet-500 dark:hover:text-violet-300"
+                  className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-violet-300 hover:text-violet-600 hover:shadow-pop dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-violet-500 dark:hover:text-violet-300"
                 >
                   {tool.icon} {tool.name}
                 </Link>
               );
             })}
+          </div>
+
+          <dl className="mt-12 grid w-full max-w-2xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-200 sm:grid-cols-4 dark:border-zinc-800 dark:bg-zinc-800">
+            {[
+              { value: `${tools.length}+`, label: "Free tools" },
+              { value: `${categories.length}`, label: "Categories" },
+              { value: "100%", label: "Free forever" },
+              { value: "0", label: "Sign-ups needed" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="bg-white px-4 py-4 text-center dark:bg-zinc-950"
+              >
+                <dt className="sr-only">{item.label}</dt>
+                <dd className="bg-gradient-to-br from-violet-600 to-fuchsia-600 bg-clip-text text-xl font-extrabold text-transparent sm:text-2xl">
+                  {item.value}
+                </dd>
+                <dd className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+                  {item.label}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      {/* Tools marquee */}
+      <section
+        aria-label="Popular tools"
+        className="overflow-hidden border-b border-zinc-200 bg-white py-4 dark:border-zinc-800 dark:bg-zinc-950"
+      >
+        <div className="relative">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent dark:from-zinc-950"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white to-transparent dark:from-zinc-950"
+          />
+          <div className="animate-marquee flex w-max items-center gap-3">
+            {[...marqueeTools, ...marqueeTools].map((tool, i) => (
+              <Link
+                key={`${tool.slug}-${i}`}
+                href={`/tools/${tool.slug}`}
+                className="flex shrink-0 items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-violet-600 dark:hover:bg-violet-950/40 dark:hover:text-violet-300"
+              >
+                <span aria-hidden>{tool.icon}</span>
+                {tool.name}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

@@ -30,7 +30,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS password_resets (
     token_hash TEXT PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    expires_at INTEGER NOT NULL
+    expires_at INTEGER NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 0
   );
 
   CREATE TABLE IF NOT EXISTS favorites (
@@ -90,4 +91,11 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_usage_events_user_time ON tool_usage_events (user_id, used_at);
   CREATE INDEX IF NOT EXISTS idx_api_keys_user ON api_keys (user_id);
   CREATE INDEX IF NOT EXISTS idx_api_requests_key_time ON api_requests (api_key_id, created_at);
+  CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets (user_id);
 `);
+
+try {
+  db.exec("ALTER TABLE password_resets ADD COLUMN attempts INTEGER NOT NULL DEFAULT 0");
+} catch {
+  // Column already exists (existing database).
+}

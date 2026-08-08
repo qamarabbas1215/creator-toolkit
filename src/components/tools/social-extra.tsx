@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { OutputArea } from "@/components/ui/OutputArea";
+import { splitSentences } from "@/lib/text";
 import { cn } from "@/lib/utils";
 
 const CAPTION_TONES = {
@@ -176,10 +177,7 @@ export function TweetFormatter() {
 
   const tweets = useMemo(() => {
     if (!cleaned) return [];
-    const sentences = cleaned
-      .split(/(?<=[.!?…])\s+/)
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const sentences = splitSentences(cleaned);
     const chunks: string[] = [];
     let buffer = "";
     for (const s of sentences) {
@@ -265,10 +263,7 @@ export function ThreadGenerator() {
   const [text, setText] = useState("");
 
   const tweets = useMemo(() => {
-    const sentences = text
-      .split(/(?<=[.!?…])\s+/)
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const sentences = splitSentences(text);
     const chunks: string[] = [];
     let buffer = "";
     for (const s of sentences) {
@@ -339,10 +334,7 @@ export function LinkedinFormatter() {
   const [addHashtags, setAddHashtags] = useState(true);
 
   const output = useMemo(() => {
-    const sentences = text
-      .split(/(?<=[.!?…])\s+/)
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const sentences = splitSentences(text);
     let out = sentences.join("\n");
     if (addHashtags) {
       const tags = LINKEDIN_HASHTAGS.map((t) => `#${t}`).join(" ");
@@ -399,10 +391,7 @@ export function InstagramCaptionOptimizer() {
   const output = useMemo(() => {
     let out = caption.trim();
     if (addLineBreaks) {
-      const sentences = out
-        .split(/(?<=[.!?…])\s+/)
-        .map((s) => s.trim())
-        .filter(Boolean);
+      const sentences = splitSentences(out);
       const lines: string[] = [];
       let line = "";
       for (const s of sentences) {
@@ -495,7 +484,7 @@ const EMOJI_GROUPS: Record<string, string[]> = {
   "Travel": ["✈️", "🚗", "🚕", "🚌", "🚲", "🏍️", "🚂", "🚀", "🚁", "⛵", "🚢", "🏔️", "🌋", "🏝️", "🏖️", "🏜️", "🌄", "🌅", "🌆", "🌃", "🗽", "🗼", "🏰", "🎡", "🎢"],
   "Activities": ["⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏓", "⛳", "🎣", "🎮", "🎲", "🎯", "🎳", "🏆", "🥇", "🥈", "🥉", "🎧", "🎤", "🎸", "🎺", "🎻", "🎹", "🎬", "🎨"],
   "Objects": ["💡", "🔑", "🔒", "🔓", "🔔", "⏰", "📱", "💻", "🖥️", "⌨️", "🖱️", "📷", "🎥", "📞", "💾", "💿", "📀", "📚", "📖", "✏️", "📝", "✂️", "📌", "📎", "🔍"],
-  "Symbols": ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤍", "💔", "💯", "🔥", "✨", "⭐", "🌟", "💫", "⚡", "💥", "💦", "🌈", "☀️", "🌙", "⭐", "❄️", "🎉", "🎊", "✔️", "❌"],
+  "Symbols": ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤍", "💔", "💯", "🔥", "✨", "⭐", "🌟", "💫", "⚡", "💥", "💦", "🌈", "☀️", "🌙", "✅", "❄️", "🎉", "🎊", "✔️", "❌"],
   "Flags": ["🏁", "🚩", "🇺🇸", "🇬🇧", "🇨🇦", "🇦🇺", "🇩🇪", "🇫🇷", "🇪🇸", "🇮🇹", "🇯🇵", "🇰🇷", "🇧🇷", "🇮🇳", "🇨🇳", "🇳🇱", "🇸🇪", "🇳🇴", "🇩🇰", "🇵🇹", "🇷🇺", "🇲🇽", "🇦🇷", "🇿🇦", "🇳🇬", "🇪🇬"],
 };
 

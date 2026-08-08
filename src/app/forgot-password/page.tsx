@@ -25,7 +25,7 @@ export default async function ForgotPasswordPage() {
           Forgot your password?
         </h1>
         <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-          Enter your account email and we&apos;ll send you a reset link.
+          Enter your account email and we&apos;ll send you a verification code.
         </p>
       </div>
       <div className="rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-pop sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">

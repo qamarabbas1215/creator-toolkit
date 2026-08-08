@@ -1,31 +1,77 @@
-import { createHash, randomBytes } from "node:crypto";
+import { createHash, randomInt } from "node:crypto";
 import { db } from "@/lib/db";
 
-export const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
+export const RESET_OTP_TTL_MS = 10 * 60 * 1000;
+export const RESET_OTP_MAX_ATTEMPTS = 5;
 
-function hashToken(token: string): string {
-  return createHash("sha256").update(token).digest("hex");
+export type ConsumeResetOtpResult =
+  | { ok: true }
+  | { ok: false; reason: "invalid" | "expired" | "locked" };
+
+function hashOtp(otp: string): string {
+  return createHash("sha256").update(otp).digest("hex");
 }
 
-export function createPasswordResetToken(userId: number): string {
-  const token = randomBytes(32).toString("hex");
-  const expiresAt = Date.now() + RESET_TOKEN_TTL_MS;
-  db.prepare(
-    "INSERT INTO password_resets (token_hash, user_id, expires_at) VALUES (?, ?, ?)"
-  ).run(hashToken(token), userId, expiresAt);
-  return token;
+interface ResetRow {
+  token_hash: string;
+  user_id: number;
+  expires_at: number;
+  attempts: number;
 }
 
-export function consumePasswordResetToken(token: string): number | null {
-  const hash = hashToken(token);
-  const row = db
-    .prepare("SELECT user_id, expires_at FROM password_resets WHERE token_hash = ?")
-    .get(hash) as unknown as { user_id: number; expires_at: number } | undefined;
-  db.prepare("DELETE FROM password_resets WHERE token_hash = ?").run(hash);
-  if (!row || row.expires_at < Date.now()) return null;
-  return row.user_id;
+function latestResetRow(userId: number): ResetRow | undefined {
+  return db
+    .prepare(
+      "SELECT token_hash, user_id, expires_at, attempts FROM password_resets WHERE user_id = ? ORDER BY expires_at DESC LIMIT 1"
+    )
+    .get(userId) as unknown as ResetRow | undefined;
 }
 
-export function deletePasswordResetTokensForUser(userId: number): void {
+function clearResetRowsForUser(userId: number): void {
   db.prepare("DELETE FROM password_resets WHERE user_id = ?").run(userId);
+}
+
+export function generateResetOtp(userId: number): string {
+  clearResetRowsForUser(userId);
+  const otp = String(randomInt(0, 1_000_000)).padStart(6, "0");
+  const expiresAt = Date.now() + RESET_OTP_TTL_MS;
+  db.prepare(
+    "INSERT INTO password_resets (token_hash, user_id, expires_at, attempts) VALUES (?, ?, ?, 0)"
+  ).run(hashOtp(otp), userId, expiresAt);
+  return otp;
+}
+
+export function consumeResetOtp(userId: number, otp: string): ConsumeResetOtpResult {
+  const row = latestResetRow(userId);
+  if (!row) return { ok: false, reason: "invalid" };
+
+  if (row.expires_at < Date.now()) {
+    clearResetRowsForUser(userId);
+    return { ok: false, reason: "expired" };
+  }
+
+  if (row.attempts >= RESET_OTP_MAX_ATTEMPTS) {
+    clearResetRowsForUser(userId);
+    return { ok: false, reason: "locked" };
+  }
+
+  if (row.token_hash === hashOtp(otp)) {
+    clearResetRowsForUser(userId);
+    return { ok: true };
+  }
+
+  const attempts = row.attempts + 1;
+  db.prepare("UPDATE password_resets SET attempts = ? WHERE token_hash = ?").run(
+    attempts,
+    row.token_hash
+  );
+  if (attempts >= RESET_OTP_MAX_ATTEMPTS) {
+    clearResetRowsForUser(userId);
+    return { ok: false, reason: "locked" };
+  }
+  return { ok: false, reason: "invalid" };
+}
+
+export function deleteResetOtpsForUser(userId: number): void {
+  clearResetRowsForUser(userId);
 }

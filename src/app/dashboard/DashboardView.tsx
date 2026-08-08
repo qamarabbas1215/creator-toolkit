@@ -63,12 +63,13 @@ export function DashboardView({ user }: { user: SessionUser }) {
     setBusy(true);
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      emitAuthChange();
-      router.push("/");
-      router.refresh();
-    } finally {
-      setBusy(false);
+    } catch {
+      // Proceed with local sign-out even if the network call fails.
     }
+    emitAuthChange();
+    router.push("/");
+    router.refresh();
+    setBusy(false);
   }
 
   useEffect(() => {
@@ -98,17 +99,23 @@ export function DashboardView({ user }: { user: SessionUser }) {
 
   async function deleteProject(id: number) {
     if (!window.confirm("Delete this saved project?")) return;
-    const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              projects: prev.projects.filter((p) => p.id !== id),
-              stats: { ...prev.stats, projectsCount: Math.max(0, prev.stats.projectsCount - 1) },
-            }
-          : prev
-      );
+    try {
+      const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                projects: prev.projects.filter((p) => p.id !== id),
+                stats: { ...prev.stats, projectsCount: Math.max(0, prev.stats.projectsCount - 1) },
+              }
+            : prev
+        );
+      } else {
+        setError("Could not delete the project. Please try again.");
+      }
+    } catch {
+      setError("Network error. Could not delete the project.");
     }
   }
 

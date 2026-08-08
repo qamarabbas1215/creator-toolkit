@@ -95,7 +95,7 @@ export function HashtagGenerator() {
       .map((k) => k.trim())
       .filter(Boolean);
     const pool = buildPool(keywords);
-    const tags = pool.slice(0, Math.max(max, 15));
+    const tags = pool.slice(0, max);
     setGenerated(tags);
     setSelected(new Set(tags));
   }

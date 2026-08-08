@@ -30,7 +30,6 @@ export async function POST(
   const { slug } = await context.params;
 
   if (!isApiTool(slug)) {
-    recordApiRequest(null, slug, 404, request.headers.get("x-forwarded-for"));
     return json(
       {
         error: `Tool '${slug}' is not available through the API. See GET /api/v1/tools for the list of supported tools.`,
@@ -41,7 +40,6 @@ export async function POST(
 
   const apiKey = request.headers.get("x-api-key");
   if (!apiKey) {
-    recordApiRequest(null, slug, 401, request.headers.get("x-forwarded-for"));
     return json(
       { error: "Missing X-API-Key header. Create a key in Account settings." },
       401,
@@ -51,20 +49,17 @@ export async function POST(
 
   const keyRow = getApiKeyByHash(hashApiKey(apiKey));
   if (!keyRow) {
-    recordApiRequest(null, slug, 401, request.headers.get("x-forwarded-for"));
     return json({ error: "Invalid API key." }, 401);
   }
 
   const user = getUserById(keyRow.user_id);
   if (!user) {
-    recordApiRequest(keyRow.id, slug, 401, request.headers.get("x-forwarded-for"));
     return json({ error: "API key owner not found." }, 401);
   }
 
   const limit = rateLimitForPlan(user.plan);
   const used = requestsInWindow(keyRow.id);
   if (used >= limit) {
-    recordApiRequest(keyRow.id, slug, 429, request.headers.get("x-forwarded-for"));
     return json(
       {
         error: `Rate limit exceeded (${limit}/hour). Upgrade to Pro for a higher limit.`,
@@ -85,7 +80,6 @@ export async function POST(
     const body = await request.json();
     params = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
   } catch {
-    recordApiRequest(keyRow.id, slug, 400, request.headers.get("x-forwarded-for"));
     return json({ error: "Request body must be valid JSON." }, 400);
   }
 
@@ -103,7 +97,6 @@ export async function POST(
       },
     });
   } catch (err) {
-    recordApiRequest(keyRow.id, slug, 400, request.headers.get("x-forwarded-for"));
     const message = err instanceof Error ? err.message : "Tool execution failed.";
     return json({ error: message }, 400);
   }
