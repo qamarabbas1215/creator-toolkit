@@ -15,8 +15,8 @@ import {
 describe("text helpers", () => {
   it("analyzes character and word counts", () => {
     const stats = analyzeText("Hello world! This is a test.");
-    expect(stats.characters).toBe(27);
-    expect(stats.charactersNoSpaces).toBe(22);
+    expect(stats.characters).toBe(28);
+    expect(stats.charactersNoSpaces).toBe(23);
     expect(stats.words).toBe(6);
     expect(stats.sentences).toBe(2);
     expect(stats.paragraphs).toBe(1);
@@ -81,7 +81,8 @@ describe("extractors", () => {
 describe("keyword frequency", () => {
   it("filters stopwords and sorts by count", () => {
     const freq = keywordFrequency("the cat and the dog and the bird", 10);
-    expect(freq[0].word).toBe("the");
-    expect(freq[0].count).toBe(3);
+    expect(freq.length).toBe(3);
+    expect(freq.map((f) => f.word)).toEqual(["cat", "dog", "bird"]);
+    expect(freq.every((f) => f.count === 1)).toBe(true);
   });
 });

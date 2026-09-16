@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { apiToolHandlers, isApiTool } from "@/lib/api-tools";
-import { getTool, tools } from "@/data/tools";
+import { tools } from "@/data/tools";
 
 const CLIENT_ONLY = new Set([
   // File / media processing (browser File API)
@@ -19,11 +19,12 @@ const CLIENT_ONLY = new Set([
   "pdf-to-word",
   "image-to-pdf",
   "word-to-pdf",
-  // Local-storage / interactive tools
+  // Local-storage / interactive / DOM tools
   "prompt-history",
   "prompt-library",
   "prompt-style-library",
   "emoji-picker",
+  "html-to-markdown",
 ]);
 
 // Tools whose client code was ported but might legitimately not ship
