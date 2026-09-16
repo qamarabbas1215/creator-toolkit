@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { queryRun, queryOne, queryAll } from "@/lib/db";
 
 export interface ProjectRow {
   id: number;
@@ -10,139 +10,140 @@ export interface ProjectRow {
   updated_at: number;
 }
 
-export function isFavorite(userId: number, toolSlug: string): boolean {
-  return Boolean(
-    db
-      .prepare("SELECT 1 FROM favorites WHERE user_id = ? AND tool_slug = ?")
-      .get(userId, toolSlug)
-  );
+export async function isFavorite(userId: number, toolSlug: string): Promise<boolean> {
+  return Boolean(await queryOne("SELECT 1 FROM favorites WHERE user_id = ? AND tool_slug = ?", userId, toolSlug));
 }
 
-export function getFavoriteSlugs(userId: number): string[] {
-  const rows = db
-    .prepare(
-      "SELECT tool_slug FROM favorites WHERE user_id = ? ORDER BY created_at DESC"
-    )
-    .all(userId) as unknown as { tool_slug: string }[];
+export async function getFavoriteSlugs(userId: number): Promise<string[]> {
+  const rows = await queryAll<{ tool_slug: string }>(
+    "SELECT tool_slug FROM favorites WHERE user_id = ? ORDER BY created_at DESC",
+    userId
+  );
   return rows.map((r) => r.tool_slug);
 }
 
-export function toggleFavorite(userId: number, toolSlug: string): boolean {
-  const favorited = isFavorite(userId, toolSlug);
+export async function toggleFavorite(userId: number, toolSlug: string): Promise<boolean> {
+  const favorited = await isFavorite(userId, toolSlug);
   if (favorited) {
-    db.prepare("DELETE FROM favorites WHERE user_id = ? AND tool_slug = ?").run(
-      userId,
-      toolSlug
-    );
+    await queryRun("DELETE FROM favorites WHERE user_id = ? AND tool_slug = ?", userId, toolSlug);
     return false;
   }
-  db.prepare(
-    "INSERT INTO favorites (user_id, tool_slug, created_at) VALUES (?, ?, ?)"
-  ).run(userId, toolSlug, Date.now());
+  await queryRun(
+    "INSERT INTO favorites (user_id, tool_slug, created_at) VALUES (?, ?, ?)",
+    userId,
+    toolSlug,
+    Date.now()
+  );
   return true;
 }
 
-export function removeFavorite(userId: number, toolSlug: string): void {
-  db.prepare("DELETE FROM favorites WHERE user_id = ? AND tool_slug = ?").run(
-    userId,
-    toolSlug
-  );
+export async function removeFavorite(userId: number, toolSlug: string): Promise<void> {
+  await queryRun("DELETE FROM favorites WHERE user_id = ? AND tool_slug = ?", userId, toolSlug);
 }
 
-export function recordToolUsage(userId: number, toolSlug: string): void {
+export async function recordToolUsage(userId: number, toolSlug: string): Promise<void> {
   const now = Date.now();
-  db.prepare(
+  await queryRun(
     `INSERT INTO tool_usage (user_id, tool_slug, runs, last_used_at)
      VALUES (?, ?, 1, ?)
      ON CONFLICT(user_id, tool_slug)
-     DO UPDATE SET runs = runs + 1, last_used_at = excluded.last_used_at`
-  ).run(userId, toolSlug, now);
-  db.prepare(
-    "INSERT INTO tool_usage_events (user_id, tool_slug, used_at) VALUES (?, ?, ?)"
-  ).run(userId, toolSlug, now);
+     DO UPDATE SET runs = runs + 1, last_used_at = excluded.last_used_at`,
+    userId,
+    toolSlug,
+    now
+  );
+  await queryRun(
+    "INSERT INTO tool_usage_events (user_id, tool_slug, used_at) VALUES (?, ?, ?)",
+    userId,
+    toolSlug,
+    now
+  );
 }
 
-export function getRecentToolSlugs(userId: number, limit = 8): string[] {
-  const rows = db
-    .prepare(
-      "SELECT tool_slug FROM tool_usage WHERE user_id = ? ORDER BY last_used_at DESC LIMIT ?"
-    )
-    .all(userId, limit) as unknown as { tool_slug: string }[];
+export async function getRecentToolSlugs(userId: number, limit = 8): Promise<string[]> {
+  const rows = await queryAll<{ tool_slug: string }>(
+    "SELECT tool_slug FROM tool_usage WHERE user_id = ? ORDER BY last_used_at DESC LIMIT ?",
+    userId,
+    limit
+  );
   return rows.map((r) => r.tool_slug);
 }
 
-export function getTopToolSlugs(
+export async function getTopToolSlugs(
   userId: number,
   limit = 5
-): { slug: string; runs: number }[] {
-  const rows = db
-    .prepare(
-      "SELECT tool_slug, runs FROM tool_usage WHERE user_id = ? ORDER BY runs DESC, last_used_at DESC LIMIT ?"
-    )
-    .all(userId, limit) as unknown as { tool_slug: string; runs: number }[];
+): Promise<{ slug: string; runs: number }[]> {
+  const rows = await queryAll<{ tool_slug: string; runs: number }>(
+    "SELECT tool_slug, runs FROM tool_usage WHERE user_id = ? ORDER BY runs DESC, last_used_at DESC LIMIT ?",
+    userId,
+    limit
+  );
   return rows.map((r) => ({ slug: r.tool_slug, runs: r.runs }));
 }
 
-export function getUsageStats(userId: number): {
+export async function getUsageStats(userId: number): Promise<{
   totalRuns: number;
   distinctTools: number;
   thisWeekRuns: number;
-} {
-  const total = db
-    .prepare("SELECT COALESCE(SUM(runs), 0) AS total FROM tool_usage WHERE user_id = ?")
-    .get(userId) as unknown as { total: number };
-  const distinct = db
-    .prepare("SELECT COUNT(*) AS c FROM tool_usage WHERE user_id = ?")
-    .get(userId) as unknown as { c: number };
+}> {
+  const total = await queryOne<{ total: number }>(
+    "SELECT COALESCE(SUM(runs), 0) AS total FROM tool_usage WHERE user_id = ?",
+    userId
+  );
+  const distinct = await queryOne<{ c: number }>(
+    "SELECT COUNT(*) AS c FROM tool_usage WHERE user_id = ?",
+    userId
+  );
   const weekStart = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const week = db
-    .prepare(
-      "SELECT COUNT(*) AS c FROM tool_usage_events WHERE user_id = ? AND used_at >= ?"
-    )
-    .get(userId, weekStart) as unknown as { c: number };
+  const week = await queryOne<{ c: number }>(
+    "SELECT COUNT(*) AS c FROM tool_usage_events WHERE user_id = ? AND used_at >= ?",
+    userId,
+    weekStart
+  );
   return {
-    totalRuns: total.total,
-    distinctTools: distinct.c,
-    thisWeekRuns: week.c,
+    totalRuns: total?.total ?? 0,
+    distinctTools: distinct?.c ?? 0,
+    thisWeekRuns: week?.c ?? 0,
   };
 }
 
-export function getProjects(userId: number): ProjectRow[] {
-  return db
-    .prepare(
-      "SELECT * FROM projects WHERE user_id = ? ORDER BY updated_at DESC"
-    )
-    .all(userId) as unknown as ProjectRow[];
+export async function getProjects(userId: number): Promise<ProjectRow[]> {
+  return queryAll<ProjectRow>(
+    "SELECT * FROM projects WHERE user_id = ? ORDER BY updated_at DESC",
+    userId
+  );
 }
 
-export function getProject(userId: number, id: number): ProjectRow | undefined {
-  return db
-    .prepare("SELECT * FROM projects WHERE user_id = ? AND id = ?")
-    .get(userId, id) as unknown as ProjectRow | undefined;
+export async function getProject(userId: number, id: number): Promise<ProjectRow | undefined> {
+  return queryOne<ProjectRow>("SELECT * FROM projects WHERE user_id = ? AND id = ?", userId, id);
 }
 
-export function createProject(
+export async function createProject(
   userId: number,
   toolSlug: string,
   title: string,
   content: string
-): ProjectRow {
+): Promise<ProjectRow> {
   const now = Date.now();
-  const result = db
-    .prepare(
-      "INSERT INTO projects (user_id, tool_slug, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
-    )
-    .run(userId, toolSlug, title, content, now, now);
-  const project = getProject(userId, Number(result.lastInsertRowid));
+  const result = await queryRun(
+    "INSERT INTO projects (user_id, tool_slug, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+    userId,
+    toolSlug,
+    title,
+    content,
+    now,
+    now
+  );
+  const project = await getProject(userId, result.lastInsertRowid);
   if (!project) throw new Error("Could not create project.");
   return project;
 }
 
-export function updateProject(
+export async function updateProject(
   userId: number,
   id: number,
   fields: { title?: string; content?: string }
-): ProjectRow | undefined {
+): Promise<ProjectRow | undefined> {
   const sets: string[] = [];
   const values: (string | number)[] = [];
   if (fields.title !== undefined) {
@@ -156,15 +157,11 @@ export function updateProject(
   if (sets.length === 0) return getProject(userId, id);
   sets.push("updated_at = ?");
   values.push(Date.now(), id, userId);
-  db.prepare(`UPDATE projects SET ${sets.join(", ")} WHERE id = ? AND user_id = ?`).run(
-    ...values
-  );
+  await queryRun(`UPDATE projects SET ${sets.join(", ")} WHERE id = ? AND user_id = ?`, ...values);
   return getProject(userId, id);
 }
 
-export function deleteProject(userId: number, id: number): boolean {
-  const result = db
-    .prepare("DELETE FROM projects WHERE id = ? AND user_id = ?")
-    .run(id, userId);
+export async function deleteProject(userId: number, id: number): Promise<boolean> {
+  const result = await queryRun("DELETE FROM projects WHERE id = ? AND user_id = ?", id, userId);
   return result.changes > 0;
 }

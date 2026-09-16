@@ -47,18 +47,18 @@ export async function POST(
     );
   }
 
-  const keyRow = getApiKeyByHash(hashApiKey(apiKey));
+  const keyRow = await getApiKeyByHash(hashApiKey(apiKey));
   if (!keyRow) {
     return json({ error: "Invalid API key." }, 401);
   }
 
-  const user = getUserById(keyRow.user_id);
+  const user = await getUserById(keyRow.user_id);
   if (!user) {
     return json({ error: "API key owner not found." }, 401);
   }
 
   const limit = rateLimitForPlan(user.plan);
-  const used = requestsInWindow(keyRow.id);
+  const used = await requestsInWindow(keyRow.id);
   if (used >= limit) {
     return json(
       {
@@ -85,8 +85,8 @@ export async function POST(
 
   try {
     const result = apiToolHandlers[slug](params);
-    touchApiKey(keyRow.id);
-    recordApiRequest(keyRow.id, slug, 200, request.headers.get("x-forwarded-for"));
+    await touchApiKey(keyRow.id);
+    await recordApiRequest(keyRow.id, slug, 200, request.headers.get("x-forwarded-for"));
     return json({
       ok: true,
       tool: slug,

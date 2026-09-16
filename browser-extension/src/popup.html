@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Creator Toolkit</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <span class="brand">⚡ Creator Toolkit</span>
+      <button id="openSite" title="Open Creator Toolkit" class="icon-btn">↗</button>
+    </header>
+
+    <main>
+      <select id="toolSelect" class="tool-select"></select>
+
+      <textarea
+        id="input"
+        placeholder="Your text or parameters go here…"
+        rows="6"
+        autocomplete="off"
+      ></textarea>
+
+      <div class="row">
+        <button id="run" class="primary">Run tool</button>
+        <span id="status" class="status" hidden></span>
+      </div>
+
+      <textarea id="output" class="output" placeholder="Result will appear here…" rows="8" readonly></textarea>
+    </main>
+
+    <footer class="footer">
+      <a href="#" id="openKeys" class="link">API key</a>
+      ·
+      <a href="#" id="openTools" class="link">All tools</a>
+    </footer>
+
+    <script src="popup.js" defer></script>
+  </body>
+</html>

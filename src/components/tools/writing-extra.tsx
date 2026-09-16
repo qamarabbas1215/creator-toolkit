@@ -470,22 +470,35 @@ const CONTRACTIONS: Record<string, string> = {
   "won't": "will not",
   "shan't": "shall not",
   "ain't": "am not",
-  "n't": " not",
+  "don't": "do not",
+  "doesn't": "does not",
+  "didn't": "did not",
+  "isn't": "is not",
+  "aren't": "are not",
+  "wasn't": "was not",
+  "weren't": "were not",
+  "haven't": "have not",
+  "hasn't": "has not",
+  "hadn't": "had not",
+  "shouldn't": "should not",
+  "couldn't": "could not",
+  "wouldn't": "would not",
+  "mustn't": "must not",
+  "let's": "let us",
   "'re": " are",
   "'ll": " will",
   "'ve": " have",
   "'m": " am",
   "'d": " would",
   "'s": " is",
-  "let's": "let us",
 };
 
 function expandContractions(text: string): string {
   let out = text;
   for (const [k, v] of Object.entries(CONTRACTIONS)) {
     out = out.replace(new RegExp(`\\b${k}`, "gi"), (m) => {
-      const isUpper = m[0] === m[0].toUpperCase();
-      const suffix = v.trim();
+      const isUpper = /[A-Z]/.test(m[0]);
+      const suffix = v;
       return `${isUpper ? suffix.charAt(0).toUpperCase() + suffix.slice(1) : suffix} `;
     });
   }

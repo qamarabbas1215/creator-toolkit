@@ -30,7 +30,7 @@ export async function PATCH(request: Request) {
     );
   }
 
-  const row = getUserById(user.id);
+  const row = await getUserById(user.id);
   if (!row || !(await verifyPassword(currentPassword, row.password_hash))) {
     return NextResponse.json(
       { error: "Your current password is incorrect." },
@@ -38,6 +38,6 @@ export async function PATCH(request: Request) {
     );
   }
 
-  updateUserPassword(user.id, await hashPassword(newPassword));
+  await updateUserPassword(user.id, await hashPassword(newPassword));
   return NextResponse.json({ ok: true });
 }

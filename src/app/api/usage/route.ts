@@ -30,6 +30,6 @@ export async function POST(request: Request) {
     );
   }
 
-  recordToolUsage(user.id, toolSlug);
+  await recordToolUsage(user.id, toolSlug);
   return NextResponse.json({ ok: true });
 }

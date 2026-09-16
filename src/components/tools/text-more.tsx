@@ -401,8 +401,17 @@ export function MorseCodeConverter() {
   );
 }
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function inlineMd(text: string): string {
-  return text
+  return escapeHtml(text)
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>")
@@ -477,7 +486,8 @@ export function MarkdownPreview() {
   );
 }
 
-const PASS_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const PASS_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const PASS_DIGITS = "0123456789";
 const PASS_SYMBOLS = "!@#$%^&*()-_=+[]{};:,.<>?/";
 
 export function PasswordGenerator() {
@@ -491,7 +501,7 @@ export function PasswordGenerator() {
     const n = Math.max(4, Math.min(128, length));
     const c = Math.max(1, Math.min(50, count));
     let pool = PASS_CHARS;
-    if (numbers) pool += "0123456789";
+    if (numbers) pool += PASS_DIGITS;
     if (symbols) pool += PASS_SYMBOLS;
     const rand = new Uint32Array(n);
     crypto.getRandomValues(rand);

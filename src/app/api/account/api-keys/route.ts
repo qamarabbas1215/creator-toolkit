@@ -13,8 +13,8 @@ export async function GET() {
   if (!user) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
-  const keys = listApiKeys(user.id);
-  const usage = getApiUsage(user.id);
+  const keys = await listApiKeys(user.id);
+  const usage = await getApiUsage(user.id);
   const limit = rateLimitForPlan(user.plan);
   const usageByKey = new Map(usage.perKey.map((k) => [k.id, k.requests]));
   const items = keys.map((k) => ({
@@ -38,7 +38,8 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
-  const keyCount = listApiKeys(user.id).length;
+  const keys = await listApiKeys(user.id);
+  const keyCount = keys.length;
   const maxKeys = user.plan === "pro" ? 10 : 2;
   if (keyCount >= maxKeys) {
     return NextResponse.json(
@@ -63,7 +64,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { key, row } = createApiKey(user.id, name);
+  const { key, row } = await createApiKey(user.id, name);
   return NextResponse.json(
     {
       key,
@@ -90,7 +91,7 @@ export async function DELETE(request: Request) {
   if (!Number.isInteger(id) || id <= 0) {
     return NextResponse.json({ error: "A valid key id is required." }, { status: 400 });
   }
-  if (!revokeApiKey(user.id, id)) {
+  if (!(await revokeApiKey(user.id, id))) {
     return NextResponse.json({ error: "API key not found." }, { status: 404 });
   }
   return NextResponse.json({ ok: true });

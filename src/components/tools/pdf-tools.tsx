@@ -38,6 +38,13 @@ function escapeXml(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/\shref\s*=\s*(['"])javascript:[^"']*\1/gi, "");
+}
+
 export function MergePdf() {
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
@@ -515,7 +522,7 @@ export function WordToPdf() {
     setStatus("Reading document…");
     try {
       const result = await mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
-      setHtml(result.value);
+      setHtml(sanitizeHtml(result.value));
       setName(file.name.replace(/\.docx?$/i, ""));
       setStatus("Preview ready. Click Print / Save as PDF and choose the target printer.");
     } catch {

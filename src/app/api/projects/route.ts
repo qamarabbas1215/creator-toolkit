@@ -8,7 +8,7 @@ export async function GET() {
   if (!user) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
-  return NextResponse.json({ projects: getProjects(user.id) });
+  return NextResponse.json({ projects: await getProjects(user.id) });
 }
 
 export async function POST(request: Request) {
@@ -50,6 +50,6 @@ export async function POST(request: Request) {
   if (!title) title = "Untitled project";
   if (title.length > 200) title = title.slice(0, 200);
 
-  const project = createProject(user.id, toolSlug, title, content);
+  const project = await createProject(user.id, toolSlug, title, content);
   return NextResponse.json({ project }, { status: 201 });
 }

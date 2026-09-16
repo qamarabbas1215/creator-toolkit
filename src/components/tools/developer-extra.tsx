@@ -687,7 +687,7 @@ export function RegexTester() {
   const details = matches
     .map((m, i) => {
       const groups =
-        m.groups.length > 1
+        m.groups.length > 0
           ? ` · groups: ${m.groups.map((g) => g ?? "(none)").join(", ")}`
           : "";
       return `${i + 1}. ${m.full} @ ${m.index}${groups}`;

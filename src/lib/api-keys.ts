@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { db } from "@/lib/db";
+import { queryOne, queryRun, queryAll } from "@/lib/db";
 
 export interface ApiKeyRow {
   id: number;
@@ -26,91 +26,96 @@ export function generateApiKey(): string {
   return API_KEY_PREFIX + randomBytes(API_KEY_BYTES).toString("hex");
 }
 
-export function createApiKey(userId: number, name: string): { key: string; row: ApiKeyRow } {
+export async function createApiKey(userId: number, name: string): Promise<{ key: string; row: ApiKeyRow }> {
   const key = generateApiKey();
   const prefix = key.slice(0, API_KEY_PREFIX.length + 8);
   const now = Date.now();
-  db.prepare(
-    "INSERT INTO api_keys (user_id, name, key_hash, prefix, created_at) VALUES (?, ?, ?, ?, ?)"
-  ).run(userId, name, hashApiKey(key), prefix, now);
-  const row = getApiKeyByHash(hashApiKey(key));
+  await queryRun(
+    "INSERT INTO api_keys (user_id, name, key_hash, prefix, created_at) VALUES (?, ?, ?, ?, ?)",
+    userId,
+    name,
+    hashApiKey(key),
+    prefix,
+    now
+  );
+  const row = await getApiKeyByHash(hashApiKey(key));
   if (!row) throw new Error("Could not create API key.");
   return { key, row };
 }
 
-export function getApiKeyByHash(keyHash: string): ApiKeyRow | undefined {
-  return db
-    .prepare("SELECT * FROM api_keys WHERE key_hash = ?")
-    .get(keyHash) as unknown as ApiKeyRow | undefined;
+export async function getApiKeyByHash(keyHash: string): Promise<ApiKeyRow | undefined> {
+  return queryOne<ApiKeyRow>("SELECT * FROM api_keys WHERE key_hash = ?", keyHash);
 }
 
-export function getApiKeyById(userId: number, id: number): ApiKeyRow | undefined {
-  return db
-    .prepare("SELECT * FROM api_keys WHERE id = ? AND user_id = ?")
-    .get(id, userId) as unknown as ApiKeyRow | undefined;
+export async function getApiKeyById(userId: number, id: number): Promise<ApiKeyRow | undefined> {
+  return queryOne<ApiKeyRow>("SELECT * FROM api_keys WHERE id = ? AND user_id = ?", id, userId);
 }
 
-export function listApiKeys(userId: number): ApiKeyRow[] {
-  return db
-    .prepare("SELECT * FROM api_keys WHERE user_id = ? ORDER BY created_at DESC")
-    .all(userId) as unknown as ApiKeyRow[];
+export async function listApiKeys(userId: number): Promise<ApiKeyRow[]> {
+  return queryAll<ApiKeyRow>("SELECT * FROM api_keys WHERE user_id = ? ORDER BY created_at DESC", userId);
 }
 
-export function revokeApiKey(userId: number, id: number): boolean {
-  const result = db.prepare("DELETE FROM api_keys WHERE id = ? AND user_id = ?").run(id, userId);
+export async function revokeApiKey(userId: number, id: number): Promise<boolean> {
+  const result = await queryRun("DELETE FROM api_keys WHERE id = ? AND user_id = ?", id, userId);
   return result.changes > 0;
 }
 
-export function touchApiKey(id: number): void {
-  db.prepare("UPDATE api_keys SET last_used_at = ? WHERE id = ?").run(Date.now(), id);
+export async function touchApiKey(id: number): Promise<void> {
+  await queryRun("UPDATE api_keys SET last_used_at = ? WHERE id = ?", Date.now(), id);
 }
 
-export function recordApiRequest(
+export async function recordApiRequest(
   apiKeyId: number | null,
   toolSlug: string,
   statusCode: number,
   ip: string | null
-): void {
-  db.prepare(
-    "INSERT INTO api_requests (api_key_id, tool_slug, status_code, ip, created_at) VALUES (?, ?, ?, ?, ?)"
-  ).run(apiKeyId, toolSlug, statusCode, ip, Date.now());
+): Promise<void> {
+  await queryRun(
+    "INSERT INTO api_requests (api_key_id, tool_slug, status_code, ip, created_at) VALUES (?, ?, ?, ?, ?)",
+    apiKeyId,
+    toolSlug,
+    statusCode,
+    ip,
+    Date.now()
+  );
 }
 
-export function requestsInWindow(apiKeyId: number): number {
+export async function requestsInWindow(apiKeyId: number): Promise<number> {
   const start = Date.now() - RATE_WINDOW_MS;
-  const row = db
-    .prepare(
-      "SELECT COUNT(*) AS c FROM api_requests WHERE api_key_id = ? AND created_at >= ?"
-    )
-    .get(apiKeyId, start) as unknown as { c: number };
-  return row.c;
+  const row = await queryOne<{ c: number }>(
+    "SELECT COUNT(*) AS c FROM api_requests WHERE api_key_id = ? AND created_at >= ?",
+    apiKeyId,
+    start
+  );
+  return row?.c ?? 0;
 }
 
-export function getApiUsage(userId: number): {
+export async function getApiUsage(userId: number): Promise<{
   keys: number;
   totalRequests: number;
   thisMonthRequests: number;
   perKey: { id: number; requests: number }[];
-} {
-  const keys = listApiKeys(userId);
+}> {
+  const keys = await listApiKeys(userId);
   const monthStart = Date.now() - 30 * 24 * 60 * 60 * 1000;
-  const keyIds = keys.map((k) => k.id);
-  const perKey = keyIds.map((id) => {
-    const row = db
-      .prepare("SELECT COUNT(*) AS c FROM api_requests WHERE api_key_id = ?")
-      .get(id) as unknown as { c: number };
-    return { id, requests: row.c };
-  });
+  const perKey: { id: number; requests: number }[] = [];
+  for (const k of keys) {
+    const row = await queryOne<{ c: number }>(
+      "SELECT COUNT(*) AS c FROM api_requests WHERE api_key_id = ?",
+      k.id
+    );
+    perKey.push({ id: k.id, requests: row?.c ?? 0 });
+  }
   const total = perKey.reduce((sum, k) => sum + k.requests, 0);
   let thisMonth = 0;
-  if (keyIds.length > 0) {
-    const placeholders = keyIds.map(() => "?").join(",");
-    const row = db
-      .prepare(
-        `SELECT COUNT(*) AS c FROM api_requests WHERE api_key_id IN (${placeholders}) AND created_at >= ?`
-      )
-      .get(...keyIds, monthStart) as unknown as { c: number };
-    thisMonth = row.c;
+  if (keys.length > 0) {
+    const placeholders = keys.map(() => "?").join(",");
+    const row = await queryOne<{ c: number }>(
+      `SELECT COUNT(*) AS c FROM api_requests WHERE api_key_id IN (${placeholders}) AND created_at >= ?`,
+      ...keys.map((k) => k.id),
+      monthStart
+    );
+    thisMonth = row?.c ?? 0;
   }
   return { keys: keys.length, totalRequests: total, thisMonthRequests: thisMonth, perKey };
 }

@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { getUserByEmail } from "@/lib/auth";
 import { generateResetOtp } from "@/lib/reset";
 import { isEmailConfigured, sendPasswordResetOtp } from "@/lib/mail";
+import { throttle } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const FORGOT_MAX = 3;
+const FORGOT_WINDOW_MS = 15 * 60 * 1000;
 
 export async function POST(req: Request) {
   let email: unknown;
@@ -22,13 +25,26 @@ export async function POST(req: Request) {
   }
 
   const normalized = email.trim().toLowerCase();
-  const user = getUserByEmail(normalized);
+
+  const limited = await throttle("forgot-password", `email:${normalized}`, FORGOT_MAX, FORGOT_WINDOW_MS);
+  if (!limited.allowed) {
+    return NextResponse.json(
+      {
+        error: "Too many requests. Try again in a few minutes.",
+        retryAfter: Math.ceil(limited.retryAfterMs / 1000),
+      },
+      { status: 429 }
+    );
+  }
+
+  const user = await getUserByEmail(normalized);
 
   if (user) {
-    const otp = generateResetOtp(user.id);
+    const otp = await generateResetOtp(user.id);
     try {
       await sendPasswordResetOtp(normalized, otp);
-    } catch {
+    } catch (err) {
+      console.error("[forgot-password] Failed to send password reset email", { email: normalized }, err);
       return NextResponse.json({ ok: true });
     }
     if (process.env.NODE_ENV !== "production" && !isEmailConfigured()) {

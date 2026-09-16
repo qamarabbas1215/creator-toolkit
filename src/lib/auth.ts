@@ -1,7 +1,7 @@
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { cookies } from "next/headers";
-import { db } from "@/lib/db";
+import { queryOne, queryRun } from "@/lib/db";
 import type { SessionUser } from "@/lib/session-types";
 
 const scrypt = promisify(scryptCallback);
@@ -11,6 +11,8 @@ export const SESSION_DAYS = 30;
 
 export interface UserRow extends SessionUser {
   password_hash: string;
+  email_verified?: number;
+  email_verified_at?: number | null;
 }
 
 export async function hashPassword(password: string): Promise<string> {
@@ -37,10 +39,11 @@ export function toSessionUser(row: UserRow): SessionUser {
   };
 }
 
-export function createSessionToken(userId: number): { token: string; expiresAt: number } {
+export async function createSessionToken(userId: number): Promise<{ token: string; expiresAt: number }> {
   const token = randomBytes(32).toString("hex");
   const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
-  db.prepare("INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)").run(
+  await queryRun(
+    "INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)",
     token,
     userId,
     expiresAt
@@ -48,12 +51,12 @@ export function createSessionToken(userId: number): { token: string; expiresAt: 
   return { token, expiresAt };
 }
 
-export function deleteSessionToken(token: string): void {
-  db.prepare("DELETE FROM sessions WHERE token = ?").run(token);
+export async function deleteSessionToken(token: string): Promise<void> {
+  await queryRun("DELETE FROM sessions WHERE token = ?", token);
 }
 
-export function deleteAllSessionsForUser(userId: number): void {
-  db.prepare("DELETE FROM sessions WHERE user_id = ?").run(userId);
+export async function deleteAllSessionsForUser(userId: number): Promise<void> {
+  await queryRun("DELETE FROM sessions WHERE user_id = ?", userId);
 }
 
 export function sessionCookieOptions(expiresAt?: number) {
@@ -80,28 +83,28 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  const row = db
-    .prepare(
-      `SELECT u.id, u.name, u.email, u.password_hash, u.plan, u.created_at
-       FROM sessions s JOIN users u ON u.id = s.user_id
-       WHERE s.token = ? AND s.expires_at > ?`
-    )
-    .get(token, Date.now()) as unknown as UserRow | undefined;
+  const row = await queryOne<UserRow>(
+    `SELECT u.id, u.name, u.email, u.password_hash, u.plan, u.created_at
+     FROM sessions s JOIN users u ON u.id = s.user_id
+     WHERE s.token = ? AND s.expires_at > ?`,
+    token,
+    Date.now()
+  );
   return row ? toSessionUser(row) : null;
 }
 
-export function getUserById(id: number): UserRow | undefined {
-  return db.prepare("SELECT * FROM users WHERE id = ?").get(id) as unknown as UserRow | undefined;
+export async function getUserById(id: number): Promise<UserRow | undefined> {
+  return queryOne<UserRow>("SELECT * FROM users WHERE id = ?", id);
 }
 
-export function getUserByEmail(email: string): UserRow | undefined {
-  return db.prepare("SELECT * FROM users WHERE email = ?").get(email) as unknown as UserRow | undefined;
+export async function getUserByEmail(email: string): Promise<UserRow | undefined> {
+  return queryOne<UserRow>("SELECT * FROM users WHERE email = ?", email);
 }
 
-export function updateUserProfile(
+export async function updateUserProfile(
   id: number,
   fields: { name?: string; email?: string }
-): UserRow | undefined {
+): Promise<UserRow | undefined> {
   const sets: string[] = [];
   const values: (string | number)[] = [];
   if (fields.name !== undefined) {
@@ -114,14 +117,14 @@ export function updateUserProfile(
   }
   if (sets.length === 0) return getUserById(id);
   values.push(id);
-  db.prepare(`UPDATE users SET ${sets.join(", ")} WHERE id = ?`).run(...values);
+  await queryRun(`UPDATE users SET ${sets.join(", ")} WHERE id = ?`, ...values);
   return getUserById(id);
 }
 
-export function updateUserPassword(id: number, passwordHash: string): void {
-  db.prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(passwordHash, id);
+export async function updateUserPassword(id: number, passwordHash: string): Promise<void> {
+  await queryRun("UPDATE users SET password_hash = ? WHERE id = ?", passwordHash, id);
 }
 
-export function deleteUser(id: number): void {
-  db.prepare("DELETE FROM users WHERE id = ?").run(id);
+export async function deleteUser(id: number): Promise<void> {
+  await queryRun("DELETE FROM users WHERE id = ?", id);
 }

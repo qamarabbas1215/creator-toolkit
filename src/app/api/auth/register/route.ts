@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import {
-  createSessionToken,
-  hashPassword,
-  SESSION_COOKIE,
-  sessionCookieOptions,
-  toSessionUser,
-} from "@/lib/auth";
-import type { UserRow } from "@/lib/auth";
+import { queryRun, queryOne } from "@/lib/db";
+import { hashPassword } from "@/lib/auth";
+import { isEmailConfigured, sendVerificationEmail } from "@/lib/mail";
+import { generateVerifyToken } from "@/lib/verify";
+import { throttle } from "@/lib/rate-limit";
+import { SITE_URL } from "@/data/site";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const REGISTER_MAX = 5;
+const REGISTER_WINDOW_MS = 60 * 60 * 1000;
 
 export async function POST(request: Request) {
   let body: { name?: unknown; email?: unknown; password?: unknown };
@@ -39,7 +38,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const existing = db.prepare("SELECT id FROM users WHERE email = ?").get(email);
+  const limited = await throttle("register", `email:${email}`, REGISTER_MAX, REGISTER_WINDOW_MS);
+  if (!limited.allowed) {
+    return NextResponse.json(
+      {
+        error: "Too many signups from this email. Try again later.",
+        retryAfter: Math.ceil(limited.retryAfterMs / 1000),
+      },
+      { status: 429 }
+    );
+  }
+
+  const existing = await queryOne("SELECT id FROM users WHERE email = ?", email);
   if (existing) {
     return NextResponse.json(
       { error: "An account with this email already exists." },
@@ -49,16 +59,35 @@ export async function POST(request: Request) {
 
   const passwordHash = await hashPassword(password);
   const createdAt = Date.now();
-  const info = db
-    .prepare("INSERT INTO users (name, email, password_hash, plan, created_at) VALUES (?, ?, ?, 'free', ?)")
-    .run(name, email, passwordHash, createdAt);
-  const id = Number(info.lastInsertRowid);
-  const row = db
-    .prepare("SELECT * FROM users WHERE id = ?")
-    .get(id) as unknown as UserRow;
+  const info = await queryRun(
+    "INSERT INTO users (name, email, password_hash, plan, email_verified, created_at) VALUES (?, ?, ?, 'free', 0, ?)",
+    name,
+    email,
+    passwordHash,
+    createdAt
+  );
+  const id = info.lastInsertRowid;
 
-  const { token, expiresAt } = createSessionToken(id);
-  const res = NextResponse.json({ user: toSessionUser(row) }, { status: 201 });
-  res.cookies.set(SESSION_COOKIE, token, sessionCookieOptions(expiresAt));
-  return res;
+  const token = await generateVerifyToken(id);
+  let devLink: string | undefined;
+  try {
+    await sendVerificationEmail(email, name, token);
+  } catch (err) {
+    await queryRun("DELETE FROM users WHERE id = ?", id);
+    console.error("[register] Verification email failed; account rolled back.", err);
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { error: "We couldn't send the verification email. Please try again." },
+        { status: 500 }
+      );
+    }
+  }
+  if (process.env.NODE_ENV !== "production" && !isEmailConfigured()) {
+    devLink = `${SITE_URL.replace(/\/$/, "")}/verify-email?token=${token}`;
+  }
+
+  return NextResponse.json(
+    { ok: true, email, devLink },
+    { status: 201 }
+  );
 }

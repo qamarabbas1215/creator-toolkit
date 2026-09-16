@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Creator Toolkit",
+  "version": "1.0.0",
+  "description": "Quick access to 150+ free tools for creators: word counters, YouTube titles, SEO generators, JSON formatters and more.",
+  "permissions": ["storage"],
+  "host_permissions": ["http://localhost:3000/*", "https://*/*"],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "Creator Toolkit",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

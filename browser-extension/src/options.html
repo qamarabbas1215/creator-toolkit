@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Creator Toolkit — Options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="card">
+      <h1>⚡ Creator Toolkit</h1>
+
+      <section>
+        <h2>API key</h2>
+        <p class="muted">
+          Create a key in your account settings, then paste it below so the
+          popup can run tools through the Public API.
+        </p>
+        <input
+          id="apiKey"
+          type="password"
+          placeholder="ctk_…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <div class="row">
+          <button id="save" class="primary">Save</button>
+          <button id="check" class="ghost">Check key</button>
+          <span id="status" class="status" hidden></span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Site</h2>
+        <p class="muted">
+          The extension talks to this URL. Update it if you deploy the app
+          somewhere other than <code>http://localhost:3000</code>.
+        </p>
+        <input id="siteUrl" type="text" spellcheck="false" />
+      </section>
+
+      <p class="foot">
+        Open the full web app:
+        <a href="#" id="openApp">Creator Toolkit</a>
+      </p>
+    </main>
+
+    <script src="options.js" defer></script>
+  </body>
+</html>

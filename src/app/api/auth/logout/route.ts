@@ -9,7 +9,7 @@ import {
 export async function POST() {
   const store = await cookies();
   const token = store.get(SESSION_COOKIE)?.value;
-  if (token) deleteSessionToken(token);
+  if (token) await deleteSessionToken(token);
   const res = NextResponse.json({ ok: true });
   res.cookies.set(SESSION_COOKIE, "", clearSessionCookieOptions());
   return res;

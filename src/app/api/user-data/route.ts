@@ -15,13 +15,13 @@ export async function GET() {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
 
-  const [favoriteSlugs, recentSlugs, topTools, stats, projects] = [
+  const [favoriteSlugs, recentSlugs, topTools, stats, projects] = await Promise.all([
     getFavoriteSlugs(user.id),
     getRecentToolSlugs(user.id, 8),
     getTopToolSlugs(user.id, 5),
     getUsageStats(user.id),
     getProjects(user.id),
-  ];
+  ]);
 
   const favorites = favoriteSlugs
     .map((slug) => getTool(slug))

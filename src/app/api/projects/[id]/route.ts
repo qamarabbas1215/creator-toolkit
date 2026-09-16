@@ -46,7 +46,7 @@ export async function PATCH(
     fields.content = content;
   }
 
-  const project = updateProject(user.id, projectId, fields);
+  const project = await updateProject(user.id, projectId, fields);
   if (!project) {
     return NextResponse.json(
       { error: "Project not found." },
@@ -71,7 +71,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Invalid project id." }, { status: 400 });
   }
 
-  const ok = deleteProject(user.id, projectId);
+  const ok = await deleteProject(user.id, projectId);
   if (!ok) {
     return NextResponse.json({ error: "Project not found." }, { status: 404 });
   }

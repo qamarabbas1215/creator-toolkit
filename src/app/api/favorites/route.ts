@@ -11,7 +11,7 @@ export async function GET() {
   if (!user) {
     return NextResponse.json({ error: "Not signed in." }, { status: 401 });
   }
-  return NextResponse.json({ slugs: getFavoriteSlugs(user.id) });
+  return NextResponse.json({ slugs: await getFavoriteSlugs(user.id) });
 }
 
 export async function POST(request: Request) {
@@ -35,8 +35,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const favorited = toggleFavorite(user.id, toolSlug);
-  return NextResponse.json({ favorited, slugs: getFavoriteSlugs(user.id) });
+  const favorited = await toggleFavorite(user.id, toolSlug);
+  return NextResponse.json({ favorited, slugs: await getFavoriteSlugs(user.id) });
 }
 
 export async function DELETE(request: Request) {
@@ -60,6 +60,6 @@ export async function DELETE(request: Request) {
     );
   }
 
-  removeFavorite(user.id, toolSlug);
-  return NextResponse.json({ favorited: false, slugs: getFavoriteSlugs(user.id) });
+  await removeFavorite(user.id, toolSlug);
+  return NextResponse.json({ favorited: false, slugs: await getFavoriteSlugs(user.id) });
 }

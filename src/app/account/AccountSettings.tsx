@@ -13,6 +13,7 @@ export function AccountSettings({ user }: { user: SessionUser }) {
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
+  const [profilePassword, setProfilePassword] = useState("");
   const [profileBusy, setProfileBusy] = useState(false);
   const [profileMsg, setProfileMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -24,6 +25,8 @@ export function AccountSettings({ user }: { user: SessionUser }) {
 
   const [deleteBusy, setDeleteBusy] = useState(false);
 
+  const emailChanged = email.trim().toLowerCase() !== user.email.toLowerCase();
+
   async function saveProfile(e: React.FormEvent) {
     e.preventDefault();
     setProfileMsg(null);
@@ -32,11 +35,24 @@ export function AccountSettings({ user }: { user: SessionUser }) {
       const res = await fetch("/api/account", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({
+          name,
+          email: email.trim(),
+          ...(emailChanged ? { password: profilePassword } : {}),
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
         setProfileMsg({ ok: false, text: data.error ?? "Could not save changes." });
+        return;
+      }
+      if (data.unverified) {
+        emitAuthChange();
+        setProfileMsg({
+          ok: true,
+          text: `Verification email sent to ${email}. Please verify it, then sign in again.`,
+        });
+        setTimeout(() => router.push("/login"), 4000);
         return;
       }
       setProfileMsg({ ok: true, text: "Profile updated." });
@@ -140,6 +156,21 @@ export function AccountSettings({ user }: { user: SessionUser }) {
                 />
               </div>
             </div>
+            {emailChanged && (
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  Current password <span className="text-zinc-400">(required to change email)</span>
+                </label>
+                <TextInput
+                  type="password"
+                  value={profilePassword}
+                  onChange={(e) => setProfilePassword(e.target.value)}
+                  autoComplete="current-password"
+                  placeholder="Your current password"
+                  required
+                />
+              </div>
+            )}
             {profileMsg && (
               <p
                 className={
@@ -197,6 +228,7 @@ export function AccountSettings({ user }: { user: SessionUser }) {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   autoComplete="new-password"
+                  minLength={8}
                   required
                 />
               </div>

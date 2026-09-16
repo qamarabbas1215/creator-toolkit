@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   }
 
   const normalized = email.trim().toLowerCase();
-  const user = getUserByEmail(normalized);
+  const user = await getUserByEmail(normalized);
   if (!user) {
     return NextResponse.json(
       { error: "This code is invalid or has expired." },
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const result = consumeResetOtp(user.id, otp);
+  const result = await consumeResetOtp(user.id, otp);
   if (!result.ok) {
     if (result.reason === "locked") {
       return NextResponse.json(
@@ -65,9 +65,9 @@ export async function POST(req: Request) {
   }
 
   const passwordHash = await hashPassword(password);
-  updateUserPassword(user.id, passwordHash);
-  deleteAllSessionsForUser(user.id);
-  deleteResetOtpsForUser(user.id);
+  await updateUserPassword(user.id, passwordHash);
+  await deleteAllSessionsForUser(user.id);
+  await deleteResetOtpsForUser(user.id);
 
   return NextResponse.json({ ok: true });
 }
