@@ -126,7 +126,7 @@ export async function createProject(
 ): Promise<ProjectRow> {
   const now = Date.now();
   const result = await queryRun(
-    "INSERT INTO projects (user_id, tool_slug, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO projects (user_id, tool_slug, title, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?) RETURNING id",
     userId,
     toolSlug,
     title,

@@ -60,7 +60,7 @@ export async function POST(request: Request) {
   const passwordHash = await hashPassword(password);
   const createdAt = Date.now();
   const info = await queryRun(
-    "INSERT INTO users (name, email, password_hash, plan, email_verified, created_at) VALUES (?, ?, ?, 'free', 0, ?)",
+    "INSERT INTO users (name, email, password_hash, plan, email_verified, created_at) VALUES (?, ?, ?, 'free', 0, ?) RETURNING id",
     name,
     email,
     passwordHash,

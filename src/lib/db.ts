@@ -27,15 +27,50 @@ interface PgPool {
 
 let pgPool: PgPool | null = null;
 
+/**
+ * Map SQLite-style `?` placeholders to Postgres `$1`, `$2`, … while
+ * skipping `?` characters inside single/double-quoted string literals.
+ * Returns the original text unchanged when there are no arguments.
+ */
+function toPgQuery(text: string, args: unknown[]): { text: string; params: unknown[] } {
+  if (args.length === 0) return { text, params: args };
+  let out = "";
+  let index = 0;
+  let quote: "'" | '"' | null = null;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (quote) {
+      out += ch;
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === "'" || ch === '"') {
+      quote = ch;
+      out += ch;
+      continue;
+    }
+    if (ch === "?") {
+      index++;
+      out += `$${index}`;
+      continue;
+    }
+    out += ch;
+  }
+  return { text: out, params: args };
+}
+
 async function getPgPool(): Promise<PgPool> {
   if (pgPool) return pgPool;
   const { neon } = await import("@neondatabase/serverless");
   const url = process.env.DATABASE_URL!;
-  const sql = neon(url) as unknown as (query: string, params?: unknown[]) => Promise<QueryRow[]>;
+  const sql = neon(url);
   pgPool = {
     async query(text, args = []) {
-      const rows = await sql(text, args);
-      return { rows: rows as QueryRow[], rowCount: rows.length };
+      const converted = toPgQuery(text, args);
+      const res = (await sql.query(converted.text, converted.params, {
+        fullResults: true,
+      })) as { rows: QueryRow[]; rowCount: number };
+      return { rows: res.rows, rowCount: res.rowCount };
     },
     async end() {
       /* neon http pool – nothing to tear down */
