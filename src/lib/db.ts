@@ -251,11 +251,8 @@ function isPg(): boolean {
 
 let pgSchemaReady = false;
 
-async function ensurePgSchema(): Promise<void> {
-  if (pgSchemaReady) return;
-  const pool = await getPgPool();
-  await pool.query(`
-  CREATE TABLE IF NOT EXISTS users (
+const PG_SCHEMA_STATEMENTS = [
+  `CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
@@ -264,37 +261,32 @@ async function ensurePgSchema(): Promise<void> {
     email_verified INTEGER NOT NULL DEFAULT 1,
     email_verified_at BIGINT,
     created_at BIGINT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS sessions (
+  )`,
+  `CREATE TABLE IF NOT EXISTS sessions (
     token TEXT PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     expires_at BIGINT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS password_resets (
+  )`,
+  `CREATE TABLE IF NOT EXISTS password_resets (
     token_hash TEXT PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     expires_at BIGINT NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0
-  );
-
-  CREATE TABLE IF NOT EXISTS favorites (
+  )`,
+  `CREATE TABLE IF NOT EXISTS favorites (
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     tool_slug TEXT NOT NULL,
     created_at BIGINT NOT NULL,
     PRIMARY KEY (user_id, tool_slug)
-  );
-
-  CREATE TABLE IF NOT EXISTS tool_usage (
+  )`,
+  `CREATE TABLE IF NOT EXISTS tool_usage (
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     tool_slug TEXT NOT NULL,
     runs INTEGER NOT NULL DEFAULT 1,
     last_used_at BIGINT NOT NULL,
     PRIMARY KEY (user_id, tool_slug)
-  );
-
-  CREATE TABLE IF NOT EXISTS projects (
+  )`,
+  `CREATE TABLE IF NOT EXISTS projects (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     tool_slug TEXT NOT NULL,
@@ -302,16 +294,14 @@ async function ensurePgSchema(): Promise<void> {
     content TEXT NOT NULL,
     created_at BIGINT NOT NULL,
     updated_at BIGINT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS tool_usage_events (
+  )`,
+  `CREATE TABLE IF NOT EXISTS tool_usage_events (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     tool_slug TEXT NOT NULL,
     used_at BIGINT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS api_keys (
+  )`,
+  `CREATE TABLE IF NOT EXISTS api_keys (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
@@ -319,41 +309,47 @@ async function ensurePgSchema(): Promise<void> {
     prefix TEXT NOT NULL,
     created_at BIGINT NOT NULL,
     last_used_at BIGINT
-  );
-
-  CREATE TABLE IF NOT EXISTS api_requests (
+  )`,
+  `CREATE TABLE IF NOT EXISTS api_requests (
     id BIGSERIAL PRIMARY KEY,
     api_key_id BIGINT REFERENCES api_keys(id) ON DELETE CASCADE,
     tool_slug TEXT NOT NULL,
     status_code INTEGER NOT NULL,
     ip TEXT,
     created_at BIGINT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS email_verifications (
+  )`,
+  `CREATE TABLE IF NOT EXISTS email_verifications (
     token_hash TEXT PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at BIGINT NOT NULL,
     expires_at BIGINT NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS throttle (
+  )`,
+  `CREATE TABLE IF NOT EXISTS throttle (
     id BIGSERIAL PRIMARY KEY,
     kind TEXT NOT NULL,
     key TEXT NOT NULL,
     created_at BIGINT NOT NULL
-  );
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites (user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_usage_user ON tool_usage (user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_projects_user ON projects (user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_usage_events_user_time ON tool_usage_events (user_id, used_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_api_keys_user ON api_keys (user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_api_requests_key_time ON api_requests (api_key_id, created_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets (user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_email_verifications_user ON email_verifications (user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_throttle_kind_key ON throttle (kind, key, created_at)`,
+  `ALTER TABLE password_resets ADD COLUMN IF NOT EXISTS attempts INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified INTEGER NOT NULL DEFAULT 1`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified_at BIGINT`,
+];
 
-  CREATE INDEX IF NOT EXISTS idx_favorites_user ON favorites (user_id);
-  CREATE INDEX IF NOT EXISTS idx_usage_user ON tool_usage (user_id);
-  CREATE INDEX IF NOT EXISTS idx_projects_user ON projects (user_id);
-  CREATE INDEX IF NOT EXISTS idx_usage_events_user_time ON tool_usage_events (user_id, used_at);
-  CREATE INDEX IF NOT EXISTS idx_api_keys_user ON api_keys (user_id);
-  CREATE INDEX IF NOT EXISTS idx_api_requests_key_time ON api_requests (api_key_id, created_at);
-  CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets (user_id);
-  CREATE INDEX IF NOT EXISTS idx_email_verifications_user ON email_verifications (user_id);
-  CREATE INDEX IF NOT EXISTS idx_throttle_kind_key ON throttle (kind, key, created_at);
-  `);
+async function ensurePgSchema(): Promise<void> {
+  if (pgSchemaReady) return;
+  const pool = await getPgPool();
+  for (const stmt of PG_SCHEMA_STATEMENTS) {
+    await pool.query(stmt);
+  }
   pgSchemaReady = true;
 }
 
