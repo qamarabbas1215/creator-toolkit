@@ -6,6 +6,7 @@ import { AccountSettings } from "./AccountSettings";
 export const metadata: Metadata = {
   title: "Account Settings",
   description: "Manage your Creator Toolkit account.",
+  robots: { index: false },
 };
 
 export default async function AccountPage() {

@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
 import { SITE_NAME, SITE_URL } from "@/data/site";
+import { tools } from "@/data/tools";
 
 const gmailMode =
   Boolean(process.env.GMAIL_USER) &&
@@ -17,7 +18,7 @@ const from =
   configuredFrom ||
   (gmailMode && process.env.GMAIL_USER
     ? `${SITE_NAME} <${process.env.GMAIL_USER}>`
-    : `${SITE_NAME} <no-reply@creator-toolkit.com>`);
+    : `${SITE_NAME} <support@example.com>`);
 
 export function isEmailConfigured(): boolean {
   return Boolean(smtpHost && smtpPass);
@@ -118,13 +119,13 @@ export async function sendWelcomeEmail(email: string, name: string): Promise<voi
     "",
     `Your ${SITE_NAME} account is now verified and ready to use.`,
     "",
-    "Browse 150+ free tools for creators, writers and developers.",
+    `Browse ${tools.length} free tools for creators, writers and developers.`,
     "",
     "Sign in any time at " + SITE_URL,
   ].join("\n");
   const html = baseHtml(
     `You're verified, ${escapeHtml(name)} 🎉`,
-    `<p style="color:#52525b;line-height:1.6">Your ${SITE_NAME} account is now verified and ready to use. Explore 150+ tools for creators, writers and developers — free, fast, and private.</p>
+    `<p style="color:#52525b;line-height:1.6">Your ${SITE_NAME} account is now verified and ready to use. Explore ${tools.length} tools for creators, writers and developers — free, fast, and private.</p>
       <p style="margin:24px 0">
         <a href="${escapeAttr(SITE_URL.replace(/\/$/, ""))}" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#7c3aed;color:#ffffff;text-decoration:none;font-weight:600">Browse tools</a>
       </p>${FOOTER}`

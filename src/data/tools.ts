@@ -76,6 +76,7 @@ export const categories: Category[] = [
 export const tools: ToolMeta[] = [
   {
     slug: "character-counter",
+    addedAt: "2026-08-02",
     name: "Character Counter",
     category: "writing",
     icon: "📝",
@@ -96,6 +97,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "word-counter",
+    addedAt: "2026-08-02",
     name: "Word Counter",
     category: "writing",
     icon: "📖",
@@ -113,6 +115,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "sentence-counter",
+    addedAt: "2026-08-02",
     name: "Sentence Counter",
     category: "writing",
     icon: "💬",
@@ -122,6 +125,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "paragraph-counter",
+    addedAt: "2026-08-02",
     name: "Paragraph Counter",
     category: "writing",
     icon: "📄",
@@ -131,6 +135,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "reading-time",
+    addedAt: "2026-08-02",
     name: "Reading Time",
     category: "writing",
     icon: "⏱️",
@@ -148,6 +153,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "speaking-time",
+    addedAt: "2026-08-02",
     name: "Speaking Time",
     category: "writing",
     icon: "🎙️",
@@ -165,6 +171,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "case-converter",
+    addedAt: "2026-08-02",
     name: "Case Converter",
     category: "text",
     icon: "🔠",
@@ -185,6 +192,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "find-and-replace",
+    addedAt: "2026-08-02",
     name: "Find & Replace",
     category: "text",
     icon: "🔎",
@@ -195,6 +203,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "remove-duplicate-lines",
+    addedAt: "2026-08-02",
     name: "Remove Duplicate Lines",
     category: "text",
     icon: "🗂️",
@@ -209,6 +218,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "remove-empty-lines",
+    addedAt: "2026-08-02",
     name: "Remove Empty Lines",
     category: "text",
     icon: "🧹",
@@ -218,6 +228,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "line-sorter",
+    addedAt: "2026-08-02",
     name: "Line Sorter",
     category: "text",
     icon: "🔃",
@@ -227,6 +238,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prefix-suffix",
+    addedAt: "2026-08-02",
     name: "Prefix / Suffix",
     category: "text",
     icon: "➕",
@@ -236,6 +248,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "reverse-text",
+    addedAt: "2026-08-02",
     name: "Reverse Text",
     category: "text",
     icon: "🔄",
@@ -245,6 +258,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "extract-urls",
+    addedAt: "2026-08-02",
     name: "Extract URLs",
     category: "text",
     icon: "🌐",
@@ -254,6 +268,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "extract-emails",
+    addedAt: "2026-08-02",
     name: "Extract Emails",
     category: "text",
     icon: "📧",
@@ -263,6 +278,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "extract-numbers",
+    addedAt: "2026-08-02",
     name: "Extract Numbers",
     category: "text",
     icon: "🔢",
@@ -272,6 +288,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "youtube-title-generator",
+    addedAt: "2026-08-02",
     name: "YouTube Title Generator",
     category: "youtube",
     icon: "🎬",
@@ -289,6 +306,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "youtube-tag-generator",
+    addedAt: "2026-08-02",
     name: "YouTube Tag Generator",
     category: "youtube",
     icon: "🏷️",
@@ -299,6 +317,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "youtube-hook-generator",
+    addedAt: "2026-08-02",
     name: "Hook Generator",
     category: "youtube",
     icon: "🪝",
@@ -309,6 +328,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "thumbnail-text-checker",
+    addedAt: "2026-08-02",
     name: "Thumbnail Text Checker",
     category: "youtube",
     icon: "🖼️",
@@ -324,6 +344,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "keyword-density",
+    addedAt: "2026-08-02",
     name: "Keyword Density",
     category: "seo",
     icon: "📊",
@@ -340,6 +361,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "meta-title-generator",
+    addedAt: "2026-08-02",
     name: "Meta Title Generator",
     category: "seo",
     icon: "🏷️",
@@ -349,6 +371,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "meta-description-generator",
+    addedAt: "2026-08-02",
     name: "Meta Description Generator",
     category: "seo",
     icon: "📝",
@@ -358,6 +381,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "slug-generator",
+    addedAt: "2026-08-02",
     name: "Slug Generator",
     category: "seo",
     icon: "🔗",
@@ -368,6 +392,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "hashtag-generator",
+    addedAt: "2026-08-02",
     name: "Hashtag Generator",
     category: "social",
     icon: "#️⃣",
@@ -385,6 +410,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "bio-generator",
+    addedAt: "2026-08-02",
     name: "Bio Generator",
     category: "social",
     icon: "👤",
@@ -394,6 +420,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "image-prompt-enhancer",
+    addedAt: "2026-08-02",
     name: "Image Prompt Enhancer",
     category: "image",
     icon: "🎨",
@@ -413,6 +440,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "negative-prompt-generator",
+    addedAt: "2026-08-02",
     name: "Negative Prompt Generator",
     category: "image",
     icon: "🚫",
@@ -428,6 +456,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "aspect-ratio-calculator",
+    addedAt: "2026-08-02",
     name: "Aspect Ratio Calculator",
     category: "image",
     icon: "📐",
@@ -444,6 +473,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "json-formatter",
+    addedAt: "2026-08-02",
     name: "JSON Formatter",
     category: "developer",
     icon: "🧩",
@@ -462,6 +492,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "base64-encoder",
+    addedAt: "2026-08-02",
     name: "Base64 Encoder / Decoder",
     category: "developer",
     icon: "🔐",
@@ -471,6 +502,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "url-encoder",
+    addedAt: "2026-08-02",
     name: "URL Encoder / Decoder",
     category: "developer",
     icon: "🔗",
@@ -480,6 +512,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "uuid-generator",
+    addedAt: "2026-08-02",
     name: "UUID Generator",
     category: "developer",
     icon: "🆔",
@@ -489,6 +522,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-token-calculator",
+    addedAt: "2026-08-02",
     name: "AI Token Calculator",
     category: "ai",
     icon: "🤖",
@@ -508,6 +542,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-cost-calculator",
+    addedAt: "2026-08-02",
     name: "AI Cost Calculator",
     category: "ai",
     icon: "💰",
@@ -518,6 +553,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "text-statistics",
+    addedAt: "2026-08-03",
     name: "Text Statistics",
     category: "writing",
     icon: "📊",
@@ -535,6 +571,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "grammar-checker",
+    addedAt: "2026-08-03",
     name: "Grammar Checker",
     category: "writing",
     icon: "✅",
@@ -553,6 +590,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "rewrite-tool",
+    addedAt: "2026-08-03",
     name: "Rewrite Tool",
     category: "writing",
     icon: "✂️",
@@ -570,6 +608,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "summarizer",
+    addedAt: "2026-08-03",
     name: "Summarizer",
     category: "writing",
     icon: "📄",
@@ -580,6 +619,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "expand-text",
+    addedAt: "2026-08-03",
     name: "Expand Text",
     category: "writing",
     icon: "📈",
@@ -590,6 +630,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "shorten-text",
+    addedAt: "2026-08-03",
     name: "Shorten Text",
     category: "writing",
     icon: "📉",
@@ -600,6 +641,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "outline-generator",
+    addedAt: "2026-08-03",
     name: "Outline Generator",
     category: "writing",
     icon: "🗂️",
@@ -615,6 +657,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "remove-emojis",
+    addedAt: "2026-08-03",
     name: "Remove Emojis",
     category: "text",
     icon: "🙅",
@@ -624,6 +667,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "remove-special-characters",
+    addedAt: "2026-08-03",
     name: "Remove Special Characters",
     category: "text",
     icon: "🧼",
@@ -639,6 +683,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "youtube-description-generator",
+    addedAt: "2026-08-03",
     name: "Description Generator",
     category: "youtube",
     icon: "📝",
@@ -655,6 +700,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ctr-analyzer",
+    addedAt: "2026-08-03",
     name: "CTR Analyzer",
     category: "youtube",
     icon: "📈",
@@ -665,6 +711,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "script-timer",
+    addedAt: "2026-08-03",
     name: "Script Timer",
     category: "youtube",
     icon: "⏱️",
@@ -675,6 +722,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "shorts-idea-generator",
+    addedAt: "2026-08-03",
     name: "Shorts Idea Generator",
     category: "youtube",
     icon: "⚡",
@@ -687,6 +735,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "cta-generator",
+    addedAt: "2026-08-03",
     name: "CTA Generator",
     category: "youtube",
     icon: "🔔",
@@ -697,6 +746,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "chapter-generator",
+    addedAt: "2026-08-03",
     name: "Chapter Generator",
     category: "youtube",
     icon: "📑",
@@ -707,6 +757,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "youtube-keyword-finder",
+    addedAt: "2026-08-03",
     name: "Keyword Finder",
     category: "youtube",
     icon: "🔍",
@@ -722,6 +773,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "robots-txt-generator",
+    addedAt: "2026-08-03",
     name: "Robots.txt Generator",
     category: "seo",
     icon: "🤖",
@@ -732,6 +784,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "sitemap-generator",
+    addedAt: "2026-08-03",
     name: "Sitemap Generator",
     category: "seo",
     icon: "🗺️",
@@ -743,6 +796,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "serp-preview",
+    addedAt: "2026-08-03",
     name: "SERP Preview",
     category: "seo",
     icon: "🖥️",
@@ -753,6 +807,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "internal-link-suggestions",
+    addedAt: "2026-08-03",
     name: "Internal Link Suggestions",
     category: "seo",
     icon: "🔗",
@@ -768,6 +823,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "caption-generator",
+    addedAt: "2026-08-03",
     name: "Caption Generator",
     category: "social",
     icon: "💬",
@@ -785,6 +841,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "tweet-formatter",
+    addedAt: "2026-08-03",
     name: "Tweet Formatter",
     category: "social",
     icon: "🐦",
@@ -795,6 +852,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "thread-generator",
+    addedAt: "2026-08-03",
     name: "Thread Generator",
     category: "social",
     icon: "🧵",
@@ -805,6 +863,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "linkedin-formatter",
+    addedAt: "2026-08-03",
     name: "LinkedIn Formatter",
     category: "social",
     icon: "💼",
@@ -820,6 +879,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "instagram-caption-optimizer",
+    addedAt: "2026-08-03",
     name: "Caption Optimizer",
     category: "social",
     icon: "📸",
@@ -835,6 +895,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "emoji-picker",
+    addedAt: "2026-08-03",
     name: "Emoji Picker",
     category: "social",
     icon: "😀",
@@ -845,6 +906,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-style-library",
+    addedAt: "2026-08-03",
     name: "Prompt Style Library",
     category: "image",
     icon: "🎭",
@@ -860,11 +922,12 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "color-palette-generator",
+    addedAt: "2026-08-03",
     name: "Color Palette Generator",
     category: "image",
     icon: "🎨",
     description:
-      "Generate color palettes by mood and copy them as hex, RGB, or CSS.",
+      "Generate 5-color palettes from a base hue and scheme, and copy them as hex codes or CSS variables.",
     keywords: [
       "color palette",
       "color scheme",
@@ -876,6 +939,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-randomizer",
+    addedAt: "2026-08-03",
     name: "Prompt Randomizer",
     category: "image",
     icon: "🎲",
@@ -886,6 +950,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-history",
+    addedAt: "2026-08-03",
     name: "Prompt History",
     category: "image",
     icon: "🕓",
@@ -896,6 +961,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "json-validator",
+    addedAt: "2026-08-03",
     name: "JSON Validator",
     category: "developer",
     icon: "🔎",
@@ -906,6 +972,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "json-compare",
+    addedAt: "2026-08-03",
     name: "JSON Compare",
     category: "developer",
     icon: "🆚",
@@ -917,6 +984,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "xml-formatter",
+    addedAt: "2026-08-03",
     name: "XML Formatter",
     category: "developer",
     icon: "🧾",
@@ -927,6 +995,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "html-formatter",
+    addedAt: "2026-08-03",
     name: "HTML Formatter",
     category: "developer",
     icon: "🌐",
@@ -937,6 +1006,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "css-beautifier",
+    addedAt: "2026-08-03",
     name: "CSS Beautifier",
     category: "developer",
     icon: "🎀",
@@ -947,6 +1017,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "sql-formatter",
+    addedAt: "2026-08-03",
     name: "SQL Formatter",
     category: "developer",
     icon: "🗄️",
@@ -957,6 +1028,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "regex-tester",
+    addedAt: "2026-08-03",
     name: "Regex Tester",
     category: "developer",
     icon: "🧮",
@@ -969,6 +1041,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "jwt-decoder",
+    addedAt: "2026-08-03",
     name: "JWT Decoder",
     category: "developer",
     icon: "🔑",
@@ -979,6 +1052,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-formatter",
+    addedAt: "2026-08-03",
     name: "Prompt Formatter",
     category: "ai",
     icon: "📋",
@@ -994,6 +1068,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-optimizer",
+    addedAt: "2026-08-03",
     name: "Prompt Optimizer",
     category: "ai",
     icon: "🚀",
@@ -1011,6 +1086,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-generator",
+    addedAt: "2026-08-03",
     name: "Prompt Generator",
     category: "ai",
     icon: "✨",
@@ -1027,6 +1103,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-library",
+    addedAt: "2026-08-03",
     name: "Prompt Library",
     category: "ai",
     icon: "📚",
@@ -1042,6 +1119,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-prompt-tester",
+    addedAt: "2026-08-03",
     name: "Prompt Tester",
     category: "ai",
     icon: "🧪",
@@ -1057,6 +1135,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-image-prompt-builder",
+    addedAt: "2026-08-03",
     name: "Image Prompt Builder",
     category: "ai",
     icon: "🖼️",
@@ -1073,6 +1152,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-chat-export-cleaner",
+    addedAt: "2026-08-03",
     name: "Chat Export Cleaner",
     category: "ai",
     icon: "🧹",
@@ -1088,6 +1168,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-prompt-translator",
+    addedAt: "2026-08-03",
     name: "Prompt Translator",
     category: "ai",
     icon: "🌍",
@@ -1103,6 +1184,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-prompt-shortener",
+    addedAt: "2026-08-03",
     name: "Prompt Shortener",
     category: "ai",
     icon: "✂️",
@@ -1118,6 +1200,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "pdf-merge",
+    addedAt: "2026-08-03",
     name: "Merge PDF",
     category: "pdf",
     icon: "🔗",
@@ -1136,6 +1219,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "pdf-split",
+    addedAt: "2026-08-03",
     name: "Split PDF",
     category: "pdf",
     icon: "✂️",
@@ -1146,6 +1230,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "pdf-compress",
+    addedAt: "2026-08-03",
     name: "Compress PDF",
     category: "pdf",
     icon: "🗜️",
@@ -1157,6 +1242,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "pdf-to-word",
+    addedAt: "2026-08-03",
     name: "PDF to Word",
     category: "pdf",
     icon: "📝",
@@ -1172,6 +1258,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "word-to-pdf",
+    addedAt: "2026-08-03",
     name: "Word to PDF",
     category: "pdf",
     icon: "📃",
@@ -1183,6 +1270,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "zip-compressor",
+    addedAt: "2026-08-03",
     name: "ZIP Compressor",
     category: "file",
     icon: "🗜️",
@@ -1194,6 +1282,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "file-compressor",
+    addedAt: "2026-08-03",
     name: "File Compressor",
     category: "file",
     icon: "🧊",
@@ -1204,6 +1293,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "bulk-renamer",
+    addedAt: "2026-08-03",
     name: "Bulk Renamer",
     category: "file",
     icon: "🏷️",
@@ -1219,6 +1309,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "image-converter",
+    addedAt: "2026-08-03",
     name: "Image Converter",
     category: "file",
     icon: "🖼️",
@@ -1236,6 +1327,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "video-converter",
+    addedAt: "2026-08-03",
     name: "Video Converter",
     category: "file",
     icon: "🎥",
@@ -1254,6 +1346,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "audio-converter",
+    addedAt: "2026-08-03",
     name: "Audio Converter",
     category: "file",
     icon: "🎵",
@@ -1271,6 +1364,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "zip-extractor",
+    addedAt: "2026-08-07",
     name: "ZIP Extractor",
     category: "file",
     icon: "🗂️",
@@ -1282,6 +1376,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "image-to-pdf",
+    addedAt: "2026-08-07",
     name: "Image to PDF",
     category: "pdf",
     icon: "🖼️",
@@ -1293,6 +1388,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ocr",
+    addedAt: "2026-08-07",
     name: "OCR Text Extractor",
     category: "pdf",
     icon: "🔎",
@@ -1304,6 +1400,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "readability-checker",
+    addedAt: "2026-08-07",
     name: "Readability Checker",
     category: "writing",
     icon: "📖",
@@ -1314,6 +1411,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "headline-analyzer",
+    addedAt: "2026-08-07",
     name: "Headline Analyzer",
     category: "writing",
     icon: "🎯",
@@ -1324,6 +1422,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "blog-title-generator",
+    addedAt: "2026-08-07",
     name: "Blog Title Generator",
     category: "writing",
     icon: "✍️",
@@ -1334,6 +1433,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "essay-title-generator",
+    addedAt: "2026-08-07",
     name: "Essay Title Generator",
     category: "writing",
     icon: "🎓",
@@ -1344,6 +1444,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "rhyme-finder",
+    addedAt: "2026-08-07",
     name: "Rhyme Finder",
     category: "writing",
     icon: "🎵",
@@ -1354,6 +1455,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "syllable-counter",
+    addedAt: "2026-08-07",
     name: "Syllable Counter",
     category: "writing",
     icon: "🔢",
@@ -1364,6 +1466,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "haiku-generator",
+    addedAt: "2026-08-07",
     name: "Haiku Generator",
     category: "writing",
     icon: "🌸",
@@ -1374,6 +1477,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "acronym-generator",
+    addedAt: "2026-08-07",
     name: "Acronym Generator",
     category: "writing",
     icon: "🔠",
@@ -1384,6 +1488,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "resignation-letter-generator",
+    addedAt: "2026-08-07",
     name: "Resignation Letter Generator",
     category: "writing",
     icon: "📤",
@@ -1394,6 +1499,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "cold-email-generator",
+    addedAt: "2026-08-07",
     name: "Cold Email Generator",
     category: "writing",
     icon: "📬",
@@ -1404,6 +1510,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "email-subject-generator",
+    addedAt: "2026-08-07",
     name: "Email Subject Generator",
     category: "writing",
     icon: "📧",
@@ -1414,6 +1521,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "thank-you-note-generator",
+    addedAt: "2026-08-07",
     name: "Thank You Note Generator",
     category: "writing",
     icon: "💌",
@@ -1424,6 +1532,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "conclusion-generator",
+    addedAt: "2026-08-07",
     name: "Conclusion Generator",
     category: "writing",
     icon: "🏁",
@@ -1434,6 +1543,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "video-idea-generator",
+    addedAt: "2026-08-07",
     name: "Video Idea Generator",
     category: "youtube",
     icon: "💡",
@@ -1444,6 +1554,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "video-outline-generator",
+    addedAt: "2026-08-07",
     name: "Video Outline Generator",
     category: "youtube",
     icon: "🗂️",
@@ -1454,6 +1565,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "community-post-generator",
+    addedAt: "2026-08-07",
     name: "Community Post Generator",
     category: "youtube",
     icon: "💬",
@@ -1464,6 +1576,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "thumbnail-text-generator",
+    addedAt: "2026-08-07",
     name: "Thumbnail Text Generator",
     category: "youtube",
     icon: "🖼️",
@@ -1474,6 +1587,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "video-checklist-generator",
+    addedAt: "2026-08-07",
     name: "Video Checklist Generator",
     category: "youtube",
     icon: "✅",
@@ -1484,6 +1598,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "meta-keywords-generator",
+    addedAt: "2026-08-07",
     name: "Meta Keywords Generator",
     category: "seo",
     icon: "🔑",
@@ -1494,6 +1609,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "heading-outline-generator",
+    addedAt: "2026-08-07",
     name: "Heading Outline Generator",
     category: "seo",
     icon: "🧭",
@@ -1504,6 +1620,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "alt-text-generator",
+    addedAt: "2026-08-07",
     name: "Alt Text Generator",
     category: "seo",
     icon: "🖌️",
@@ -1514,6 +1631,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "content-brief-generator",
+    addedAt: "2026-08-07",
     name: "Content Brief Generator",
     category: "seo",
     icon: "📋",
@@ -1524,6 +1642,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "faq-schema-generator",
+    addedAt: "2026-08-07",
     name: "FAQ Schema Generator",
     category: "seo",
     icon: "🧩",
@@ -1534,6 +1653,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "tiktok-idea-generator",
+    addedAt: "2026-08-07",
     name: "TikTok Idea Generator",
     category: "social",
     icon: "🎵",
@@ -1544,6 +1664,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "instagram-story-generator",
+    addedAt: "2026-08-07",
     name: "Story Ideas Generator",
     category: "social",
     icon: "📸",
@@ -1554,6 +1675,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "pinterest-title-generator",
+    addedAt: "2026-08-07",
     name: "Pinterest Title Generator",
     category: "social",
     icon: "📌",
@@ -1564,6 +1686,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "poll-ideas-generator",
+    addedAt: "2026-08-07",
     name: "Poll Ideas Generator",
     category: "social",
     icon: "🗳️",
@@ -1574,6 +1697,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "content-calendar-generator",
+    addedAt: "2026-08-07",
     name: "Content Calendar Generator",
     category: "social",
     icon: "📅",
@@ -1584,6 +1708,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "lighting-prompt-generator",
+    addedAt: "2026-08-07",
     name: "Lighting Prompt Generator",
     category: "image",
     icon: "💡",
@@ -1594,6 +1719,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "camera-settings-generator",
+    addedAt: "2026-08-07",
     name: "Camera Settings Prompt",
     category: "image",
     icon: "📷",
@@ -1604,6 +1730,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "lora-prompt-generator",
+    addedAt: "2026-08-07",
     name: "LoRA Prompt Generator",
     category: "image",
     icon: "🧠",
@@ -1614,6 +1741,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-extender",
+    addedAt: "2026-08-07",
     name: "Prompt Extender",
     category: "image",
     icon: "➕",
@@ -1624,6 +1752,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "lorem-ipsum-generator",
+    addedAt: "2026-08-07",
     name: "Lorem Ipsum Generator",
     category: "text",
     icon: "📃",
@@ -1634,6 +1763,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "text-repeater",
+    addedAt: "2026-08-07",
     name: "Text Repeater",
     category: "text",
     icon: "🔁",
@@ -1644,6 +1774,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "text-to-csv",
+    addedAt: "2026-08-07",
     name: "Text to CSV",
     category: "text",
     icon: "📊",
@@ -1654,6 +1785,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "column-aligner",
+    addedAt: "2026-08-07",
     name: "Column Aligner",
     category: "text",
     icon: "📏",
@@ -1664,6 +1796,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "number-to-words",
+    addedAt: "2026-08-07",
     name: "Number to Words",
     category: "text",
     icon: "🔤",
@@ -1674,6 +1807,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "palindrome-checker",
+    addedAt: "2026-08-07",
     name: "Palindrome Checker",
     category: "text",
     icon: "🔄",
@@ -1684,6 +1818,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "anagram-finder",
+    addedAt: "2026-08-07",
     name: "Anagram Finder",
     category: "text",
     icon: "🧩",
@@ -1694,6 +1829,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "morse-code-converter",
+    addedAt: "2026-08-07",
     name: "Morse Code Converter",
     category: "text",
     icon: "📡",
@@ -1704,6 +1840,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "markdown-preview",
+    addedAt: "2026-08-07",
     name: "Markdown Preview",
     category: "text",
     icon: "📝",
@@ -1714,6 +1851,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "password-generator",
+    addedAt: "2026-08-07",
     name: "Password Generator",
     category: "text",
     icon: "🔐",
@@ -1724,6 +1862,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "character-frequency-counter",
+    addedAt: "2026-08-07",
     name: "Character Frequency Counter",
     category: "text",
     icon: "📈",
@@ -1734,6 +1873,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "word-frequency-counter",
+    addedAt: "2026-08-07",
     name: "Word Frequency Counter",
     category: "text",
     icon: "📊",
@@ -1744,6 +1884,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "timestamp-converter",
+    addedAt: "2026-08-07",
     name: "Timestamp Converter",
     category: "developer",
     icon: "⏰",
@@ -1754,6 +1895,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "color-converter",
+    addedAt: "2026-08-07",
     name: "Color Converter",
     category: "developer",
     icon: "🎨",
@@ -1764,6 +1906,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "json-to-csv",
+    addedAt: "2026-08-07",
     name: "JSON to CSV",
     category: "developer",
     icon: "🧾",
@@ -1774,6 +1917,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "csv-to-json",
+    addedAt: "2026-08-07",
     name: "CSV to JSON",
     category: "developer",
     icon: "📄",
@@ -1784,6 +1928,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "json-to-yaml",
+    addedAt: "2026-08-07",
     name: "JSON to YAML",
     category: "developer",
     icon: "📋",
@@ -1794,6 +1939,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "html-to-markdown",
+    addedAt: "2026-08-07",
     name: "HTML to Markdown",
     category: "developer",
     icon: "🌐",
@@ -1804,6 +1950,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "html-entity-encoder",
+    addedAt: "2026-08-07",
     name: "HTML Entity Encoder",
     category: "developer",
     icon: "🔣",
@@ -1814,6 +1961,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "regex-escape",
+    addedAt: "2026-08-07",
     name: "Regex Escape",
     category: "developer",
     icon: "🔒",
@@ -1824,6 +1972,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "sha256-generator",
+    addedAt: "2026-08-07",
     name: "SHA-256 Generator",
     category: "developer",
     icon: "🔐",
@@ -1834,6 +1983,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "random-number-generator",
+    addedAt: "2026-08-07",
     name: "Random Number Generator",
     category: "developer",
     icon: "🎲",
@@ -1844,6 +1994,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "password-strength-checker",
+    addedAt: "2026-08-07",
     name: "Password Strength Checker",
     category: "developer",
     icon: "🛡️",
@@ -1854,6 +2005,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "text-diff",
+    addedAt: "2026-08-07",
     name: "Text Diff",
     category: "developer",
     icon: "🆚",
@@ -1864,6 +2016,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "interview-question-generator",
+    addedAt: "2026-08-07",
     name: "Interview Question Generator",
     category: "ai",
     icon: "💼",
@@ -1874,6 +2027,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "midjourney-prompt-generator",
+    addedAt: "2026-08-07",
     name: "Midjourney Prompt Generator",
     category: "ai",
     icon: "🎨",
@@ -1884,6 +2038,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "prompt-comparator",
+    addedAt: "2026-08-07",
     name: "Prompt Comparator",
     category: "ai",
     icon: "⚖️",
@@ -1894,6 +2049,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "ai-response-improver",
+    addedAt: "2026-08-07",
     name: "AI Response Improver",
     category: "ai",
     icon: "✨",
@@ -1904,6 +2060,7 @@ export const tools: ToolMeta[] = [
   },
   {
     slug: "question-generator",
+    addedAt: "2026-08-07",
     name: "Question Generator",
     category: "ai",
     icon: "❓",
@@ -1942,7 +2099,13 @@ export function trendingTools(): ToolMeta[] {
 }
 
 export function newTools(): ToolMeta[] {
-  return tools.filter((t) => t.isNew);
+  const windowStart = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  return tools
+    .filter((t) => t.addedAt && new Date(t.addedAt).getTime() >= windowStart)
+    .sort(
+      (a, b) =>
+        new Date(b.addedAt!).getTime() - new Date(a.addedAt!).getTime()
+    );
 }
 
 export function searchTools(query: string): ToolMeta[] {

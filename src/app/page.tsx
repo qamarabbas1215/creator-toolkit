@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { categories, featuredTools, newTools, tools, trendingTools } from "@/data/tools";
-import { SITE_DESCRIPTION } from "@/data/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/data/site";
 import { HomeSearch } from "@/components/home/HomeSearch";
 import { ToolCard } from "@/components/tools/ToolCard";
+import { JsonLd } from "@/components/seo/JsonLd";
 import {
   ArrowRightIcon,
   CheckIcon,
-  ClockIcon,
   SparklesIcon,
 } from "@/components/icons";
 
@@ -26,12 +26,12 @@ const popularQuickLinks = [
 
 const whyPoints = [
   {
-    title: "100% free, forever",
-    description: "Every tool is free with no sign-up, no limits, and no hidden paywalls.",
+    title: "Free to use",
+    description: "Every tool is free, with no account required and no hidden paywalls.",
   },
   {
     title: "Private by design",
-    description: "Everything runs in your browser. Your text never leaves your device.",
+    description: "The tools run in your browser, so your text is processed on your device.",
   },
   {
     title: "Fast & reliable",
@@ -115,6 +115,16 @@ export default function HomePage() {
 
   return (
     <main className="flex-1">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: SITE_NAME,
+          url: SITE_URL,
+          description: SITE_DESCRIPTION,
+          inLanguage: "en",
+        }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-zinc-200 bg-gradient-to-b from-violet-50 via-white to-white dark:border-zinc-800 dark:from-violet-950/30 dark:via-zinc-950 dark:to-zinc-950">
         <div
@@ -151,8 +161,8 @@ export default function HomePage() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
             Fast, private, and free — character counters, AI token estimators,
-            YouTube title generators, SEO tools and more. Everything runs in
-            your browser, so your text never leaves your device.
+            YouTube title generators, SEO tools and more. The tools run right
+            in your browser, so your text is processed on your device.
           </p>
           <div className="mt-10 flex w-full justify-center">
             <HomeSearch />
@@ -180,7 +190,7 @@ export default function HomePage() {
             {[
               { value: `${tools.length}+`, label: "Free tools" },
               { value: `${categories.length}`, label: "Categories" },
-              { value: "100%", label: "Free forever" },
+              { value: "100%", label: "Free to use" },
               { value: "0", label: "Sign-ups needed" },
             ].map((item) => (
               <div
@@ -264,10 +274,7 @@ export default function HomePage() {
                 {cat.description}
               </p>
               <span className="mt-3 flex items-center gap-1 text-xs font-medium text-zinc-400 transition-colors group-hover:text-violet-600 dark:group-hover:text-violet-400">
-                {featured.filter((t) => t.category === cat.slug).length +
-                  trending.filter((t) => t.category === cat.slug).length +
-                  recent.filter((t) => t.category === cat.slug).length}{" "}
-                tools
+                {tools.filter((t) => t.category === cat.slug).length} tools
                 <ArrowRightIcon width={12} height={12} className="transition-transform group-hover:translate-x-0.5" />
               </span>
             </Link>
@@ -281,7 +288,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Hand-picked"
             title="Featured tools"
-            subtitle="Our most-loved tools, ready when you are."
+            subtitle="Hand-picked essentials, ready when you are."
             linkHref="/tools"
             linkLabel="View all"
           />
@@ -296,14 +303,9 @@ export default function HomePage() {
       {/* Trending */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24">
         <SectionHeading
-          eyebrow="This week"
-          title={
-            <span className="flex items-center gap-2">
-              <ClockIcon width={22} height={22} className="text-violet-500" />
-              Trending now
-            </span>
-          }
-          subtitle="What creators are using this week."
+          eyebrow="Popular"
+          title="Popular tools"
+          subtitle="Hand-selected favorites across every category."
           linkHref="/tools"
           linkLabel="View all"
         />
@@ -315,22 +317,24 @@ export default function HomePage() {
       </section>
 
       {/* Newly added */}
-      <section className="border-y border-zinc-200 bg-zinc-50/70 dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24">
-          <SectionHeading
-            eyebrow="Fresh out"
-            title="Newly added"
-            subtitle="Fresh tools, shipped regularly."
-            linkHref="/tools"
-            linkLabel="View all"
-          />
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {recent.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
-            ))}
+      {recent.length > 0 && (
+        <section className="border-y border-zinc-200 bg-zinc-50/70 dark:border-zinc-800 dark:bg-zinc-900/40">
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24">
+            <SectionHeading
+              eyebrow="Fresh out"
+              title="Newly added"
+              subtitle="Our most recent additions and refreshed tools."
+              linkHref="/tools"
+              linkLabel="View all"
+            />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {recent.map((tool) => (
+                <ToolCard key={tool.slug} tool={tool} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Why */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24">
@@ -402,8 +406,8 @@ export default function HomePage() {
               Ready to create faster?
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-violet-100">
-              Join thousands of creators using free tools every day. No sign-up
-              required — just open a tool and start.
+              Every tool is free to use — no account required. Pick one and
+              start creating.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
               <Link

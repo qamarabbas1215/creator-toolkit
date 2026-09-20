@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/data/blog";
+import { SITE_NAME, SITE_URL } from "@/data/site";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { ArrowRightIcon } from "@/components/icons";
 
 export function generateStaticParams() {
@@ -19,6 +21,17 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/blog/${post.slug}`,
+      siteName: SITE_NAME,
+      type: "article",
+      publishedTime: post.date,
+    },
   };
 }
 
@@ -31,8 +44,27 @@ export default async function BlogPostPage({
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    inLanguage: "en",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${post.slug}`,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
+
   return (
     <main className="mx-auto max-w-3xl flex-1 px-4 py-16 sm:px-6">
+      <JsonLd data={jsonLd} />
       <Link
         href="/blog"
         className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-violet-600 transition-colors hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300"

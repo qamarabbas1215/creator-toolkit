@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     images: [{ url: "/logo.webp", width: 256, height: 256, alt: SITE_NAME }],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     images: ["/logo.webp"],
   },
 };

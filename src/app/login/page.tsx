@@ -8,6 +8,7 @@ import { SITE_NAME } from "@/data/site";
 export const metadata: Metadata = {
   title: "Sign in — Account",
   description: `Sign in to ${SITE_NAME} or create a free account.`,
+  robots: { index: false },
 };
 
 export default async function LoginPage() {

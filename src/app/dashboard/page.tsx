@@ -6,6 +6,7 @@ import { DashboardView } from "./DashboardView";
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Your Creator Toolkit dashboard.",
+  robots: { index: false },
 };
 
 export default async function DashboardPage() {

@@ -5,6 +5,16 @@ import { SITE_NAME } from "@/data/site";
 export const metadata: Metadata = {
   title: "About",
   description: `About ${SITE_NAME} — a free, private toolbox for creators.`,
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: `About ${SITE_NAME}`,
+    description: `About ${SITE_NAME} — a free, private toolbox for creators.`,
+    url: "/about",
+    siteName: SITE_NAME,
+    type: "website",
+  },
 };
 
 export default function AboutPage() {
@@ -23,14 +33,23 @@ export default function AboutPage() {
           ship content every day.
         </p>
         <p>
-          Every tool runs entirely in your browser. Your text, prompts, and
-          data never leave your device, which means no uploads, no servers, and
-          no tracking. It&apos;s fast because there&apos;s nothing to wait for.
+          Most tools run right in your browser — the text, prompts, and files
+          you work with are processed on your device. Optional features such as
+          saved projects, favorites, and our developer API store data on our
+          servers. See our{" "}
+          <Link href="/privacy" className="font-medium text-violet-600 underline underline-offset-2 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300">
+            Privacy Policy
+          </Link>{" "}
+          for details.
         </p>
         <p>
           We&apos;re constantly adding new tools and improving the ones we have.
-          If there&apos;s a tool you wish existed, let us know — we love shipping
-          the small things that save creators hours.
+          If there&apos;s a tool you wish existed, we&apos;d love to hear from you —
+          reach out through our{" "}
+          <Link href="/contact" className="font-medium text-violet-600 underline underline-offset-2 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300">
+            contact page
+          </Link>
+          . We love shipping the small things that save creators hours.
         </p>
       </div>
       <div className="mt-10">

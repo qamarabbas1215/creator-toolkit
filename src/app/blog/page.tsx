@@ -1,12 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { blogPosts } from "@/data/blog";
+import { SITE_NAME } from "@/data/site";
 import { ArrowRightIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: "Blog",
   description:
     "Tips, tutorials, and guides for content creators — YouTube titles, SEO, and everyday workflows.",
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "Blog — Creator Toolkit",
+    description:
+      "Tips, tutorials, and guides for content creators — YouTube titles, SEO, and everyday workflows.",
+    url: "/blog",
+    siteName: SITE_NAME,
+    type: "website",
+  },
 };
 
 export default function BlogPage() {

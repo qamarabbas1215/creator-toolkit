@@ -2,17 +2,11 @@ import Link from "next/link";
 import { categories, tools } from "@/data/tools";
 import { SITE_NAME } from "@/data/site";
 import {
-  GitHubIcon,
-  InstagramIcon,
   XSocialIcon,
-  YouTubeIcon,
 } from "@/components/icons";
 
 const socials = [
   { href: "https://twitter.com/creatortoolkit", label: "X (Twitter)", Icon: XSocialIcon },
-  { href: "https://github.com", label: "GitHub", Icon: GitHubIcon },
-  { href: "https://youtube.com", label: "YouTube", Icon: YouTubeIcon },
-  { href: "https://instagram.com", label: "Instagram", Icon: InstagramIcon },
 ];
 
 export function Footer() {
@@ -29,7 +23,7 @@ export function Footer() {
             </div>
             <p className="mt-3 max-w-xs text-sm leading-6 text-zinc-500 dark:text-zinc-400">
               The all-in-one toolbox for creators, writers, YouTubers, and
-              developers. Fast, free, and 100% in your browser.
+              developers. Free tools, built to run in your browser.
             </p>
             <div className="mt-5 flex items-center gap-1.5">
               {socials.map(({ href, label, Icon }) => (
@@ -147,6 +141,30 @@ export function Footer() {
                   Privacy Policy
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-zinc-500 transition-colors hover:text-violet-600 dark:text-zinc-400 dark:hover:text-violet-400"
+                >
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/faq"
+                  className="text-zinc-500 transition-colors hover:text-violet-600 focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 dark:text-zinc-400 dark:hover:text-violet-400"
+                >
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-zinc-500 transition-colors hover:text-violet-600 dark:text-zinc-400 dark:hover:text-violet-400"
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -157,7 +175,7 @@ export function Footer() {
           </p>
           <p className="flex items-center gap-1.5">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            Made for creators. No sign-up. No tracking. No limits.
+            Made for creators. Free tools — no account required.
           </p>
         </div>
       </div>

@@ -28,6 +28,7 @@ export interface ToolMeta {
   featured?: boolean;
   trending?: boolean;
   isNew?: boolean;
+  addedAt?: string;
   popularity: number;
   pro?: boolean;
 }
@@ -40,4 +41,37 @@ export interface ToolExample {
 export interface ToolFaq {
   question: string;
   answer: string;
+}
+
+export interface ToolHowToStep {
+  title: string;
+  description: string;
+}
+
+export interface ToolWorkedExample {
+  input: string;
+  output: string;
+  note?: string;
+}
+
+export interface ToolRelated {
+  slug: string;
+  note: string;
+}
+
+export interface ToolBlogLink {
+  slug: string;
+  title: string;
+  readTime: string;
+}
+
+export interface ToolExtras {
+  examples: ToolExample[];
+  faqs: ToolFaq[];
+  howTo?: ToolHowToStep[];
+  workedExample?: ToolWorkedExample;
+  limits?: string[];
+  privacyNote?: string;
+  related?: ToolRelated[];
+  blogLink?: ToolBlogLink;
 }

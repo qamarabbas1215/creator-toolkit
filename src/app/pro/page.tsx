@@ -7,6 +7,16 @@ import { SITE_NAME } from "@/data/site";
 export const metadata: Metadata = {
   title: "Pro",
   description: `Upgrade to ${SITE_NAME} Pro for advanced creator tools and priority features.`,
+  alternates: {
+    canonical: "/pro",
+  },
+  openGraph: {
+    title: `${SITE_NAME} Pro`,
+    description: `Upgrade to ${SITE_NAME} Pro for advanced creator tools and priority features.`,
+    url: "/pro",
+    siteName: SITE_NAME,
+    type: "website",
+  },
 };
 
 const BENEFITS = [

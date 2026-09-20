@@ -1,12 +1,24 @@
 import type { Metadata } from "next";
 import { categories, tools } from "@/data/tools";
 import { ToolsExplorer } from "@/components/tools/ToolsExplorer";
+import { SITE_NAME } from "@/data/site";
 import type { CategorySlug } from "@/types/tool";
 
 export const metadata: Metadata = {
   title: "All Tools",
   description:
     "Browse every free tool in Creator Toolkit — writing, YouTube, SEO, social media, image, text, developer, and AI tools.",
+  alternates: {
+    canonical: "/tools",
+  },
+  openGraph: {
+    title: "All Tools — Free Creator Toolkit",
+    description:
+      "Browse every free tool in Creator Toolkit — writing, YouTube, SEO, social media, image, text, developer, and AI tools.",
+    url: "/tools",
+    siteName: SITE_NAME,
+    type: "website",
+  },
 };
 
 const categorySlugs = categories.map((c) => c.slug);
