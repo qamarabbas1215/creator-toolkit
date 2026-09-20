@@ -206,7 +206,7 @@ export function PromptComparator() {
   );
 }
 
-const IMPROVE_RULES = [
+const REVISION_TIPS = [
   "Break long sentences into shorter ones.",
   "Replace vague words like 'good', 'bad', 'very' with concrete language.",
   "Add an active voice instead of passive constructions.",
@@ -224,27 +224,29 @@ export function AiResponseImprover() {
     const vague = [" very ", " really ", " good ", " bad ", " nice "].filter((w) => lower.includes(w));
     const passive = /\b(is|are|was|were) (being )?\w+ed\b/i.test(text);
     const longSentences = splitSentences(text).filter((s) => s.split(/\s+/).length > 30).length;
-    const suggestions = IMPROVE_RULES.slice(0, 4);
+    const tips = REVISION_TIPS.slice(0, 4);
     const flags = [
       passive ? "Uses passive voice in places." : null,
       longSentences > 0 ? `Found ${longSentences} very long sentence(s).` : null,
       vague.length > 0 ? `Contains vague wording (${vague.map((v) => v.trim()).join(", ")}).` : null,
     ].filter(Boolean);
     return [
-      `Original (${text.split(/\s+/).filter(Boolean).length} words)`,
+      `Original response (${text.split(/\s+/).filter(Boolean).length} words)`,
       "",
       text.trim(),
       "",
-      "--- Suggested improvements ---",
-      ...suggestions.map((s, i) => `${i + 1}. ${s}`),
-      ...flags.map((f) => `• ${f}`),
+      "--- Review findings ---",
+      ...(flags.length ? flags.map((f) => `• ${f}`) : ["No obvious issues detected."]),
+      "",
+      "--- Quick revision tips ---",
+      ...tips.map((s, i) => `${i + 1}. ${s}`),
     ].join("\n");
   }, [text]);
 
   return (
     <div className="space-y-6">
-      <Textarea label="Your response" value={text} onChange={(e) => setText(e.target.value)} rows={8} placeholder="Paste an AI or human-written response to improve…" />
-      <OutputArea value={output} label="Improved response" filename="improved-response.txt" rows={12} />
+      <Textarea label="Your response" value={text} onChange={(e) => setText(e.target.value)} rows={8} placeholder="Paste an AI or human-written response to review…" />
+      <OutputArea value={output} label="Response review" filename="response-review.txt" rows={12} />
     </div>
   );
 }

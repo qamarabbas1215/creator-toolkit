@@ -1169,16 +1169,16 @@ export const tools: ToolMeta[] = [
   {
     slug: "ai-prompt-translator",
     addedAt: "2026-08-03",
-    name: "Prompt Translator",
+    name: "Prompt Vocabulary Translator",
     category: "ai",
     icon: "🌍",
     description:
-      "Translate prompts between languages while keeping AI-optimized phrasing.",
+      "Translate common prompt vocabulary word-by-word into 7 languages. Words without a dictionary match stay in English — perfect for building bilingual prompts.",
     keywords: [
-      "translate prompt",
-      "prompt translation",
+      "prompt vocabulary",
+      "bilingual prompt",
+      "translate prompt words",
       "multi language",
-      "ai prompt translate",
     ],
     popularity: 62,
   },
@@ -2050,11 +2050,12 @@ export const tools: ToolMeta[] = [
   {
     slug: "ai-response-improver",
     addedAt: "2026-08-07",
-    name: "AI Response Improver",
+    name: "Response Reviewer",
     category: "ai",
     icon: "✨",
-    description: "Get concrete tips to sharpen any AI or human-written response.",
-    keywords: ["improve response", "response improver", "ai writing tips", "polish text"],
+    description:
+      "Scan an AI or human-written response for passive voice, vague wording, and overly long sentences, then get quick revision tips.",
+    keywords: ["response review", "response feedback", "writing checklist", "passive voice checker"],
     isNew: true,
     popularity: 59,
   },

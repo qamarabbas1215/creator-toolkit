@@ -964,7 +964,7 @@ export function AiPromptTranslator() {
     <div className="space-y-6">
       <Textarea
         label="English prompt"
-        placeholder="Paste an English prompt to translate…"
+        placeholder="Paste an English prompt to translate common vocabulary…"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         rows={8}
@@ -982,13 +982,14 @@ export function AiPromptTranslator() {
       </OptionRow>
       <Card>
         <p className="text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-          This is a starter translation of common prompt vocabulary. Words without a
-          dictionary match are kept in English — perfect for building bilingual prompts.
+          This translates common prompt vocabulary word-by-word from a built-in
+          dictionary. Words without a dictionary match are kept in English — perfect
+          for building bilingual prompts.
         </p>
       </Card>
       <OutputArea
         value={translated}
-        label={`Translated prompt (${LANGS[langIndex].name})`}
+        label={`Prompt with translated vocabulary (${LANGS[langIndex].name})`}
         filename={`prompt-${langId}.txt`}
         rows={8}
       />

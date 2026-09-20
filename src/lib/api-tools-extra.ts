@@ -3845,7 +3845,7 @@ registerHandler("prompt-comparator", (p) => {
   };
 });
 
-const IMPROVE_RULES = [
+const REVISION_TIPS = [
   "Break long sentences into shorter ones.",
   "Replace vague words like 'good', 'bad', 'very' with concrete language.",
   "Add an active voice instead of passive constructions.",
@@ -3861,20 +3861,22 @@ registerHandler("ai-response-improver", (p) => {
   const vague = [" very ", " really ", " good ", " bad ", " nice "].filter((w) => lower.includes(w));
   const passive = /\b(is|are|was|were) (being )?\w+ed\b/i.test(input);
   const longSentences = splitSentences(input).filter((s) => s.split(/\s+/).length > 30).length;
-  const suggestions = IMPROVE_RULES.slice(0, 4);
+  const tips = REVISION_TIPS.slice(0, 4);
   const flags = [
     passive ? "Uses passive voice in places." : null,
     longSentences > 0 ? `Found ${longSentences} very long sentence(s).` : null,
     vague.length > 0 ? `Contains vague wording (${vague.map((v) => v.trim()).join(", ")}).` : null,
   ].filter(Boolean);
   return [
-    `Original (${input.split(/\s+/).filter(Boolean).length} words)`,
+    `Original response (${input.split(/\s+/).filter(Boolean).length} words)`,
     "",
     input.trim(),
     "",
-    "--- Suggested improvements ---",
-    ...suggestions.map((s, i) => `${i + 1}. ${s}`),
-    ...flags.map((f) => `• ${f}`),
+    "--- Review findings ---",
+    ...(flags.length ? flags.map((f) => `• ${f}`) : ["No obvious issues detected."]),
+    "",
+    "--- Quick revision tips ---",
+    ...tips.map((s, i) => `${i + 1}. ${s}`),
   ].join("\n");
 });
 
