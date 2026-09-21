@@ -1995,6 +1995,916 @@ const CURATED: Record<string, ToolExtras> = {
       },
     ],
   },
+  "find-and-replace": {
+    examples: [
+      {
+        title: "Clean up a copied draft",
+        description:
+          "Fix a repeated typo across a pasted article: find the misspelling and replace every occurrence in one pass.",
+      },
+      {
+        title: "Normalize a word or phrase",
+        description:
+          "Swap an outdated term, like newsletter for email, everywhere in a block of text.",
+      },
+      {
+        title: "Work case-by-case",
+        description:
+          "Turn on **Case sensitive** to only touch exact matches and leave differently-cased variants alone.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does Find & Replace support regex patterns?",
+        answer:
+          "No. The find box is treated as literal text in both modes — special characters like `.` and `*` are escaped automatically before matching. Use the Regex Tester when you need pattern-based matching.",
+      },
+      {
+        question: "Does it replace every occurrence or just the first?",
+        answer:
+          "Every occurrence. Both the case-sensitive and case-insensitive modes replace all matches across the text; there is no find-next or approve-each-match flow.",
+      },
+      {
+        question: "What happens if the search text isn't found?",
+        answer:
+          "The output stays identical to the input. When nothing matches, the tool simply returns the original text unchanged.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description: "Drop the source text into the input box.",
+      },
+      {
+        title: "Set the find and replacement text",
+        description:
+          "Type the literal text to find and what to swap it for; check **Case sensitive** to require an exact case match.",
+      },
+      {
+        title: "Copy the result",
+        description:
+          "The output updates live and is ready to copy from the output box.",
+      },
+    ],
+    workedExample: {
+      input: "The quick brown fox jumps over the lazy dog. The quick dog runs fast.",
+      output: "The slow brown fox jumps over the lazy dog. The slow dog runs fast.",
+      note: "With Case sensitive off, both lowercase instances of quick match and become slow. Every matching occurrence is replaced at once — there is no per-instance confirmation.",
+    },
+    limits: [
+      "Matching is literal in both modes, never regex-based.",
+      "Replacement applies to all occurrences at once; there is no per-match approval step.",
+      "In the case-insensitive mode, `$` tokens such as `$&` in the replacement text expand as in a regex replace; check **Case sensitive** for a fully literal insertion.",
+    ],
+    privacyNote:
+      "Replacement runs locally in your browser. Your text is never sent to a server.",
+    related: [
+      {
+        slug: "case-converter",
+        note: "Adjust capitalisation after you swap wording.",
+      },
+      {
+        slug: "remove-duplicate-lines",
+        note: "Clear repeated lines after replacing terms.",
+      },
+      {
+        slug: "regex-tester",
+        note: "When you need pattern-based matches instead of literal text.",
+      },
+    ],
+  },
+  "extract-urls": {
+    examples: [
+      {
+        title: "Collect links from a post",
+        description:
+          "Paste a blog post or comment and pull out every http(s):// and www. link into a clean, copy-ready list.",
+      },
+      {
+        title: "Collapse duplicates",
+        description:
+          "Repeated links appear once in the output even if they occur many times in the source.",
+      },
+      {
+        title: "Audit outbound links",
+        description:
+          "Grab every link in a page's text to review where the links actually point.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which URLs are detected?",
+        answer:
+          "Links starting with `http://`, `https://`, or `www.` followed by a dotted domain and an optional path. Bare domains like `example.com` and scheme-less links that don't use `www.` are not picked up.",
+      },
+      {
+        question: "Are duplicates removed?",
+        answer:
+          "Yes. The URL list is deduplicated, so the same link that appears ten times is listed once, and the counter reflects unique URLs.",
+      },
+      {
+        question: "Is this full URL parsing?",
+        answer:
+          "No. It is a pragmatic pattern match, not a standards-compliant parser. A period that ends a sentence directly after a path is kept as part of the URL.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the source text",
+        description: "Any text that may contain links works.",
+      },
+      {
+        title: "Read the count",
+        description:
+          "The **URLs found** counter shows how many unique links were detected.",
+      },
+      {
+        title: "Copy the list",
+        description: "Every unique URL is listed one per line for copying.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Read the guide at https://example.com/page or follow www.example.org for updates; the old http://example.com/demo is archived.",
+      output:
+        "URLs found: 3\nhttps://example.com/page\nwww.example.org\nhttp://example.com/demo",
+      note: "The bare domain `example.com` (no scheme or `www.`) is not matched, and the three discovered links are deduplicated and listed one per line.",
+    },
+    limits: [
+      "Only `http://`, `https://`, and `www.`-prefixed links match; other schemes like `mailto:` or `ftp:` are ignored.",
+      "Matching is pattern-based, not a full URL parser, so oddities like trailing punctuation in a path are kept verbatim.",
+      "A dotted domain is required, so local hosts such as `https://localhost` are skipped.",
+    ],
+    privacyNote:
+      "Extraction runs entirely in your browser. Your text is never uploaded.",
+    related: [
+      {
+        slug: "extract-emails",
+        note: "Pull addresses from the same source text.",
+      },
+      {
+        slug: "extract-numbers",
+        note: "Collect numeric values alongside links.",
+      },
+    ],
+  },
+  "extract-emails": {
+    examples: [
+      {
+        title: "Gather contacts from a thread",
+        description:
+          "Paste an email thread or support log and collect every address into a clean list.",
+      },
+      {
+        title: "Deduplicate a mailing list",
+        description:
+          "Repeated addresses collapse to a single entry, keeping your list tidy.",
+      },
+      {
+        title: "Check a footer",
+        description:
+          "Verify which addresses actually appear in a page or newsletter text.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What counts as an email address?",
+        answer:
+          "A local part of letters, digits, dots and the `+`, `-`, `_`, `%` signs, followed by a domain with a two-letter-or-longer extension such as `example.com` or `mail.example.com`. One-letter TLDs like `a@b.c` do not match.",
+      },
+      {
+        question: "Are duplicates removed?",
+        answer:
+          "Yes. The same address is listed only once and the counter reflects unique addresses.",
+      },
+      {
+        question: "Is this RFC-perfect email parsing?",
+        answer:
+          "No. It is a practical pattern match: unusual-but-valid addresses can be mis-split or missed, and the tool never verifies that a mailbox actually exists.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the source text",
+        description: "Drop in any text that may contain addresses.",
+      },
+      {
+        title: "Read the count",
+        description:
+          "The **Emails found** counter shows how many unique addresses were detected.",
+      },
+      {
+        title: "Copy the list",
+        description: "One address per line, ready to paste elsewhere.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Need help? Write to support@example.com or john.doe+jobs@mail.example.com. (support@example.com appears twice.)",
+      output:
+        "Emails found: 2\nsupport@example.com\njohn.doe+jobs@mail.example.com",
+      note: "The repeated `support@example.com` is listed once thanks to deduplication, and a local part with a `+` tag such as `john.doe+jobs` is kept intact.",
+    },
+    limits: [
+      "A two-letter-or-longer top-level domain is required, so short forms like `a@b.c` are not matched.",
+      "Pattern-based rather than RFC-compliant: quoted local parts or addresses joined by odd punctuation can be missed or split.",
+      "Extraction is deterministic — it does not check whether a mailbox exists or is deliverable.",
+    ],
+    privacyNote:
+      "Extraction happens locally in your browser. Your text never leaves the page.",
+    related: [
+      {
+        slug: "extract-urls",
+        note: "Grab the links in the same source text.",
+      },
+      {
+        slug: "extract-numbers",
+        note: "Collect the numbers alongside the addresses.",
+      },
+    ],
+  },
+  "extract-numbers": {
+    examples: [
+      {
+        title: "Pull totals from an order",
+        description:
+          "Extract quantities, prices and negative adjustments from order or invoice text.",
+      },
+      {
+        title: "Sum numbers in prose",
+        description:
+          "Collect numeric values scattered across a paragraph and see their total in the **Sum** readout.",
+      },
+      {
+        title: "Convert a recipe",
+        description:
+          "Grab the measurements, including decimals like 1.5, for easy scaling.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What kinds of numbers match?",
+        answer:
+          "Integers, negatives with a leading minus, and decimals using either a dot or a comma as the separator (1.5 or 2,5). Percentages match as the bare number — 50% becomes 50.",
+      },
+      {
+        question: "Is the comma a thousands separator?",
+        answer:
+          "No. A comma is treated as a decimal separator, so 1,234 is one number that counts as about 1.234 toward the sum — not one thousand two hundred and thirty-four.",
+      },
+      {
+        question: "How is the sum computed?",
+        answer:
+          "Each match is parsed with a comma converted to a dot and added to the total, which is formatted with up to four decimal digits.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the text",
+        description: "Any text containing numeric values works.",
+      },
+      {
+        title: "Check the count and sum",
+        description:
+          "The **Numbers found** counter and **Sum** update live as you type.",
+      },
+      {
+        title: "Copy the list",
+        description: "Each number appears on its own line in the output box.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Order 3 apples, -2 refunds, 1.5 kg at 9.99 each, plus 1,234 items and a 50% discount.",
+      output:
+        "Numbers found: 6\n3\n-2\n1.5\n9.99\n1,234\n50\nSum: 63.724",
+      note: "A comma is never a thousands separator: 1,234 is a single match that contributes 1.234 to the sum, and 50% is extracted as the bare number 50.",
+    },
+    limits: [
+      "Only decimal separators are recognised — 1,000,000 is matched in parts, not as one million.",
+      "A hyphen before a digit is treated as a minus sign, so a range like 10-20 yields 10 and -20.",
+      "Dates like 2024-05-01 split into parts, and currency symbols like `$` in $9.99 are left out.",
+    ],
+    privacyNote:
+      "Extraction and summation run locally in your browser. Nothing is uploaded.",
+    related: [
+      {
+        slug: "extract-urls",
+        note: "Find the links in the same text.",
+      },
+      {
+        slug: "extract-emails",
+        note: "Pull the email addresses too.",
+      },
+    ],
+  },
+  "text-diff": {
+    examples: [
+      {
+        title: "Review an edited draft",
+        description:
+          "Compare the original and revised versions of a post to see exactly which lines changed.",
+      },
+      {
+        title: "Check config changes",
+        description:
+          "Diff two versions of a settings file or list to confirm what was added or removed.",
+      },
+      {
+        title: "Verify copy edits",
+        description:
+          "Confirm a rewrite only touched the intended lines and nothing else drifted.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How are differences calculated?",
+        answer:
+          "The two inputs are compared line by line using a longest-common-subsequence algorithm: identical lines stay put, removed lines show struck through, and added lines are highlighted.",
+      },
+      {
+        question: "Is the comparison word-based?",
+        answer:
+          "No. It is strictly line-based — a single changed word on an otherwise unchanged line shows as that whole line removed and the new line added.",
+      },
+      {
+        question: "Can I copy the diff?",
+        answer:
+          "The comparison is a read-only visual view, so there is no plain-text diff export. The **Additions** and **Removals** counters report the totals.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the original",
+        description: "The starting version goes in **Original**.",
+      },
+      {
+        title: "Paste the revised version",
+        description: "The updated text goes in **New**.",
+      },
+      {
+        title: "Read the colors",
+        description:
+          "Added lines show highlighted, removed lines struck through, and identical lines stay grey.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Original:\nalpha\nbeta\ngamma\ndelta\n\nNew:\nalpha\nbeta2\ngamma\ndelta2",
+      output: "Additions: 2 · Removals: 2",
+      note: "The two identical lines (alpha, gamma) are kept in place, while beta→beta2 and delta→delta2 each show as one removed and one added line rather than a character-level edit.",
+    },
+    limits: [
+      "Comparison is line-based only, so one changed character marks the whole line as changed.",
+      "The diff view is read-only — there is no text output to copy or download.",
+      "Blank lines are compared like any other line, so stray empty lines appear as added or removed rows.",
+    ],
+    privacyNote:
+      "Diffing runs locally in your browser. Neither input leaves your device.",
+    related: [
+      {
+        slug: "json-compare",
+        note: "Compare two JSON documents with a paired view.",
+      },
+      {
+        slug: "case-converter",
+        note: "Normalise case on a copy before you diff it.",
+      },
+    ],
+  },
+  "json-validator": {
+    examples: [
+      {
+        title: "Validate an API response",
+        description:
+          "Paste a JSON payload and confirm it parses cleanly before wiring it into code.",
+      },
+      {
+        title: "Find the typo fast",
+        description:
+          "Trailing commas and unquoted keys are flagged with the parser's message and the exact character position.",
+      },
+      {
+        title: "Inspect structure",
+        description:
+          "Valid JSON reports its root type, depth, total key count and top-level members at a glance.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it validate against a JSON Schema?",
+        answer:
+          "No. This tool checks JSON syntax with the browser's own JSON parser. It does not validate structure against a JSON Schema or enforce required fields.",
+      },
+      {
+        question: "What makes JSON invalid here?",
+        answer:
+          "Anything the standard parser rejects: trailing commas, single-quoted strings, unquoted property names, comments and control characters inside strings all raise an error.",
+      },
+      {
+        question: "What do the stats mean?",
+        answer:
+          "**Root type** is the top-level kind (object, array, string, number, boolean, null), **Depth** counts nested object/array levels, **Total keys** counts every key recursively, and **Top-level** is the number of first-level members.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your JSON",
+        description: "Drop valid or invalid JSON into the input.",
+      },
+      {
+        title: "Watch the badge",
+        description:
+          "A green **Valid JSON** badge appears when the text parses; otherwise a red badge shows the parser message and a character position.",
+      },
+      {
+        title: "Use the formatted output",
+        description:
+          "Valid input is pretty-printed with two-space indentation in the output box for copying.",
+      },
+    ],
+    workedExample: {
+      input:
+        '{ "name": "Ada", "tags": ["ai", "code"], "meta": { "count": 2 }, "ok": true }',
+      output:
+        "Valid JSON · Root type: object · Total keys: 5 · Top-level keys: 4 · Depth: 2",
+      note: "Adding a trailing comma after the last value would flip the badge to Invalid and report an error such as `Expected double-quoted property name in JSON at position 17`, with a matching character-position hint.",
+    },
+    limits: [
+      "Validation is syntax-only — it never checks schema, required fields or value types against a contract.",
+      "The character position comes from the runtime's error message and is a best-effort hint, not a styled cursor.",
+      "JSON5-style extensions like comments or unquoted keys fail, because they are not part of standard JSON.",
+    ],
+    privacyNote:
+      "Parsing and formatting run entirely in your browser. Your JSON is never sent to a server.",
+    related: [
+      {
+        slug: "json-formatter",
+        note: "Beautify or minify the payload.",
+      },
+      {
+        slug: "json-to-csv",
+        note: "Convert validated records into a table.",
+      },
+      {
+        slug: "json-compare",
+        note: "Spot differences between two documents.",
+      },
+    ],
+  },
+  "regex-tester": {
+    examples: [
+      {
+        title: "Test a pattern before shipping",
+        description:
+          "Validate a regex against realistic sample text before using it in code.",
+      },
+      {
+        title: "Inspect capture groups",
+        description:
+          "Each match reports its index and any capturing-group values in the details list.",
+      },
+      {
+        title: "Refine step by step",
+        description:
+          "Adjust flags and watch matches, highlights and totals update live.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which flags does the tool support?",
+        answer:
+          "`g` (global), `i` (ignore case), `m` (multiline) and `s` (dotall) are available as checkboxes. The `g` flag is always applied internally so every match is listed and highlighted, even if you uncheck it.",
+      },
+      {
+        question: "How do matches show up?",
+        answer:
+          "The test string is rendered with each match highlighted, a **Matches** counter shows the total, and the details list reports each match's index plus capture-group values.",
+      },
+      {
+        question: "What happens with an invalid pattern?",
+        answer:
+          "The pattern is caught before matching and its error message appears in a red box; matches stay empty until the pattern is fixed.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter the pattern",
+        description:
+          "Type a regex without slashes or flags; select the g/i/m/s flags you need.",
+      },
+      {
+        title: "Paste the test string",
+        description: "The text to search against updates the matches live.",
+      },
+      {
+        title: "Read and copy the results",
+        description:
+          "Full matches and the match details (index and groups) are available to copy.",
+      },
+    ],
+    workedExample: {
+      input: "Start 09:15, break at 10:30, done 11:45. Pattern: (\\d{2}):(\\d{2})",
+      output:
+        "Matches: 3\n1. 09:15 @ 6 · groups: 09, 15\n2. 10:30 @ 22 · groups: 10, 30\n3. 11:45 @ 34 · groups: 11, 45",
+      note: "The two capture groups are reported per match — first the hour, then the minute — and every occurrence is matched because the global flag is always force-enabled.",
+    },
+    limits: [
+      "Patterns run on the browser's native JavaScript regex engine, so newer features require a current browser.",
+      "This is a matching tool only — there is no find-and-replace mode here.",
+      "The global flag is always on, so all matches are found and shown, never just the first.",
+    ],
+    privacyNote:
+      "Matching runs locally in your browser. Patterns and test strings never leave the page.",
+    related: [
+      {
+        slug: "find-and-replace",
+        note: "Do literal text replacements across a document.",
+      },
+      {
+        slug: "extract-emails",
+        note: "Skip the pattern and pull addresses directly.",
+      },
+    ],
+  },
+  "json-to-csv": {
+    examples: [
+      {
+        title: "Export an API array to a table",
+        description:
+          "Turn a list of objects into a header row plus one CSV line per object.",
+      },
+      {
+        title: "Flatten for spreadsheets",
+        description:
+          "Keys are unioned across objects, so every record keeps its own columns even when the shapes differ.",
+      },
+      {
+        title: "Prepare a database import",
+        description:
+          "Convert JSON records into CSV ready for a spreadsheet or database import.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What JSON shapes are accepted?",
+        answer:
+          "A top-level array of objects, or a single object treated as a one-row array. Nested values are stringified — arrays join with commas and objects become `[object Object]`.",
+      },
+      {
+        question: "How are headers chosen?",
+        answer:
+          "The header row is the union of all object keys in first-seen order. Objects missing a key get an empty cell in that column.",
+      },
+      {
+        question: "Is the output properly quoted?",
+        answer:
+          "Yes. Cells containing a comma, double quote or newline are wrapped in quotes with inner quotes doubled, which is the standard CSV escaping. Empty values are left blank.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste valid JSON",
+        description: "An array of objects, or a single object.",
+      },
+      {
+        title: "Clear any error",
+        description:
+          "Invalid JSON, empty arrays and non-object items each surface a clear message under the input.",
+      },
+      {
+        title: "Copy the CSV",
+        description:
+          "The table output is ready to copy to a clipboard or download as output.csv.",
+      },
+    ],
+    workedExample: {
+      input:
+        '[{"id":1,"name":"Ada","tags":["ai"]},{"id":2,"name":"Grace, M.","tags":[]},{"name":"Linus"}]',
+      output:
+        'id,name,tags\n1,Ada,ai\n2,"Grace, M.",\n,Linus,',
+      note: "Headers are the union id, name, tags in first-seen order; the cell with a comma, Grace, M., is quoted, [\"ai\"] stringifies to ai, and Linus leaves the missing id blank.",
+    },
+    limits: [
+      "Only arrays of objects (or a single object) convert — a bare array of scalars shows `JSON must contain objects.`",
+      "Nested arrays and objects are not recursively flattened: an array becomes its comma-joined items and an object becomes `[object Object]`.",
+      "Quoting covers cells with commas, quotes or newlines; multi-line records are not supported.",
+    ],
+    privacyNote: "Conversion runs in your browser. No JSON is uploaded.",
+    related: [
+      {
+        slug: "csv-to-json",
+        note: "Go the other way and turn rows back into objects.",
+      },
+      {
+        slug: "json-validator",
+        note: "Validate the payload before converting it.",
+      },
+      {
+        slug: "json-formatter",
+        note: "Clean up the source JSON first.",
+      },
+    ],
+  },
+  "csv-to-json": {
+    examples: [
+      {
+        title: "Import a spreadsheet dump",
+        description:
+          "Paste a CSV export and turn the rows into JSON objects keyed by the header row.",
+      },
+      {
+        title: "Handle quoted commas",
+        description:
+          "Cells wrapped in quotes, like a city of London, UK, stay intact instead of splitting.",
+      },
+      {
+        title: "Work without headers",
+        description:
+          "Turn off **First row is a header** and columns are named col1, col2 and so on.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How are rows parsed?",
+        answer:
+          "Each line becomes one row split on commas while respecting quoted cells. A doubled quote inside a quoted cell becomes a literal quote, and commas inside quotes are not split.",
+      },
+      {
+        question: "Does it follow RFC 4180 fully?",
+        answer:
+          "Not entirely. Quoting and doubled quotes are handled, but a quoted field cannot span multiple lines — a newline inside a quoted cell ends the record.",
+      },
+      {
+        question: "What happens to headers and empty cells?",
+        answer:
+          "With **First row is a header** on, row one names the keys; with it off, columns get col1, col2, and so on. A missing cell becomes an empty string in the object.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the CSV",
+        description: "Rows separated by newlines.",
+      },
+      {
+        title: "Choose the header option",
+        description:
+          "Keep **First row is a header** on when the first line holds column names.",
+      },
+      {
+        title: "Copy the JSON",
+        description:
+          "The pretty-printed array is ready to copy or download.",
+      },
+    ],
+    workedExample: {
+      input:
+        "name,email,city\nAda,ada@example.com,\"London, UK\"\nBo,bo@example.com,Berlin",
+      output:
+        '[\n  {\n    "name": "Ada",\n    "email": "ada@example.com",\n    "city": "London, UK"\n  },\n  {\n    "name": "Bo",\n    "email": "bo@example.com",\n    "city": "Berlin"\n  }\n]',
+      note: "The quoted city cell London, UK is preserved around its comma and mapped to the city header; each data row becomes one object keyed by the header names.",
+    },
+    limits: [
+      "Blank and whitespace-only lines are skipped, but non-empty cells are otherwise kept verbatim with no trimming.",
+      "Quoted fields must stay on a single line; multiline quoted values are not supported.",
+      "Missing cells become empty strings rather than null.",
+    ],
+    privacyNote:
+      "Parsing runs locally in your browser. Nothing is uploaded.",
+    related: [
+      {
+        slug: "json-to-csv",
+        note: "Convert JSON records back into a table.",
+      },
+      {
+        slug: "json-validator",
+        note: "Validate the resulting JSON before you use it.",
+      },
+    ],
+  },
+  "password-strength-checker": {
+    examples: [
+      {
+        title: "Score a draft password",
+        description:
+          "Type a candidate and see its score out of 10 with a plain-language checklist.",
+      },
+      {
+        title: "Tighten the weak spots",
+        description:
+          "Each unfulfilled rule is spelled out, so you know exactly what to add next.",
+      },
+      {
+        title: "Compare two candidates",
+        description:
+          "Test replacements against each other and keep the higher-scoring option.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How is the score calculated?",
+        answer:
+          "Points come from length (8+ and 12+), a mix of upper- and lowercase, digits, symbols, and avoiding four identical characters in a row, capped at 10. Labels are Strong (8–10), Medium (5–7), Weak (3–4) and Very weak (0–2).",
+      },
+      {
+        question: "Does a high score mean the password is safe?",
+        answer:
+          "No. The score only reflects five simple heuristics. It does not check dictionaries, common passwords, sequences or leaked-password lists, and it says nothing about whether you reused the password elsewhere.",
+      },
+      {
+        question: "Is my password sent anywhere?",
+        answer:
+          "No. Scoring runs entirely on the page, so the password never leaves your browser.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Type a password",
+        description: "The field masks the text as you type.",
+      },
+      {
+        title: "Read the score and rules",
+        description:
+          "The score, colour bar, label and checklist update live.",
+      },
+      {
+        title: "Iterate",
+        description:
+          "Follow the unfulfilled checks to raise the score before you adopt the password.",
+      },
+    ],
+    workedExample: {
+      input: "Tr0ub4dor&3",
+      output:
+        "8 / 10 · Strong\nAt least 8 characters ✓\nMix of upper and lowercase ✓\nIncludes numbers ✓\nIncludes symbols ✓\nNo long repeated characters ✓",
+      note: "Eleven characters with mixed case, a digit and a symbol reach 8/10 Strong — but this is only the rule-based score; it does not check that the password isn't a common or leaked one.",
+    },
+    limits: [
+      "The check is a length/character-class heuristic, not an attacker model: it never tests dictionary words, sequences or breached-password lists.",
+      "The repeated-character rule triggers on four identical characters in a row, so long but predictable passwords can still score high.",
+      "A good score does not mean the password is unique or uncompromised.",
+    ],
+    privacyNote:
+      "The password is evaluated only in your browser and is never transmitted or stored.",
+    related: [
+      {
+        slug: "password-generator",
+        note: "Create a strong, random password to test here.",
+      },
+      {
+        slug: "sha256-generator",
+        note: "Fingerprint your credentials text locally.",
+      },
+    ],
+  },
+  "sha256-generator": {
+    examples: [
+      {
+        title: "Hash a string in the browser",
+        description:
+          "Turn any text into its fixed-length SHA-256 digest for integrity checks.",
+      },
+      {
+        title: "Verify a known digest",
+        description:
+          "Recompute a hash locally and compare it to the value you were given.",
+      },
+      {
+        title: "Fingerprint a snippet",
+        description:
+          "A short text maps to a 64-hex-character fingerprint that changes completely if even one character changes.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is hashing the same as encryption?",
+        answer:
+          "No. SHA-256 is a one-way hash: the digest cannot be turned back into the original text and there is no key. It is used for integrity and fingerprinting, not for storing data confidentially and recovering it later.",
+      },
+      {
+        question: "Does it hash files?",
+        answer:
+          "No. The input is a single text field — to digest a file, paste its contents as a string.",
+      },
+      {
+        question: "Is the digest standard?",
+        answer:
+          "Yes. It uses the browser's Web Crypto SHA-256 implementation, so the 64-character lowercase hex digest matches any other SHA-256 tool for the same UTF-8 input.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Type or paste text",
+        description: "The input box holds the text to hash.",
+      },
+      {
+        title: "Click Compute SHA-256",
+        description:
+          "The digest is calculated on demand with the browser's Web Crypto API.",
+      },
+      {
+        title: "Copy the digest",
+        description:
+          "The 64-character lowercase hex string is ready to copy or download.",
+      },
+    ],
+    workedExample: {
+      input: "hello",
+      output:
+        "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+      note: "This is the standard SHA-256 digest of hello — 64 lowercase hex characters, identical to what any other SHA-256 tool produces for the same input.",
+    },
+    limits: [
+      "Hashing is one-way: a digest cannot be reversed or decrypted back into the input.",
+      "Only text input is supported — there is no file upload.",
+      "The Web Crypto API requires a secure (HTTPS) context in most browsers, so the hash button may error on a plain-HTTP local page.",
+    ],
+    privacyNote:
+      "Hashing runs locally with the browser's Web Crypto API. Your text is never sent to a server.",
+    related: [
+      {
+        slug: "password-generator",
+        note: "Generate the strong string to fingerprint.",
+      },
+      {
+        slug: "base64-encoder",
+        note: "Encode text instead of hashing it.",
+      },
+    ],
+  },
+  "faq-schema-generator": {
+    examples: [
+      {
+        title: "Build FAQPage markup",
+        description:
+          "Paste your questions and answers and get schema.org FAQPage JSON-LD for your page.",
+      },
+      {
+        title: "Reuse existing FAQs",
+        description:
+          "Format the Q&As you already publish into structured data without hand-writing JSON.",
+      },
+      {
+        title: "Validate the output",
+        description:
+          "Copy the generated JSON-LD into the JSON validator to confirm it parses before adding it to your page.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What input format does it expect?",
+        answer:
+          "One item per line. Questions start with `Q:`, `Q1:` (or `Question:`), and their answer follows on the next line starting with `A:` / `A2:` and so on. Any question without a matching answer is left out.",
+      },
+      {
+        question: "Does the schema guarantee search rich results?",
+        answer:
+          "No. Markup helps search engines understand the page but does not guarantee rich results — and rich results require the markup to genuinely reflect visible page content.",
+      },
+      {
+        question: "What structure is produced?",
+        answer:
+          "A schema.org FAQPage object with one Question entry per pair, each containing a `name` and an `acceptedAnswer` with a `text` field, in standard JSON-LD with a `@context` of `https://schema.org`.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter Q&A pairs",
+        description:
+          "One question and one answer per line using the `Q:` / `A:` prefixes.",
+      },
+      {
+        title: "Fix any error message",
+        description:
+          "At least one complete Q&A pair is required; an orphan question alone shows a hint with the expected format.",
+      },
+      {
+        title: "Copy the schema",
+        description:
+          "Pretty-printed JSON-LD is ready to paste into your page's head or a structured-data testing tool.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Q: What is this tool?\nA: It builds FAQPage schema markup.\nQ2: Is it free?\nA2: Yes, it runs in your browser.",
+      output:
+        'FAQPage JSON-LD with 2 questions\n{ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [ { "@type": "Question", "name": "What is this tool", "acceptedAnswer": { "@type": "Answer", "text": "It builds FAQPage schema markup." } }, { "@type": "Question", "name": "Is it free", "acceptedAnswer": { "@type": "Answer", "text": "Yes, it runs in your browser." } } ] }',
+      note: "The parser strips the `Q:` / `Q2:` prefixes, removes a trailing `?` from each question text, and pairs it with the following answer into a Question/acceptedAnswer entry.",
+    },
+    limits: [
+      "Input is parsed line by line with `Q:` / `A:` prefixes — free-form lists, bullet FAQs or question-and-answer on a single line are not recognised.",
+      "A question without a matching answer is dropped, and the whole output requires at least one complete pair.",
+      "Schema markup alone does not guarantee rich results; the page must genuinely contain the questions and answers.",
+    ],
+    privacyNote:
+      "Schema generation runs locally in your browser. Your Q&A text is never uploaded.",
+    related: [
+      {
+        slug: "json-validator",
+        note: "Confirm the generated JSON-LD parses cleanly.",
+      },
+    ],
+  },
 };
 
 function fallbackExtras(toolSlug: string): ToolExtras | null {
