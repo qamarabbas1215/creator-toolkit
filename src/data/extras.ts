@@ -1079,6 +1079,922 @@ const CURATED: Record<string, ToolExtras> = {
       },
     ],
   },
+  "text-statistics": {
+    examples: [
+      {
+        title: "Profile a draft before publishing",
+        description:
+          "Paste a finished draft to see characters, words, sentences, and readability in one grid.",
+      },
+      {
+        title: "Find the hardest paragraph",
+        description:
+          "Compare syllables and average words per sentence across sections to spot dense copy.",
+      },
+      {
+        title: "Track one stat as you edit",
+        description:
+          "Watch unique words, long words (7+), and grade level update live while you revise.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which stats does Text Statistics actually show?",
+        answer:
+          "Characters (with and without spaces), words, unique words, sentences, paragraphs, lines, long words of 7 letters or more, syllables, average word length, average words per sentence, Flesch Reading Ease with a label, and Flesch-Kincaid Grade Level.",
+      },
+      {
+        question: "Does it include reading or speaking time?",
+        answer:
+          "The shared stats engine also computes reading minutes (200 wpm) and speaking minutes (130 wpm), but this page does not display them. Use the Reading Time or Speaking Time tools for those numbers.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Type or paste into the box — every statistic updates as you type.",
+      },
+      {
+        title: "Read the grid and the Flesch card",
+        description:
+          "Characters, words, sentences, syllables, and grade level sit in the stat grid; the card shows the Flesch Reading Ease score and its label.",
+      },
+      {
+        title: "Copy the full breakdown",
+        description:
+          "Click Copy all stats to grab a plain-text summary of every metric as its own line.",
+      },
+    ],
+    workedExample: {
+      input: "Hello world. How are you? Great!",
+      output:
+        "Characters: 32 · Words: 6 · Unique words: 6 · Sentences: 3 · Paragraphs: 1 · Lines: 1 · Long words (7+): 0 · Syllables: 7 · Avg word length: 4.0 · Avg words / sentence: 2.0 · Flesch ease: 106.1 (Very Easy) · Grade level: -1.0",
+      note: "Words are matched with the Latin-focused pattern [A-Za-z0-9'’-], giving 6 words and 7 syllables. The Flesch formula can exceed 100 for very short, simple text, and the page bar clamps at 100%.",
+    },
+    limits: [
+      "Words are matched with a Latin-focused pattern, so space-less scripts such as Chinese or Japanese are undercounted.",
+      "Syllable counting is an English heuristic (vowel groups with a trailing-e rule), so other languages get rough estimates.",
+      "Sentences split on . ! ? and …, so abbreviations, decimals, and initials add extra sentences.",
+      "The Flesch score can climb above 100 on very short simple text even though the formula label reads 0–100.",
+    ],
+    privacyNote:
+      "All statistics are computed in your browser with JavaScript. Your text is never sent to a server.",
+    related: [
+      {
+        slug: "word-counter",
+        note: "The same word basis with reading time and keyword frequency.",
+      },
+      {
+        slug: "sentence-counter",
+        note: "Sentence totals and longest/shortest sentence lengths.",
+      },
+      {
+        slug: "readability-checker",
+        note: "Focus on the Flesch Reading Ease score alone.",
+      },
+    ],
+  },
+  "readability-checker": {
+    examples: [
+      {
+        title: "Grade a blog intro",
+        description:
+          "Paste an intro and aim for a Standard (60–70) score so casual readers keep going.",
+      },
+      {
+        title: "Compare two versions",
+        description:
+          "Draft the same idea twice and compare which reads more easily before you publish.",
+      },
+      {
+        title: "Check a call-to-action",
+        description:
+          "Make sure subscribe buttons and signup copy are Short Sentences with Simple Words like the scoring guide recommends.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What score should I aim for?",
+        answer:
+          "The tool uses the Flesch label bands: 90+ Very Easy, 80+ Easy, 70+ Fairly Easy, 60+ Standard, 50+ Fairly Difficult, 30+ Difficult, and below 30 Very Confusing. For creator content, Standard or above is a safe target.",
+      },
+      {
+        question: "What exactly is measured?",
+        answer:
+          "Flesch Reading Ease uses average words per sentence and average syllables per word: 206.835 − 1.015 × (words ÷ sentences) − 84.6 × (syllables ÷ words). The tool displays the rounded score, its label, and the underlying word, sentence, and syllable counts.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Drop a paragraph, script, or landing page into the box. The score updates as you type.",
+      },
+      {
+        title: "Read the score and label",
+        description:
+          "The Reading Ease card shows the score from 0–100 plus its label (Very Easy to Very Confusing).",
+      },
+      {
+        title: "Inspect the breakdown",
+        description:
+          "Words, sentences, syllables, and average syllables per word explain why the score landed where it did.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Reading ease scores are calculated from sentence length and syllable count. Longer sentences with difficult words produce lower scores. Short text tends to score quite high.",
+      output:
+        "Score: 61.4 (Standard) · Words: 26 · Sentences: 3 · Syllables: 42 · Avg syllables per word: 1.62",
+      note: "The three sentences average 8.7 words each, but multisyllable words like calculated, difficult, and syllable push the count up, which keeps the score in the Standard band.",
+    },
+    limits: [
+      "The score is an English Flesch Reading Ease estimate, so other languages and mixed text get skewed results.",
+      "Syllables come from an English heuristic (vowel groups with a trailing-e rule), not a dictionary.",
+      "Sentences split on . ! ? and …, so decimals, initials, and abbreviations add count.",
+      "Flesch is length-based only: it says nothing about vocabulary difficulty or tone.",
+    ],
+    privacyNote:
+      "The score is computed locally in your browser. Nothing you paste is uploaded or stored.",
+    related: [
+      {
+        slug: "text-statistics",
+        note: "The same core stats with a full grid on one page.",
+      },
+      {
+        slug: "sentence-counter",
+        note: "A headline-friendlier sentence total without the score.",
+      },
+      {
+        slug: "word-counter",
+        note: "Word counts, reading time, and keyword frequency.",
+      },
+    ],
+  },
+  "headline-analyzer": {
+    examples: [
+      {
+        title: "Score a video title",
+        description:
+          "Paste a YouTube title and see exactly which of the five signals held it back.",
+      },
+      {
+        title: "A/B test two headlines",
+        description:
+          "Compare a numbers-first title against a question title and keep the higher score.",
+      },
+      {
+        title: "Tweak until it hits 8+",
+        description:
+          "Add a power word or a digit and watch the score climb toward the Strong band.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What does the score mean?",
+        answer:
+          "8–10 is Strong, 6–7 is Decent, and below 6 is Needs work. The rating is a composition heuristic — a headline that has a numbers score, a power word, and a question mark tends to draw more clicks.",
+      },
+      {
+        question: "What are the five signals?",
+        answer:
+          "Numbers or digits, an emotional trigger word, headline length, a question, and punctuation — an exclamation mark, period, or question mark. Each is shown as a score out of 10 and the five are averaged into the final rating.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste or type a headline",
+        description:
+          "The score updates live as you edit the title.",
+      },
+      {
+        title: "Read the five signals",
+        description:
+          "Numbers, emotional triggers, length, question, and punctuation each get a score out of 10 in the breakdown list.",
+      },
+      {
+        title: "Iterate on the weak signal",
+        description:
+          "Raise the lowest score first — usually by adding a digit or an emotional keyword from the list.",
+      },
+    ],
+    workedExample: {
+      input: "10 Proven Ways to Boost Your CTR (in 2026)",
+      output:
+        "Overall: 8/10 (Strong) · Length: 10 · Power words: 8 · Numbers: 9 · Question: 7 · Punctuation: 6",
+      note: "Nine words land in the 6–12 sweet spot (10/10), and two power words (Proven, Boost) beat the baseline. The digit 10 earns the numbers signal; the title is not a question and has no terminal punctuation, so those two signals stay low.",
+    },
+    limits: [
+      "The verdict is a heuristic. It does not predict actual click-through rates or guarantee YouTube traction.",
+      "'Question' triggers on a ? anywhere in the title; the parentheses around a year in the example do not count.",
+      "The emotional keyword list is fixed (Proven, Secret, Easy, Instant, and a handful more).",
+      "Punctuation triggers once on any of . ! ? for 9 points — a bare ellipsis (…) does not count on its own.",
+    ],
+    privacyNote:
+      "Analysis runs entirely in your browser. Headlines are never stored or shared.",
+    related: [
+      {
+        slug: "ctr-analyzer",
+        note: "A separate 0–100 rating with power words and framing hooks.",
+      },
+      {
+        slug: "blog-title-generator",
+        note: "Hand out fresh titles after you finish analyzing.",
+      },
+      {
+        slug: "youtube-title-generator",
+        note: "Generate titles to test against this analyzer.",
+      },
+    ],
+  },
+  "grammar-checker": {
+    examples: [
+      {
+        title: "Clean a caption before posting",
+        description:
+          "Paste text from your phone where doubled spaces and typos slipped in, then copy the corrected version.",
+      },
+      {
+        title: "Fix common misspellings",
+        description:
+          "The tool rewrites a fixed set of frequent typos (like teh → the) while keeping your wording intact.",
+      },
+      {
+        title: "Normalize spacing and punctuation",
+        description:
+          "Collapse extra spaces and remove spaces before commas, periods, and question marks in one pass.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this an AI grammar checker?",
+        answer:
+          "No. It applies deterministic rules: collapsing doubled spaces, removing spaces before punctuation, re-capping letters after . ! ?, flagging repeated words, and fixing a small dictionary of 28 common misspellings. It will not rewrite sentences or suggest style improvements.",
+      },
+      {
+        question: "Why didn't it flag my lowercase sentence?",
+        answer:
+          "The tool only re-capitalizes the word after a sentence-ending period, exclamation, or question mark. It intentionally does not correct a lowercased first letter of the very first word.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Drop text into the box — the check runs live as you type, listing each issue it finds.",
+      },
+      {
+        title: "Review each suggestion",
+        description:
+          "Scan the issue list — each entry shows the problem, the corrected text, and why it changed.",
+      },
+      {
+        title: "Copy the corrected version",
+        description:
+          "Use Copy corrected text to grab the fully corrected version — all fixes are applied in that output.",
+      },
+    ],
+    workedExample: {
+      input: "this is teh  best  way to recieve it",
+      output:
+        "Fixed: 'this is the best way to receive it' · 4 issues found (two extra spaces, teh → the, recieve → receive)",
+      note: "The first word stays lowercase because the checker only fixes text after a sentence-ending period, never the opening letter.",
+    },
+    limits: [
+      "Corrections are rule-based, not a full grammar engine: no subject-verb agreement, tense, or style checks.",
+      "The misspelling dictionary covers 28 of the most common typos only.",
+      "Repeated-word detection triggers on exact repeats like 'the the' and does not catch near duplicates.",
+      "The re-capitalization rule only applies after . ! ?, so it does not fix a lowercase first letter.",
+    ],
+    privacyNote:
+      "The check runs entirely in your browser. Nothing you paste is uploaded or stored.",
+    related: [
+      {
+        slug: "rewrite-tool",
+        note: "Say the same thing a different way after fixing typos.",
+      },
+      {
+        slug: "readability-checker",
+        note: "Confirm the corrected text is easy to read.",
+      },
+      {
+        slug: "sentence-counter",
+        note: "Check sentence length once you tighten your text.",
+      },
+    ],
+  },
+  "summarizer": {
+    examples: [
+      {
+        title: "Condense notes into a TL;DR",
+        description:
+          "Paste long meeting or research notes and pull 50% of the text into a fast summary.",
+      },
+      {
+        title: "Skim three articles quickly",
+        description:
+          "Run each article at 20% and compare the kept sentences before reading any full post.",
+      },
+      {
+        title: "Extract the core of your own writing",
+        description:
+          "Shorten a post to its key sentences to reuse as a social caption or email preview.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How is the summary picked?",
+        answer:
+          "The tool scores every sentence by how often its words appear across the whole text (rarer words weigh more after stopwords are removed). It then keeps the highest-scoring sentences until they reach the selected percentage of the sentence pool, and restores the original order.",
+      },
+      {
+        question: "Why do same-length options differ?",
+        answer:
+          "The ratio is applied to the sentence pool, so the same input at 30% and 50% keeps a different number of complete sentences, re-sorted into their original order afterward. Nothing is rewritten or fused.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Drop any prose into the box.",
+      },
+      {
+        title: "Pick a length",
+        description:
+          "Choose Short (20%), Medium (30%), or Long (50%) of the original text.",
+      },
+      {
+        title: "Compare and copy",
+        description:
+          "The kept sentences render in their original order; copy the summary when it looks right.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Dogs love to run. Training a dog takes time and patience. Puppies chew everything they find. Older dogs are usually calmer.",
+      output:
+        "Long (50%): 'Training a dog takes time and patience. Puppies chew everything they find.' · 2 of 4 sentences kept",
+      note: "The frequency scorer favors sentences carrying rarer content words (patience, puppies, chew), then re-sorts them back into their original order.",
+    },
+    limits: [
+      "Summaries are extractive: the tool never writes new sentences, only reuses full ones.",
+      "Short input can stay unchanged because at least one sentence is always kept.",
+      "The word-frequency scoring can prize a specific-looking sentence over the most general one.",
+      "Scoring is synchronous, so very long texts compute fully in the browser with no server round-trip.",
+    ],
+    privacyNote:
+      "Summarization and scoring happen locally in your browser. Text is never sent to a server, and there is no AI API involved.",
+    related: [
+      {
+        slug: "shorten-text",
+        note: "Trim by character or word count instead of by sentence.",
+      },
+      {
+        slug: "keyword-density",
+        note: "See which words drive the sentence scoring above.",
+      },
+      {
+        slug: "text-statistics",
+        note: "Compare original vs. summary length with real numbers.",
+      },
+    ],
+  },
+  "thumbnail-text-checker": {
+    examples: [
+      {
+        title: "Stress-test your thumbnail copy",
+        description:
+          "Paste the text you plan to put on a 1280×720 thumbnail and see if it stays readable at YouTube's small render size.",
+      },
+      {
+        title: "Choose a canvas and font size",
+        description:
+          "Switch between 16:9 video, 9:16 Shorts, square, and 4K presets and drag the font-size slider to match your design.",
+      },
+      {
+        title: "Trim words that push you out of range",
+        description:
+          "Cut from 8 words down to 6 to recover the word-count bonus and get a cleaner 100.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does the score predict clicks?",
+        answer:
+          "No. Readability Score is strictly a legibility heuristic: how quickly the text can be read at thumbnail size. It combines word count, text size relative to the canvas, and length and has nothing to do with CTR or viewer interest.",
+      },
+      {
+        question: "What preset should I use?",
+        answer:
+          "1280×720 (the classic 16:9 canvas) and 1920×1080 match most video layouts. Shorts use 720×1280, and the 1:1 preset (1080×1080) covers square uploads. Choose the one your audience actually sees.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Type the text on your thumbnail",
+        description:
+          "Enter the exact copy as it appears on the design.",
+      },
+      {
+        title: "Pick a canvas and font size",
+        description:
+          "Choose the thumbnail dimensions and drag the font-size slider to match your design.",
+      },
+      {
+        title: "Aim for the green zone",
+        description:
+          "The word count, character count, readability score, live preview, and recommendations show how close you are to a clear, punchy thumbnail.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Text: '5 MISTAKES YOU MAKE' · Canvas: 1280×720 · Font: 140 px",
+      output:
+        "Readability: 100/100 (raw 110, clamped to 100) · Word count: 4 · 'Great thumbnail text — clear, readable, and punchy.'",
+      note: "Four short words at about 11% of canvas width hit every bonus: ≤6 words, size ≥9%, length ≤40 characters, and the 2–5-word sweet spot.",
+    },
+    limits: [
+      "The score measures legibility, not click-through — it never predicts whether viewers will click.",
+      "The font slider is a design estimate. Results shift if your real font size differs.",
+      "The 60–260 px slider only approximates typical YouTube thumbnail fonts.",
+      "Emoji and special glyphs count toward length but are rendered by your own system font.",
+    ],
+    privacyNote:
+      "The analysis runs locally in your browser. No text, canvas choices, or scores are uploaded.",
+    related: [
+      {
+        slug: "thumbnail-text-generator",
+        note: "Generate short, punchy thumbnail copy to feed this checker.",
+      },
+      {
+        slug: "ctr-analyzer",
+        note: "Check the title that leads viewers to the thumbnail.",
+      },
+      {
+        slug: "youtube-title-generator",
+        note: "Pair a title with your optimized thumbnail text.",
+      },
+    ],
+  },
+  "ctr-analyzer": {
+    blogLink: {
+      slug: "youtube-titles-that-get-clicked",
+      title: "How to write YouTube titles that actually get clicked",
+      readTime: "6 min read",
+    },
+    examples: [
+      {
+        title: "Score your next video title",
+        description:
+          "Paste a title before hitting publish and see where you earn and lose points against the CTR checklist.",
+      },
+      {
+        title: "Compare title candidates",
+        description:
+          "Run two or three title ideas side by side and keep the one that clears the 70-plus Strong band.",
+      },
+      {
+        title: "Add the missing hook",
+        description:
+          "Drop in a number, a power word, or parentheses framing and watch the bar climb from Average to Strong.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does this predict real click-through rate?",
+        answer:
+          "No. CTR Score is a heuristics-based rating built from length, numbers, power words, framing parentheses, questions, and emoji. It is a writing checklist, not a measurement of viewer behavior, and the page says so.",
+      },
+      {
+        question: "What pushes a title into Strong?",
+        answer:
+          "A length between 20 and 60 characters, a number, and at least one of 14 power words (like mistakes, secret, best, or never). Adding parentheses framing like (in 2026) also adds points.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Type or paste a title",
+        description:
+          "The score re-evaluates live on every keystroke.",
+      },
+      {
+        title: "Read the checklist bars",
+        description:
+          "Length, power words, and each hook gets its own bar with the exact points awarded.",
+      },
+      {
+        title: "Iterate until 70+",
+        description:
+          "Reach the Strong band by raising the weakest bar: tighten length or add a power word or number.",
+      },
+    ],
+    workedExample: {
+      input: "5 Editing Secrets That Will Change Your Videos (in 2026)",
+      output:
+        "CTR Score: 90/100 (Strong) · Length: +20 · Numbers: +15 · Power words: +5 · Brackets: +10",
+      note: "The 56-character title is inside the 20–60 sweet spot (+20) and contains a digit (+15). Only one power word matches — secret inside Secrets — so the power-word bucket adds +5 instead of the cap +15, and the (in 2026) brackets add +10. It stops at 90; a second power word, a question mark, or an emoji would push it higher.",
+    },
+    limits: [
+      "It evaluates only the title text — never audience behavior, thumbnails, or real CTR data.",
+      "The 14 power words are fixed, so synonyms like 'failures' or 'tips' do not score.",
+      "An emoji only counts if the actual character is present in the title.",
+      "Titles over 60 characters earn a reduced length bonus, and ones past 70 receive none, even if well-written.",
+    ],
+    privacyNote:
+      "All scoring runs in your browser. Titles and scores never leave your device.",
+    related: [
+      {
+        slug: "thumbnail-text-checker",
+        note: "Readability scoring for the thumbnail that pairs with the title.",
+      },
+      {
+        slug: "youtube-title-generator",
+        note: "Generate title options to run through this analyzer.",
+      },
+      {
+        slug: "youtube-hook-generator",
+        note: "Write the first line that keeps viewers after the click.",
+      },
+    ],
+  },
+  "script-timer": {
+    examples: [
+      {
+        title: "Fit a script to a slot",
+        description:
+          "Paste a script and pick 140 wpm to see spoken length against a 10-minute target.",
+      },
+      {
+        title: "Find the slow section",
+        description:
+          "Sections like the intro and main points are timed separately, so you can see exactly what pushes you over.",
+      },
+      {
+        title: "Reset and re-plan",
+        description:
+          "Trim the longest section and watch total time drop before you start recording.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How do section markers work?",
+        answer:
+          "The timer splits text on Markdown-style and script markers — ## headings, ###, --, [Section], and MM:SS timecodes. Each marked block becomes a measured section and gets its own word count and duration.",
+      },
+      {
+        question: "What speaking speed is assumed?",
+        answer:
+          "You can choose 120, 140, 160, or 180 words per minute. The default is 140 wpm, a common talking-pace average for creator scripts.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your script",
+        description:
+          "Add your section markers (## Intro, [Main points], etc.) as you go.",
+      },
+      {
+        title: "Select a speaking pace",
+        description:
+          "Pick the 120–180 wpm preset that matches how you actually record.",
+      },
+      {
+        title: "Read the section breakdown",
+        description:
+          "Total time plus per-section minutes and word counts show where the length lives.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Welcome back to the channel everyone\n\n### Main points\nThanks for all the support on this long video",
+      output:
+        "Total: 6s at 140 wpm · Intro: 6 words → 3s · Main points: 9 words → 4s (15 words total)",
+      note: "Each marker creates its own section, and duration is section words ÷ speaking speed: 6 words at 140 wpm ≈ 2.6s (rounded to 3s) and 9 words ≈ 3.9s (rounded to 4s).",
+    },
+    limits: [
+      "It estimates from word count only, so pacing, pauses, and ad-libs shift real recording time.",
+      "Unmarked text is treated as an Intro section until you add a marker.",
+      "Speech-rate presets are fixed; there is no custom wpm field.",
+      "MM:SS markers are treated as section separators, not literal timestamps.",
+    ],
+    privacyNote:
+      "Timing happens locally in your browser. Your script never leaves the page.",
+    related: [
+      {
+        slug: "speaking-time",
+        note: "A flat words → time estimate with no sectioning.",
+      },
+      {
+        slug: "reading-time",
+        note: "Minutes-to-read for written (not spoken) samples.",
+      },
+      {
+        slug: "chapter-generator",
+        note: "Turn a finished script into YouTube chapters.",
+      },
+    ],
+  },
+  "tweet-formatter": {
+    examples: [
+      {
+        title: "Clean up a drafted tweet",
+        description:
+          "Remove doubled spaces, curly quotes, and stray newlines before pasting into X.",
+      },
+      {
+        title: "Split a long post automatically",
+        description:
+          "When the cleaned text needs more than one tweet, it is split automatically into numbered tweets of up to 260 characters.",
+      },
+      {
+        title: "Count exactly before you post",
+        description:
+          "The live 280-character counter shows exactly where you stand, thread or single tweet.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What does the formatter actually change?",
+        answer:
+          "It normalizes line endings, converts curly quotes and dashes to straight characters, collapses runs of spaces, trims blank lines, and trims the ends. Your words are otherwise untouched.",
+      },
+      {
+        question: "How does the thread split work?",
+        answer:
+          "The tool packs cleaned sentences into blocks of up to 260 characters. If that takes more than one block, it shows them as numbered tweets (1/2, 2/2…), splitting only between sentences so text is never cut mid-word.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "The preview updates live and shows before/after character counts.",
+      },
+      {
+        title: "Watch the counter",
+        description:
+          "The live 280 counter shows whether the cleaned text fits, and a numbered thread appears automatically when more than one tweet is needed.",
+      },
+      {
+        title: "Copy what you need",
+        description:
+          "Copy formatted grabs the cleaned text; Copy thread grabs the whole numbered split when one is shown.",
+      },
+    ],
+    workedExample: {
+      input:
+        "This is a long text.\n\n\nYou should format it  - properly!\n\n\n\nAnd finish here.\n\n",
+      output:
+        "Cleaned: 'This is a long text.\n\nYou should format it - properly!\n\nAnd finish here.' · 72/280 characters — fits in one tweet.",
+      note: "Runs of spaces collapse, runs of three or more newlines collapse to a single blank line, dashes are normalized to hyphens, and trailing blank lines are trimmed — the words are unchanged.",
+    },
+    limits: [
+      "The count uses JavaScript string length (UTF-16 code units), so an emoji occupies two slots and an emoji-heavy draft has less headroom than it looks.",
+      "Thread blocks pack whole sentences up to 260 characters, so text is never cut mid-word; a single sentence longer than 260 keeps its full length in one block.",
+      "The formatter does not rewrite your wording; it only cleans whitespace and quotes.",
+      "X's live counting already includes URLs, so short links are recommended inside long tweets.",
+    ],
+    privacyNote:
+      "Formatting and counting run entirely on your device. Your text is never uploaded.",
+    related: [
+      {
+        slug: "thread-generator",
+        note: "Split real sentences across tweets with numbering.",
+      },
+      {
+        slug: "character-counter",
+        note: "Raw 280 counts and keyword stats for any text.",
+      },
+      {
+        slug: "linkedin-formatter",
+        note: "The same normalization tuned for LinkedIn's editor.",
+      },
+    ],
+  },
+  "thread-generator": {
+    examples: [
+      {
+        title: "Turn a paste of notes into a thread",
+        description:
+          "Drop a wall of sentences in and let the tool pack them into numbered 240-character tweets in order.",
+      },
+      {
+        title: "Share a long explanation",
+        description:
+          "Keep full sentences intact across tweets instead of hard-cutting mid-word like a character limiter.",
+      },
+      {
+        title: "Preview the whole arc",
+        description:
+          "The numbering and per-tweet counts show how the story flows before any line goes out.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How does this differ from a tweet limiter?",
+        answer:
+          "The thread generator splits on sentence boundaries, never mid-word, and packs one or more full sentences per tweet block. Character-based splitters can cut anywhere; here each tweet reads as a complete thought in sequence.",
+      },
+      {
+        question: "What size does it allow per tweet?",
+        answer:
+          "It packs sentences up to a 240-character budget per tweet, so even the longest blocks steer clear of the 280 limit. Words that cannot fit begin the next tweet.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Write or paste your content",
+        description:
+          "Any text works — it is split into sentences first.",
+      },
+      {
+        title: "Generate the thread",
+        description:
+          "Blocks are numbered 1/2, 2/2, and so on in reading order.",
+      },
+      {
+        title: "Copy the whole thread",
+        description:
+          "Copy full thread grabs every numbered block in reading order.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Editing a video is mostly subtraction. You add value by removing the parts nobody needs. Cut every pause, every repeated word, every shot that says what the previous one already said. Do it early in the morning when you are fresh. Then watch it again tonight with colder eyes.",
+      output:
+        "2 tweets · Tweet 1/2 (230 chars): 'Editing a video is mostly subtraction. You add value by removing the parts nobody needs. Cut every pause, every repeated word, every shot that says what the previous one already said. Do it early in the morning when you are fresh.' · Tweet 2/2 (45 chars): 'Then watch it again tonight with colder eyes.'",
+      note: "Sentences stay whole: the packer packs up to 240 characters a tweet, so the final short sentence starts its own block rather than being merged.",
+    },
+    limits: [
+      "Blocks are words you supplied; the tool adds no formatting, emphasis, or hooks.",
+      "A sentence longer than 240 characters becomes its own oversized block rather than being split.",
+      "Sentence splitting relies on punctuation like . ! ?, so abbreviated text may mis-tokenize.",
+      "Numbering is baked into each block, so reordering blocks after copying means re-numbering by hand.",
+    ],
+    privacyNote:
+      "The split happens locally in your browser. Nothing is stored or sent to a server.",
+    related: [
+      {
+        slug: "tweet-formatter",
+        note: "Clean up and count a single tweet.",
+      },
+      {
+        slug: "character-counter",
+        note: "Check how close each block runs to 280.",
+      },
+      {
+        slug: "linkedin-formatter",
+        note: "The same cleanup, tuned for LinkedIn drafts.",
+      },
+    ],
+  },
+  "aspect-ratio-calculator": {
+    examples: [
+      {
+        title: "Check a thumbnail ratio",
+        description:
+          "Enter 1280×720 to confirm a 16:9 canvas before exporting from any design tool.",
+      },
+      {
+        title: "Compare a Short vs a video",
+        description:
+          "Flip between 1080×1920 (9:16) and 1920×1080 (16:9) to validate your crops.",
+      },
+      {
+        title: "Match the nearest common ratio",
+        description:
+          "An odd dimension returns the closest of ten standard ratios, from 21:9 to 1:1.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How is the simplified ratio found?",
+        answer:
+          "The tool divides both sides by their greatest common divisor to produce the exact ratio, then rounds the decimal to four places. A separate card always shows which of ten common ratios your dimensions are closest to.",
+      },
+      {
+        question: "Does it support vertical formats?",
+        answer:
+          "Yes. Swap width and height for 9:16 Shorts, or use the preset buttons for 1920×1080 (16:9), 1080×1920 (9:16), 1600×1200 (4:3), 1080×1080 (1:1), 3440×1440 (21:9), and 1500×1000 (3:2).",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter width and height",
+        description:
+          "Use the numeric inputs or tap a preset like 1920×1080.",
+      },
+      {
+        title: "Read the result triangle",
+        description:
+          "The simplified ratio, the decimal (to four places), and the nearest common ratio appear instantly.",
+      },
+      {
+        title: "Copy what you need",
+        description:
+          "Copy the ratio, the decimal, or the dimension pair for your platform.",
+      },
+    ],
+    workedExample: {
+      input: "Width: 1920 · Height: 1080",
+      output:
+        "Ratio: 16:9 · Decimal: 1.7778 · Nearest common ratio: 16:9",
+      note: "GCD(1920, 1080) = 120, giving the textbook 16:9; 1080×1920 mirrors it as 9:16.",
+    },
+    limits: [
+      "The nearest-common-ratio list only knows ten presets (16:9 through 4:5).",
+      "The simplified ratio is exact; the decimal is rounded to four places.",
+      "Zero or negative inputs are not validated — the GCD still runs on absolute rounded values, so double-check your numbers.",
+      "It reports the ratio math only — it does not crop or resize an image.",
+    ],
+    privacyNote:
+      "All ratio math runs in your browser. No dimensions are uploaded.",
+    related: [
+      {
+        slug: "ai-image-prompt-builder",
+        note: "Feed the computed aspect into a prompt for image models.",
+      },
+      {
+        slug: "color-palette-generator",
+        note: "Pair the canvas shape with a matching palette.",
+      },
+      {
+        slug: "thumbnail-text-checker",
+        note: "Reuse the computed aspect when layouting thumbnail text.",
+      },
+    ],
+  },
+  "ai-cost-calculator": {
+    examples: [
+      {
+        title: "Estimate a batch of generations",
+        description:
+          "Paste a prompt, enter the expected output size, and see the price across the 13 supported models at once.",
+      },
+      {
+        title: "Compare an expensive and a cheap model",
+        description:
+          "Keep the same input and output sizes and switch from GPT-4o to GPT-4o mini to see the price gap in cents.",
+      },
+      {
+        title: "Budget a content pipeline",
+        description:
+          "Run the same prompt through every model and pick the cheapest one that meets quality needs.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Are the prices live?",
+        answer:
+          "No. The calculator uses static per-million-token prices baked into the app for 13 popular models. They are a planning estimate, not a real-time bill, and can drift as providers republish pricing.",
+      },
+      {
+        question: "How is the input token count derived?",
+        answer:
+          "It estimates tokens from character count (roughly one token per 4 characters) using each model's character-per-token constant, which is closer to 3.5 for Claude and a few Chinese-native models. Output tokens are estimated from the character count you enter, divided by the model's characters-per-token constant.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter your prompt and other text",
+        description:
+          "Input characters drive the input-token estimate.",
+      },
+      {
+        title: "Set the output size",
+        description:
+          "Enter the output characters you expect; tokens are estimated as that count divided by the model's characters-per-token constant.",
+      },
+      {
+        title: "Compare the table",
+        description:
+          "Every model row shows input cost, output cost, and total, so the cheapest option is visible at a glance.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Prompt: 'Hello' (1 token) · Output: '…500 characters…' (125 tokens) · Model: GPT-4o ($2.50/million input, $10/million output)",
+      output:
+        "Input tokens: 1 · Output tokens: 125 · GPT-4o: $0.001252 · GPT-4o mini: $0.000075",
+      note: "Cost is (inputTokens ÷ 1M × inPrice) + (outputTokens ÷ 1M × outPrice), so GPT-4o is the 1 input token ($0.0000025) plus 125 output tokens ($0.00125). GPT-4o mini's cheaper unit rates make the same 1 + 125 tokens cost under a tenth of a cent.",
+    },
+    limits: [
+      "Prices are a static snapshot of 13 models and can go stale as providers republish pricing.",
+      "Token estimates are character-based; real tokenizers vary slightly between models.",
+      "The output-token estimate comes from the character count you enter; it does not simulate a model run.",
+      "Total cost is rounded to six decimals in the table, so sub-mill-cent rows may show $0.000000.",
+    ],
+    privacyNote:
+      "Token math and pricing run entirely in your browser. Prompts and numbers are never uploaded.",
+    related: [
+      {
+        slug: "ai-token-calculator",
+        note: "Count tokens for any model without the price table.",
+      },
+    ],
+  },
 };
 
 function fallbackExtras(toolSlug: string): ToolExtras | null {
