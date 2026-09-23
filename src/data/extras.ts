@@ -2905,6 +2905,865 @@ const CURATED: Record<string, ToolExtras> = {
       },
     ],
   },
+  "image-converter": {
+    examples: [
+      {
+        title: "Keep transparency in a logo",
+        description:
+          "Convert a PNG logo to WebP and keep its transparent background for a web build.",
+      },
+      {
+        title: "Flatten a photo for sharing",
+        description:
+          "Convert an opaque photo to JPEG at the default 85% quality to shrink it for email or social uploads.",
+      },
+      {
+        title: "Batch a photo set",
+        description:
+          "Add several images and convert them at once; multiple outputs download together as converted-images.zip.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does JPEG keep transparency?",
+        answer:
+          "No. JPEG has no alpha channel, so the tool fills the canvas with solid white before encoding. If you want transparency preserved, choose PNG or WebP.",
+      },
+      {
+        question: "Does the quality slider affect every format?",
+        answer:
+          "No. It applies only to JPEG and WebP. PNG is lossless, so the quality control is ignored for that target and the full pixels are kept.",
+      },
+      {
+        question: "What happens to animated GIFs?",
+        answer:
+          "The image is decoded by your browser and drawn to a canvas, so an animated GIF converts from its first frame only — the animation is not preserved.",
+      },
+      {
+        question: "Why did multiple files download as a ZIP?",
+        answer:
+          "When you convert more than one image, they are packed into an archive named converted-images.zip. A single image downloads directly with its new extension.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Add your images",
+        description:
+          "Use Add images to pick one or more files. Anything your browser can decode is accepted — JPG, PNG, WebP, GIF, and more.",
+      },
+      {
+        title: "Pick a target format and quality",
+        description:
+          "Choose PNG, JPEG (the default), or WebP. The quality slider (default 85%) applies to JPEG and WebP only.",
+      },
+      {
+        title: "Convert and download",
+        description:
+          "Click Convert, then grab the downloaded file — or the ZIP when you converted more than one.",
+      },
+    ],
+    workedExample: {
+      input: "logo.png (with transparency) → target JPEG",
+      output: "logo.jpg · transparent areas rendered solid white · quality 85%",
+      note: "JPEG has no alpha channel, so the canvas is filled with white before encoding. Choosing PNG or WebP instead preserves the transparency.",
+    },
+    limits: [
+      "Supported output formats are PNG, JPEG, and WebP; any file your browser cannot decode fails with the status 'One or more files could not be converted.'",
+      "JPEG fills transparency with white — only PNG and WebP keep an alpha channel.",
+      "Images are not resized: the output keeps the source pixel dimensions.",
+      "Animated GIFs convert from their first frame, and very large images can hit browser memory limits during canvas encoding.",
+    ],
+    privacyNote:
+      "Conversion happens entirely in your browser with the built-in canvas API. The images you pick are read locally and never uploaded.",
+    related: [
+      {
+        slug: "image-to-pdf",
+        note: "Package converted images into a single PDF document.",
+      },
+      {
+        slug: "aspect-ratio-calculator",
+        note: "Confirm the ratio before you export.",
+      },
+      {
+        slug: "color-palette-generator",
+        note: "Build a palette to match the converted image.",
+      },
+    ],
+  },
+  "video-converter": {
+    examples: [
+      {
+        title: "Re-encode a file for the web",
+        description:
+          "Convert an MP4 to WebM (VP9) for a smaller, browser-friendly version.",
+      },
+      {
+        title: "Turn a clip into an animated GIF",
+        description:
+          "Use the GIF target, which encodes at 12 fps scaled to a 480px-wide frame, for a quick preview loop.",
+      },
+      {
+        title: "Pull the audio track",
+        description:
+          "Choose MP3 to drop the video stream and keep only the audio from a file.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this a real transcode?",
+        answer:
+          "Yes. Conversion runs FFmpeg compiled to WebAssembly inside your browser, so the video is genuinely re-encoded with libx264, VP9, or the target codec — not just repackaged.",
+      },
+      {
+        question: "Why did the first conversion take so long?",
+        answer:
+          "Before the first conversion the tool downloads the FFmpeg engine (~30 MB) from a CDN. Later conversions reuse the engine held in memory.",
+      },
+      {
+        question: "Do bigger files cause issues?",
+        answer:
+          "Encoding happens in the browser's memory, so very large or long files can fail or take noticeably longer depending on your device. There is no server-side fallback.",
+      },
+      {
+        question: "What formats can I output?",
+        answer:
+          "MP4 (H.264), WebM (VP9), MOV (H.264), MKV (H.264), animated GIF (12 fps, scaled to 480px wide), and MP3 (audio only).",
+      },
+    ],
+    howTo: [
+      {
+        title: "Choose a video file",
+        description:
+          "Pick a single file — MP4, WebM, MOV, AVI, MKV, and more are accepted.",
+      },
+      {
+        title: "Select the target format",
+        description:
+          "MP4 is the default; choose WebM, MOV, MKV, GIF, or MP3 from the dropdown.",
+      },
+      {
+        title: "Watch the progress and download",
+        description:
+          "A progress bar fills as FFmpeg runs; the converted file downloads with your original filename and the new extension.",
+      },
+    ],
+    workedExample: {
+      input: "clip.mp4 → target MP3",
+      output: "clip.mp3 · video stream removed (-vn), audio re-encoded with libmp3lame",
+      note: "The MP3 target runs FFmpeg with -vn, so the output contains only the audio stream; no video frames are included.",
+    },
+    limits: [
+      "Conversion is real re-encoding with the FFmpeg core, delivered as WebAssembly; speed depends on your device, file length, and resolution.",
+      "The output formats are fixed — MP4, WebM, MOV, MKV, GIF, and MP3 — with preset encoding settings (libx264 CRF 23, VP9 CRF 32, etc.).",
+      "The GIF target always encodes at 12 fps and scales to a maximum width of 480px.",
+      "Only one file converts at a time, and large files can hit browser memory limits.",
+    ],
+    privacyNote:
+      "The video is processed locally by FFmpeg in WebAssembly, so its bytes stay in your browser. The engine itself (~30 MB) is fetched from a CDN on first use.",
+    related: [
+      {
+        slug: "audio-converter",
+        note: "Re-encode audio files with the same engine.",
+      },
+      {
+        slug: "image-converter",
+        note: "Convert still images or the first frame of a GIF.",
+      },
+      {
+        slug: "ocr",
+        note: "Pull selectable text from a recorded frame instead.",
+      },
+    ],
+  },
+  "audio-converter": {
+    examples: [
+      {
+        title: "Shrink a voice note",
+        description:
+          "Convert an M4A recording to MP3 for a smaller, widely-compatible file.",
+      },
+      {
+        title: "Hand off a WAV",
+        description:
+          "Decode a lossy source into an uncompressed WAV for editing in a DAW.",
+      },
+      {
+        title: "Archive in FLAC",
+        description:
+          "Re-encode to FLAC for a file that loses nothing further during conversion.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this a real re-encode?",
+        answer:
+          "Yes. Audio is decoded and re-encoded in your browser by FFmpeg compiled to WebAssembly, with codec targets of MP3 (libmp3lame), WAV (16-bit PCM), OGG Vorbis, M4A (AAC 192 kbit/s), FLAC, and AAC.",
+      },
+      {
+        question: "Is FLAC truly lossless here?",
+        answer:
+          "The FLAC target uses the FLAC encoder, so no further quality is lost during conversion — but the result is only as good as the source. Converting an MP3 to FLAC does not recover detail the MP3 already removed.",
+      },
+      {
+        question: "Why does the first conversion download something?",
+        answer:
+          "The FFmpeg engine (~30 MB) is fetched from a CDN on first use and kept in memory afterwards.",
+      },
+      {
+        question: "Can I convert multiple files at once?",
+        answer:
+          "No — this tool converts one audio file at a time.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Choose an audio file",
+        description:
+          "Pick a single file — MP3, WAV, OGG, M4A, FLAC, AAC, OPUS, and more.",
+      },
+      {
+        title: "Pick the target format",
+        description:
+          "MP3 is the default; the other options are WAV, OGG (Vorbis), M4A (AAC), FLAC, and AAC.",
+      },
+      {
+        title: "Convert and download",
+        description:
+          "Watch the progress bar, then grab the file, which keeps your original base name with the new extension.",
+      },
+    ],
+    workedExample: {
+      input: "podcast-episode.mp3 → target WAV",
+      output: "podcast-episode.wav · decoded to uncompressed 16-bit PCM and downloaded",
+      note: "The WAV target uses the pcm_s16le codec, producing an uncompressed file that is typically much larger than the source.",
+    },
+    limits: [
+      "One file converts at a time — there is no batch mode.",
+      "Output codecs are fixed: MP3, WAV, OGG Vorbis, M4A (AAC), FLAC, and AAC, with preset settings such as 192 kbit/s AAC.",
+      "FLAC and WAV preserve the decoded audio but cannot add detail the source already lost — an MP3 converted to FLAC keeps the MP3's quality.",
+      "Very long files can be slow or fail in browser memory; encoding speed depends on the device.",
+    ],
+    privacyNote:
+      "Decoding and encoding run locally with FFmpeg WebAssembly, so the audio stays in your browser. The engine (~30 MB) downloads from a CDN the first time you convert.",
+    related: [
+      {
+        slug: "video-converter",
+        note: "Extract the audio track from a video file.",
+      },
+      {
+        slug: "image-converter",
+        note: "Batch-convert images alongside your audio.",
+      },
+      {
+        slug: "ocr",
+        note: "Read audio labels or transcripts from images.",
+      },
+    ],
+  },
+  "ocr": {
+    examples: [
+      {
+        title: "Extract a screenshot",
+        description:
+          "Drop a screenshot of a message or error dialog and copy the text out for editing.",
+      },
+      {
+        title: "Read a scanned page",
+        description:
+          "Scan a document, upload the image, and pull the printed text into a copyable output box.",
+      },
+      {
+        title: "OCR a multi-page PDF",
+        description:
+          "Give the tool a PDF and it reads the first five pages, labeling each with a page marker.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which OCR engine is used?",
+        answer:
+          "Tesseract.js — the Tesseract OCR engine compiled to run in your browser. There is no server call; the engine (~15 MB) is downloaded on first use.",
+      },
+      {
+        question: "How accurate is it?",
+        answer:
+          "Accuracy depends heavily on image quality, resolution, and skew. Clean, well-lit, sharp text extracts best; blurry, rotated, or noisy scans can produce errors or no text at all.",
+      },
+      {
+        question: "Does it support every language?",
+        answer:
+          "It offers 12 preset languages: English (default), Spanish, French, German, Italian, Portuguese, Dutch, Arabic, Hindi, Japanese, Chinese (Simplified), and Korean.",
+      },
+      {
+        question: "Are PDFs fully processed?",
+        answer:
+          "No. PDFs are rendered page by page and OCR'd up to the first 5 pages only, with each block labeled as '--- Page N ---'.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Choose an image or PDF",
+        description:
+          "Pick a screenshot, scan, or photo. PDFs are handled too, but only the first 5 pages are read.",
+      },
+      {
+        title: "Select the language",
+        description:
+          "English is the default; switch to the language that matches the text if it is not English.",
+      },
+      {
+        title: "Extract and copy",
+        description:
+          "Click Extract text, watch the progress bar, then copy or download the result from the output box (ocr-text.txt).",
+      },
+    ],
+    workedExample: {
+      input: "screenshot containing the line: Subscribe for more videos",
+      output: "Subscribe for more videos",
+      note: "The recognized text fills the editable output box, and the status line reports the word count — 4 words in this case. No confidence score is displayed.",
+    },
+    limits: [
+      "Accuracy is quality-dependent: blur, rotation, low resolution, and background noise all hurt results.",
+      "PDFs are OCR'd to the first 5 pages only, rendered at 2× scale before recognition.",
+      "Only the 12 listed languages are available; text in other scripts may come out garbled or empty.",
+      "No confidence values are displayed, and handwriting cannot be relied on.",
+      "The engine (~15 MB) downloads from a CDN on first use; long files can be slow and memory-heavy.",
+    ],
+    privacyNote:
+      "Recognition happens in your browser with Tesseract.js, so the image or PDF is not uploaded. The engine itself (~15 MB) is fetched from a CDN the first time you run it.",
+    related: [
+      {
+        slug: "pdf-to-word",
+        note: "Extract selectable text from a text-based PDF.",
+      },
+      {
+        slug: "image-to-pdf",
+        note: "Package scanned images into a document first.",
+      },
+      {
+        slug: "image-converter",
+        note: "Clean or resize an image before OCR.",
+      },
+    ],
+  },
+  "pdf-split": {
+    examples: [
+      {
+        title: "One PDF → one page per file",
+        description:
+          "Split a document into individual page PDFs, delivered together in a ZIP.",
+      },
+      {
+        title: "Pull a chapter range",
+        description:
+          "Extract pages 2–4 of a long guide into a single smaller PDF.",
+      },
+      {
+        title: "Share one section",
+        description:
+          "Export a single page number as its own PDF to send to a collaborator.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which modes are available?",
+        answer:
+          "Two. 'Split into separate pages' writes every page as page-N.pdf inside a ZIP named {name}-pages.zip. 'Extract a page range' takes From and To numbers and outputs a single {name}-pages-{s}-{e}.pdf.",
+      },
+      {
+        question: "What if I type a range outside the document?",
+        answer:
+          "The range is clamped to the document: the start is limited to between 1 and the page count, and the end is locked to at least the start and at most the total pages.",
+      },
+      {
+        question: "Can I specify multiple ranges at once?",
+        answer:
+          "No — a single contiguous range only. To extract several ranges, run the tool once per range.",
+      },
+      {
+        question: "Is this processed on a server?",
+        answer:
+          "No. Splitting uses pdf-lib entirely in your browser.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Choose a PDF",
+        description:
+          "Pick the file; the tool reads its page count and fills the To box with the last page.",
+      },
+      {
+        title: "Pick a mode",
+        description:
+          "Choose 'Split into separate pages' or 'Extract a page range', and set From/To for a range.",
+      },
+      {
+        title: "Split and download",
+        description:
+          "Click Split PDF or Extract range, then grab the ZIP or the single range PDF.",
+      },
+    ],
+    workedExample: {
+      input: "guide.pdf (6 pages) · mode: Extract range · From 2 · To 4",
+      output: "guide-pages-2-4.pdf · 3 pages extracted",
+      note: "The range is clamped to the document bounds (1..6), then pages 2, 3, and 4 are copied in order into a fresh PDF.",
+    },
+    limits: [
+      "Only a single contiguous range is supported — no multiple ranges or custom output names.",
+      "Encrypted, corrupted, or non-PDF files fail with 'That file is not a valid PDF.' or 'Failed to split this PDF.'",
+      "Splitting copies pages and does not guarantee that interactive forms, annotations, or bookmarks survive.",
+      "Large files can hit browser memory limits; there is no server-side fallback.",
+    ],
+    privacyNote:
+      "Splitting runs locally with pdf-lib. The PDF you choose is read in your browser and never uploaded.",
+    related: [
+      {
+        slug: "pdf-merge",
+        note: "Combine the resulting pages back into one file.",
+      },
+      {
+        slug: "pdf-compress",
+        note: "Shrink the extracted PDF.",
+      },
+      {
+        slug: "pdf-to-word",
+        note: "Pull text out of a page instead.",
+      },
+    ],
+  },
+  "image-to-pdf": {
+    examples: [
+      {
+        title: "Turn screenshots into a handout",
+        description:
+          "Add several screenshots in order and export them as one paginated PDF.",
+      },
+      {
+        title: "Package a set of scans",
+        description:
+          "Bundle scanned pages into a single document with one image per page.",
+      },
+      {
+        title: "Export at a fixed page size",
+        description:
+          "Choose A4 portrait, A4 landscape, or Letter so the PDF prints predictably.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which image formats are supported?",
+        answer:
+          "JPG and PNG are embedded directly. Other formats your browser can decode (WebP, GIF, and more) are drawn to a canvas and stored as PNG first. Files that cannot be decoded fail the conversion.",
+      },
+      {
+        question: "What are the page size options?",
+        answer:
+          "Fit image size (the default, one page per image at its own dimensions), A4 portrait, A4 landscape, or Letter. With a fixed page size, each image is scaled down to fit while keeping its aspect ratio.",
+      },
+      {
+        question: "Why is the output always called images.pdf?",
+        answer:
+          "The tool names every result images.pdf and reports the page count in the status line; rename the downloaded file if you need a different name.",
+      },
+      {
+        question: "Can I change the order?",
+        answer:
+          "Yes — each image row has up and down arrows to reorder the pages before you create the PDF, and an ✕ button to remove an image.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Add images in order",
+        description:
+          "Pick one or more images, then use the arrows to set the page order.",
+      },
+      {
+        title: "Choose a page size",
+        description:
+          "Leave Fit image size for native dimensions, or pick A4 portrait, A4 landscape, or Letter.",
+      },
+      {
+        title: "Create and download",
+        description:
+          "Click Create PDF — the result downloads as images.pdf with one page per image.",
+      },
+    ],
+    workedExample: {
+      input: "cover.jpg, diagram.png, appendix.png (in that order) · page size: A4 portrait",
+      output: "images.pdf · 3 pages, each image scaled to fit a 595×842 pt page",
+      note: "With a fixed page size each image is down-scaled to fit the page while keeping its aspect ratio; the output always downloads as images.pdf.",
+    },
+    limits: [
+      "One page per image — images are not combined onto a single page.",
+      "JPG and PNG are embedded directly; other formats go through a canvas re-encode to PNG, so their decode depends on your browser.",
+      "There is no margins, compression, or quality control — images are embedded at their original bytes (or canvas PNG for other formats).",
+      "The output is not an OCR or searchable PDF — no hidden text layer is added.",
+      "Very large images can fail in browser memory.",
+    ],
+    privacyNote:
+      "The PDF is built locally with pdf-lib and the browser canvas. Your images are not uploaded anywhere.",
+    related: [
+      {
+        slug: "image-converter",
+        note: "Convert images before packing them into a PDF.",
+      },
+      {
+        slug: "pdf-merge",
+        note: "Combine several PDFs into one.",
+      },
+      {
+        slug: "ocr",
+        note: "Extract text from the resulting scanned PDF.",
+      },
+    ],
+  },
+  "ai-prompt-tester": {
+    examples: [
+      {
+        title: "Score a draft prompt",
+        description:
+          "Paste a prompt and read its 0–100 score plus a checklist of what's missing.",
+      },
+      {
+        title: "Fix the weakest item",
+        description:
+          "Add a constraint or an example and watch the score move as the check passes.",
+      },
+      {
+        title: "Compare two versions",
+        description:
+          "Run the same idea with and without detail to see which checks clear.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does this run my prompt through an AI model?",
+        answer:
+          "No. There is no model, no API, and no network call. The tool applies six static rules to the text and scores how many pass.",
+      },
+      {
+        question: "What are the six checks?",
+        answer:
+          "Clear instruction (an action verb like write or explain), Specific & detailed (numbers or detail words), Constraints given (must, avoid, limit, and similar), Examples included, Output format defined, and Good length (at least 30 characters, flagged above 1500).",
+      },
+      {
+        question: "How is the score calculated?",
+        answer:
+          "Score is passed checks ÷ total checks × 100, rounded. Colors are applied by band: green at 80+, amber at 50+, red below 50.",
+      },
+      {
+        question: "Does the score predict output quality?",
+        answer:
+          "No. It is a prompt-writing checklist, not a prediction of what a model will produce or how useful the result will be.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your prompt",
+        description:
+          "Type or paste into the field; the score, characters, estimated tokens, and words update live.",
+      },
+      {
+        title: "Read the checklist",
+        description:
+          "Each of the six checks shows a pass mark or a warning, with a tip for the failing ones.",
+      },
+      {
+        title: "Iterate",
+        description:
+          "Fix a failing item and the score re-calculates immediately.",
+      },
+    ],
+    workedExample: {
+      input: "Write a short product description for my new cafe.",
+      output: "Score: 50/100 · 3 of 6 checks passed · 9 words · ~13 est. tokens",
+      note: "The verb write and the word new pass Clear instruction and Specific & detailed, and the 50-character length passes Good length. Constraints, an example, and an output format are each missing, leaving 3 of 6 checks.",
+    },
+    limits: [
+      "The score is a fixed text heuristic — it does not call a model, predict quality, or judge fitness for a specific model.",
+      "Checks key on simple word patterns, so a genuinely specific prompt written differently can score lower than a generic one that happens to match keywords.",
+      "Good length requires at least 30 characters and warns above 1500; 'Est. tokens' is simply characters ÷ 4.",
+    ],
+    privacyNote:
+      "Scoring runs entirely in your browser. Your prompt is never sent to a server or any AI provider.",
+    related: [
+      {
+        slug: "prompt-comparator",
+        note: "Compare two prompts' heuristics side by side.",
+      },
+      {
+        slug: "prompt-optimizer",
+        note: "Get improvement suggestions for a prompt.",
+      },
+      {
+        slug: "ai-prompt-shortener",
+        note: "Trim a long prompt before you test it.",
+      },
+    ],
+  },
+  "prompt-comparator": {
+    examples: [
+      {
+        title: "A/B two prompt drafts",
+        description:
+          "Paste two versions and compare word counts, unique words, and specificity cues at a glance.",
+      },
+      {
+        title: "Spot the weaker one",
+        description:
+          "The verdict names the more detailed prompt, so you know which draft to develop.",
+      },
+      {
+        title: "See what 'detailed' means",
+        description:
+          "Each side lists its specificity cue matches — soft, golden, moody, cinematic, and a few more.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it use an AI model to judge?",
+        answer:
+          "No. It compares three heuristic metrics: total words, unique words, and how many of a fixed set of specificity words appear.",
+      },
+      {
+        question: "How is the verdict decided?",
+        answer:
+          "Each prompt gets words + (2 × specificity cues) + (3 × unique ÷ words). The higher score is named 'more detailed and specific'; equal scores produce an 'equally detailed' verdict.",
+      },
+      {
+        question: "Does word order matter?",
+        answer:
+          "No. All three metrics are order-insensitive: they count tokens, unique tokens, and whether word cues appear anywhere in the text.",
+      },
+      {
+        question: "Is this an objective quality measure?",
+        answer:
+          "No. It measures detail signals only — not how well the prompt will perform with an image or text model.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste Prompt A and Prompt B",
+        description:
+          "Add both texts; the metrics update as you type.",
+      },
+      {
+        title: "Read the three metrics",
+        description:
+          "Words, Unique, and Specificity cues are shown per panel.",
+      },
+      {
+        title: "Check the verdict",
+        description:
+          "The result card states which prompt the heuristic judges more detailed.",
+      },
+    ],
+    workedExample: {
+      input: "A: a fox drinking tea in a Victorian library · B: a golden fox drinking soft tea in a Victorian library",
+      output: "Prompt B is more detailed and specific · A: 8 words · 7 unique · 0 cues · B: 10 words · 9 unique · 2 cues",
+      note: "golden and soft are both in the fixed specificity-word list, and B has more unique words, so its heuristic score (words + 2×cues + 3×unique ratio) is higher and the verdict names B.",
+    },
+    limits: [
+      "This is a heuristic comparison, not an objective or AI-powered quality score.",
+      "The specificity cue list is fixed at a small set of words, so specificity expressed differently is not counted.",
+      "Metrics ignore word order, and very short prompts at near-equal scores can produce an 'equally detailed' verdict.",
+    ],
+    privacyNote:
+      "Both prompts are compared locally in your browser and are never uploaded.",
+    related: [
+      {
+        slug: "ai-prompt-tester",
+        note: "Score either prompt against a six-point checklist.",
+      },
+      {
+        slug: "prompt-optimizer",
+        note: "Get rewrite suggestions for the losing draft.",
+      },
+      {
+        slug: "prompt-library",
+        note: "Find ready-made prompt structures to compare against.",
+      },
+    ],
+  },
+  "internal-link-suggestions": {
+    examples: [
+      {
+        title: "Spot strong link candidates",
+        description:
+          "Paste an article plus labels and URLs; the tool ranks which links match the content best.",
+      },
+      {
+        title: "Check an anchor phrase",
+        description:
+          "The label's words that appear in your content are suggested as anchor text.",
+      },
+      {
+        title: "Re-run an old post",
+        description:
+          "Run the same page content against new candidate links to see which still fit.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it crawl or scan my website?",
+        answer:
+          "No. It only compares the content you paste with the candidate links you enter. There is no crawling, sitemap reading, or site-wide index.",
+      },
+      {
+        question: "How is the match percentage calculated?",
+        answer:
+          "Each label is tokenized; words shorter than 3 characters and a stop-word list (the, and, or, for, of, to…) are ignored for matching. The score is matched-words ÷ the label's full word count, shown as a rounded percentage.",
+      },
+      {
+        question: "What do the strength bands mean?",
+        answer:
+          "Greater than 50% is strong, greater than 0% is possible, and 0% is weak — based solely on word overlap, not on SEO value.",
+      },
+      {
+        question: "Does it detect links already in my content?",
+        answer:
+          "No. Existing anchors or URLs in the pasted content are not detected or removed.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your content",
+        description:
+          "Add the page or article text you plan to link from.",
+      },
+      {
+        title: "Add candidate links",
+        description:
+          "One per line as label | url, for example About | /about. The default box holds three examples.",
+      },
+      {
+        title: "Read the ranked list",
+        description:
+          "Each candidate shows a percentage badge, a suggested anchor (the first matching word), and the full Markdown-style output with strength labels.",
+      },
+    ],
+    workedExample: {
+      input: "Content: We share editing tips and thumbnail ideas on this blog every week. · Links: Video editing tips | /blog/editing-tips · About the blog | /about",
+      output: "[editing](/blog/editing-tips) — strong (67% match) · [blog](/about) — possible (33% match)",
+      note: "The first label matches 2 of its 3 words (editing, tips); the second matches 1 of 3 (blog) because the denominator is the label's full word count, so it lands in the possible band.",
+    },
+    limits: [
+      "Matching is a token-overlap heuristic — it does not read meaning, context, or SEO value, and a match does not guarantee better ranking or traffic.",
+      "The tool only works on the content you paste and the link list you supply; it cannot inspect your site or its other pages.",
+      "Existing links in the content are not detected, and stop words plus 1–2 letter words are excluded from matching.",
+      "Anchor suggestions reuse the first matching word of the label, which may not be the ideal phrase.",
+    ],
+    privacyNote:
+      "All matching happens locally in your browser. Your content and link list are not uploaded.",
+    related: [
+      {
+        slug: "keyword-density",
+        note: "Understand which terms dominate your content first.",
+      },
+      {
+        slug: "serp-preview",
+        note: "Pair the page with a fitting title and description.",
+      },
+      {
+        slug: "slug-generator",
+        note: "Clean up the URLs you link to.",
+      },
+    ],
+    blogLink: {
+      slug: "creators-seo-checklist",
+      title: "The creator's SEO checklist before you hit publish",
+      readTime: "8 min read",
+    },
+  },
+  "serp-preview": {
+    examples: [
+      {
+        title: "Fit a meta title",
+        description:
+          "Type your title and keep the 60-character bar green to avoid truncation in search results.",
+      },
+      {
+        title: "Tune the meta description",
+        description:
+          "Watch the 160-character bar stay in the Fits zone as you write.",
+      },
+      {
+        title: "Check the URL display",
+        description:
+          "See how the path is shown in a Google-style result card.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it measure exact pixel width?",
+        answer:
+          "No. The fit checks are character-based against the 60- and 160-character guides, not actual pixel-width measurement of your chosen font.",
+      },
+      {
+        question: "Is this what Google actually shows?",
+        answer:
+          "No. It is a static visual approximation of a search result — Google's truncation depends on the device, query, and its own layout, and the preview is not live data.",
+      },
+      {
+        question: "Do the bars predict ranking or clicks?",
+        answer:
+          "No. They only report title and description length against the 60/160 guides.",
+      },
+      {
+        question: "Is there a mobile and desktop toggle?",
+        answer:
+          "No. The preview is a single card rendered the same way regardless of viewport.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter title, description, and URL",
+        description:
+          "All three update the preview card live; the URL field defaults to a sample blog path.",
+      },
+      {
+        title: "Watch the Snippet fit bars",
+        description:
+          "Each bar fills from 0–100% based on title ÷ 60 and description ÷ 160, labeled Fits or May truncate.",
+      },
+      {
+        title: "Read the colors",
+        description:
+          "Lengths within the guides render in the normal preview colors; over-length text is highlighted amber as a truncation warning.",
+      },
+    ],
+    workedExample: {
+      input: "Title: 10 Editing Tips for Creators · Description: Learn faster edits, clean cuts, and better pacing in under ten minutes.",
+      output: "Title · 28/60 chars · Fits · bar 47% · Description · 71/160 chars · Fits · bar 44%",
+      note: "The bars are character ratios: 28 ÷ 60 rounds to 47% and 71 ÷ 160 to 44%. Both are within the guides, so the preview card keeps its default colors.",
+    },
+    limits: [
+      "Fit checks are character-based, not pixel-width, and the 60/160 figures are common guides rather than guarantees of what Google shows.",
+      "The preview is a static approximation — there is no device toggle and no live Google data, and it never predicts ranking or clicks.",
+      "The description preview uses a two-line clamp, so over-long text can look similar to shorter text in the card even when the bar warns of truncation.",
+    ],
+    privacyNote:
+      "Everything is computed locally in your browser. Your title, description, and URL are never uploaded.",
+    related: [
+      {
+        slug: "meta-title-generator",
+        note: "Write a title that fits the 60-character guide.",
+      },
+      {
+        slug: "meta-description-generator",
+        note: "Draft a description that fits the 160-character guide.",
+      },
+      {
+        slug: "internal-link-suggestions",
+        note: "Plan the page's internal links alongside its snippet.",
+      },
+    ],
+    blogLink: {
+      slug: "creators-seo-checklist",
+      title: "The creator's SEO checklist before you hit publish",
+      readTime: "8 min read",
+    },
+  },
 };
 
 function fallbackExtras(toolSlug: string): ToolExtras | null {
