@@ -3764,6 +3764,992 @@ const CURATED: Record<string, ToolExtras> = {
       readTime: "8 min read",
     },
   },
+  "chapter-generator": {
+    examples: [
+      {
+        title: "Turn a script into chapter lines",
+        description:
+          "Paste timestamps with titles, one per line, and get a clean copy-ready list for your video description.",
+      },
+      {
+        title: "Normalize messy times",
+        description:
+          "Times like 0:00, 1:35, and 5:20 are rewritten to zero-padded 00:00, 01:35, and 05:20 so the list reads consistently.",
+      },
+      {
+        title: "Reorder or trim sections",
+        description:
+          "Edit or remove lines in the input box and the chapter count and output update instantly.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What time formats are supported?",
+        answer:
+          "A line is recognized when it starts with a timestamp in MM:SS or HH:MM:SS form, optionally followed by a dash. Times are rewritten to zero-padded form, so 0:00 becomes 00:00 and 1:35 becomes 01:35.",
+      },
+      {
+        question: "What happens to lines without a timestamp?",
+        answer:
+          "They are skipped. The parser only keeps lines that begin with a timestamp followed by a title; anything else is ignored, including intro or notes lines.",
+      },
+      {
+        question: "Does it import transcripts or analyze my video?",
+        answer:
+          "No. It only reformats the timestamps and titles you paste. There is no YouTube transcript import, video analysis, AI generation, or YouTube API integration — you paste the finished list into the video description yourself.",
+      },
+      {
+        question: "What if a line has a time but no title?",
+        answer:
+          "The title defaults to the word Chapter, so the line still produces output instead of being dropped.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste timestamps and titles",
+        description:
+          "Type one chapter per line, time followed by the title, for example 0:00 Intro and 5:20 Editing workflow.",
+      },
+      {
+        title: "Use a separator if you like",
+        description:
+          "An optional dash after the time (-, –, —) is stripped, so 1:35 – Tools I use and 1:35 Tools I use both work.",
+      },
+      {
+        title: "Copy or download the list",
+        description:
+          "The output is a time + title line per chapter. Copy it into your video description or download chapters.txt.",
+      },
+    ],
+    workedExample: {
+      input: "0:00 Intro\n1:35 – Tools I use\n5:20 Editing workflow\nVoiceover notes",
+      output: "00:00 Intro\n01:35 Tools I use\n05:20 Editing workflow",
+      note: "Three chapters. Times are zero-padded (00:00, 01:35, 05:20), the dash after 1:35 is stripped, and the line Voiceover notes is ignored because it does not start with a timestamp.",
+    },
+    limits: [
+      "Only lines that start with an MM:SS (or HH:MM:SS) timestamp become chapters; every other line is skipped.",
+      "Times are always rewritten to zero-padded form, so the output keeps a uniform 00:00 or 00:00:00 shape even when your input is looser.",
+      "Three-part HH:MM:SS timestamps are normalized with the same single pass as MM:SS, so an hour-long time like 1:02:03 reads as 01:01:02 — keep timestamps in MM:SS and verify the output.",
+      "There is no transcript import, video analysis, or platform integration. The tool only structures the text you paste.",
+    ],
+    privacyNote:
+      "Parsing happens entirely in your browser with JavaScript. The timestamps and titles you paste are not uploaded anywhere.",
+    related: [
+      {
+        slug: "youtube-description-generator",
+        note: "Assemble a full video description around your chapters.",
+      },
+      {
+        slug: "script-timer",
+        note: "Estimate how long a script reads before you record.",
+      },
+    ],
+  },
+  "linkedin-formatter": {
+    examples: [
+      {
+        title: "Break up a wall of text",
+        description:
+          "Paste a long draft and turn it into one-sentence-per-line, the scannable style that works well in LinkedIn posts.",
+      },
+      {
+        title: "Add a hashtag footer",
+        description:
+          "Leave the hashtag checkbox on to append the fixed LinkedIn hashtag line below your post.",
+      },
+      {
+        title: "Clean a copied draft",
+        description:
+          "Reformat text pasted from a document or chat where line breaks and emphasis got mangled.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it add bullet points or emojis to every line?",
+        answer:
+          "No. It splits the text into sentences and puts each sentence on its own line. When the checkbox is on it also appends one hashtag line at the end. That is the full set of transformations.",
+      },
+      {
+        question: "Which hashtags are added?",
+        answer:
+          "A fixed set of six: #contentcreation #creatoreconomy #productivity #marketing #growth #socialmedia. They are the same every time and are not generated from your text.",
+      },
+      {
+        question: "How are sentences detected?",
+        answer:
+          "The shared text engine splits on . ! ? and …. Because it is a simple rule-based splitter, abbreviations and decimals are treated as sentence ends.",
+      },
+      {
+        question: "Is there a character counter?",
+        answer:
+          "No. LinkedIn limits are not tracked and text is never truncated. Whatever you paste is what gets reformatted.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your draft",
+        description:
+          "Enter a paragraph, several paragraphs, or a rough post into the text box.",
+      },
+      {
+        title: "Decide on hashtags",
+        description:
+          "Keep Add trending hashtags at the end checked for the standard footer, or uncheck it for a hashtag-free version.",
+      },
+      {
+        title: "Copy or download the post",
+        description:
+          "The one-sentence-per-line version is ready to copy into the LinkedIn composer, or download it as linkedin-post.txt.",
+      },
+    ],
+    workedExample: {
+      input: "This is a long paragraph. It has three sentences. See how they split!",
+      output:
+        "This is a long paragraph.\nIt has three sentences.\nSee how they split!\n\n#contentcreation #creatoreconomy #productivity #marketing #growth #socialmedia",
+      note: "Each sentence lands on its own line and the fixed hashtag set is appended after a blank line. Unchecking the hashtag option produces only the first three lines.",
+    },
+    limits: [
+      "The tool does not count characters, enforce LinkedIn limits, or truncate long posts.",
+      "No bullets, emojis, bold, or other formatting is added — the output is one sentence per line plus the optional hashtag line.",
+      "Sentences split on . ! ? and …, so abbreviations, decimals, and initials add extra lines.",
+      "The hashtag set is fixed and generic; it is not derived from your text or audience.",
+    ],
+    privacyNote:
+      "Formatting runs in your browser using the shared text engine. Your draft is not sent to any server.",
+    related: [
+      {
+        slug: "thread-generator",
+        note: "Split a long post into a numbered Twitter/X thread instead.",
+      },
+      {
+        slug: "character-counter",
+        note: "Check the length of the reformatted post before posting.",
+      },
+    ],
+  },
+  "instagram-caption-optimizer": {
+    examples: [
+      {
+        title: "Break a long caption into short lines",
+        description:
+          "Turn a dense paragraph into lines of roughly 14 words each by leaving the Break into short lines option on.",
+      },
+      {
+        title: "Build a niche hashtag set",
+        description:
+          "Type a niche like travel or fitness and the tool appends up to 12 related hashtags after your caption.",
+      },
+      {
+        title: "Check the 2,200-character budget",
+        description:
+          "Watch the length counter update as you edit and confirm whether the output fits Instagram's 2,200-character caption limit.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this an AI optimizer?",
+        answer:
+          "No. It performs three deterministic transformations: it trims whitespace, optionally re-wraps sentences into short lines, and optionally appends hashtags derived from your niche. No model is called.",
+      },
+      {
+        question: "How are the hashtags chosen?",
+        answer:
+          "Your niche is lowercased and stripped to letters and digits, then expanded with suffixes like tips, community, life, and 2026 plus a set of broad defaults. The combined list is de-duplicated and capped at 12.",
+      },
+      {
+        question: "When are hashtags added?",
+        answer:
+          "Only when the Add hashtags box is checked and a niche is filled in. With an empty niche, no hashtags are generated.",
+      },
+      {
+        question: "What does the / 2200 number mean?",
+        answer:
+          "It is the character length of the produced caption compared against 2200. The tool shows Fits within Instagram's limit or Over the limit — trim it down. It does not predict reach, ranking, or engagement.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste a caption draft",
+        description:
+          "Enter your caption. The trimmed, transformed version appears in the outputs below.",
+      },
+      {
+        title: "Choose the transformations",
+        description:
+          "Keep Break into short lines on to wrap text at roughly 14 words per line, and fill in a niche and keep Add hashtags on for a hashtag set.",
+      },
+      {
+        title: "Check the length and copy",
+        description:
+          "Confirm the / 2200 counter reads Fits, then copy the optimized caption or download instagram-caption.txt.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Caption: Loving this time in Porto. The food is incredible. The sunsets are unreal. Make sure you pack comfortable shoes. · Niche: travel",
+      output:
+        "Loving this time in Porto. The food is incredible. The sunsets are unreal.\nMake sure you pack comfortable shoes.\n\n#travel #traveltips #travelcommunity #travellife #travelgoals #travel2026 #viral #trending #explore #reels #fyp #foryou",
+      note: "Sentences are packed into lines until a line would exceed 14 words, so the fourth sentence starts a new line. The niche travel expands to 12 hashtags. The final string is 233 characters, which reads as Fits within Instagram's limit.",
+    },
+    limits: [
+      "There is no AI, no engagement prediction, and no guarantee of reach or ranking.",
+      "The line-wrap target is about 14 words per line; a single sentence longer than 14 words stays on its own line and is not split.",
+      "Hashtags are only added when a niche is filled in; the 12-tag cap and the suffix-based set are fixed rules.",
+      "The 2200 figure is a character check against a caption limit. It does not reflect how Instagram renders or ranks the post.",
+    ],
+    privacyNote:
+      "Transformation and length counting run locally in your browser. Your caption and niche are not uploaded.",
+    related: [
+      {
+        slug: "caption-generator",
+        note: "Draft a fresh caption before running it through the optimizer.",
+      },
+      {
+        slug: "hashtag-generator",
+        note: "Generate a broader hashtag set for other platforms.",
+      },
+    ],
+  },
+  "prompt-formatter": {
+    examples: [
+      {
+        title: "Structure a one-liner prompt",
+        description:
+          "Split a single instruction into Role, Task, Context, Constraints, and Tone fields and get a labelled, paste-ready prompt.",
+      },
+      {
+        title: "Turn constraints into bullets",
+        description:
+          "Type each constraint on its own line and the formatter renders them as a bulleted Constraints section.",
+      },
+      {
+        title: "Keep prompts consistent",
+        description:
+          "Use the same section order for every prompt you send to a model so the structure looks uniform.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does this call an AI model?",
+        answer:
+          "No. It is a formatting utility that assembles the fields you fill in into a markdown-style template. No model is called and no text is sent anywhere.",
+      },
+      {
+        question: "What if I leave a field empty?",
+        answer:
+          "Empty fields are omitted from the output. Only the sections you actually fill in appear, in the fixed order Role, Task, Context, Constraints, Output Format, Examples, Tone.",
+      },
+      {
+        question: "How are constraints formatted?",
+        answer:
+          "Each non-empty line is trimmed and prefixed with a hyphen, so the field becomes a bulleted list inside the Constraints section.",
+      },
+      {
+        question: "What do the stats mean?",
+        answer:
+          "Sections counts the number of ## headings in the output, and Est. tokens is the character length divided by 4 — a rough estimate, not a real tokenizer result.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Fill in the fields",
+        description:
+          "Add the role, task, context, and any other detail. Constraints accepts one item per line.",
+      },
+      {
+        title: "Watch the prompt build",
+        description:
+          "The formatted prompt updates live in the output box as you type, with each section labelled with a ## heading.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Copy the formatted prompt into your AI chat app, or download formatted-prompt.txt to keep a versioned copy.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Role: senior copywriter · Task: write a product description · Context: a sustainable sneaker brand · Constraints: no jargon, max 150 words · Tone: friendly and confident",
+      output:
+        "## Role\nsenior copywriter\n\n## Task\nwrite a product description\n\n## Context\na sustainable sneaker brand\n\n## Constraints\n- no jargon\n- max 150 words\n\n## Tone\nfriendly and confident",
+      note: "Constraints lines become hyphen bullets, sections are separated by blank lines, and the Output Format and Examples sections are omitted because they were left empty. The stats read Sections: 5.",
+    },
+    limits: [
+      "This is a template assembler, not an editor: it trims and labels your words but does not rewrite, expand, or improve them.",
+      "The section order is fixed and empty fields are dropped, so you cannot reorder sections or force an empty heading.",
+      "The Est. tokens stat is characters divided by 4 and can differ from a model's real token count.",
+      "Formatting a prompt does not guarantee better model output; it only makes the structure consistent.",
+    ],
+    privacyNote:
+      "Formatting happens in your browser using local templates. None of the fields you type are sent to a server or any AI service.",
+    related: [
+      {
+        slug: "prompt-optimizer",
+        note: "Apply heuristic upgrades on top of a formatted prompt.",
+      },
+      {
+        slug: "prompt-generator",
+        note: "Generate a complete prompt when you are starting from scratch.",
+      },
+    ],
+  },
+  "prompt-optimizer": {
+    examples: [
+      {
+        title: "Upgrade a bare instruction",
+        description:
+          "Paste write a summary of this report and get back a version with a role prefix, constraints, an output-format line, and a self-review request.",
+      },
+      {
+        title: "Spot vague wording",
+        description:
+          "The tool flags words like some, things, stuff, maybe, and whatever so you can replace them with concrete details.",
+      },
+      {
+        title: "Review what changed",
+        description:
+          "Every applied improvement is listed in the Improvements applied card beneath your prompt.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this powered by an AI backend?",
+        answer:
+          "No. It applies a fixed set of deterministic rules with regular expressions — no language model, no API call, and no semantic understanding of your prompt.",
+      },
+      {
+        question: "Which rules actually change the text?",
+        answer:
+          "Three additions modify the text: a You are… role prefix (only if the prompt does not already start with a role phrase), a Constraints block (only if no constraint keyword is present), and an Output block (only if no output/format keyword is present). A Review your work… line is always appended.",
+      },
+      {
+        question: "Do the vague-word and example checks rewrite anything?",
+        answer:
+          "No. The vague-word check and the consider-an-example check are displayed as suggestions only. They never alter the prompt text.",
+      },
+      {
+        question: "What if my prompt already has constraints and a format?",
+        answer:
+          "Those blocks are not added again, but the role prefix (if missing) and the self-review line are still applied, so the optimized output can still differ from the input.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste a prompt",
+        description:
+          "Enter any prompt. The optimized version and the improvement list update live as you type.",
+      },
+      {
+        title: "Read the improvement card",
+        description:
+          "Each check that fired is listed with a short reason. This is the full list of rules that ran — nothing else is analyzed.",
+      },
+      {
+        title: "Copy or download the result",
+        description:
+          "Use the optimized prompt in your AI chat app, or download optimized-prompt.txt.",
+      },
+    ],
+    workedExample: {
+      input: "write a summary of this report",
+      output:
+        "You are a helpful, precise assistant. write a summary of this report\n\nConstraints: Be specific, avoid fluff, and stay on topic.\n\nOutput: Provide a clear, well-structured answer.\n\nReview your work against the request before answering.",
+      note: "Five improvements are reported: Added a role, Added constraints, Specified output format, Consider adding an example, and Added self-review step. The example check is advisory and changes no text. The stored token estimate rounds 233 ÷ 4 to 58.",
+    },
+    limits: [
+      "Rules are regex-based, not semantic. A prompt that mentions formats or constraints in unusual phrasing may not be detected, and blocks may be added redundantly.",
+      "The vague-word and example checks are advisory only; the optimized text is not reworded by the tool.",
+      "It does not measure prompt quality or predict results, and there is no guarantee the optimized prompt performs better with any specific model.",
+      "The prefix is inserted as-is, so a lowercase instruction like the worked example keeps its original casing after the role sentence.",
+    ],
+    privacyNote:
+      "All rules run locally in your browser. Your prompt and the optimized text never leave the device, and no AI service is invoked.",
+    related: [
+      {
+        slug: "prompt-formatter",
+        note: "Structure the optimized prompt into labelled sections.",
+      },
+      {
+        slug: "prompt-generator",
+        note: "Create a fresh, structured prompt from a topic.",
+      },
+    ],
+  },
+  "ai-chat-export-cleaner": {
+    examples: [
+      {
+        title: "Clean a copied chat",
+        description:
+          "Paste a conversation that has User: and Assistant: prefixes and timestamps, and get plain readable dialogue.",
+      },
+      {
+        title: "Prepare text for repurposing",
+        description:
+          "Remove speaker labels so a conversation can be reused as a script, FAQ draft, or blog outline.",
+      },
+      {
+        title: "Tighten spacing",
+        description:
+          "The blank-line collapse option replaces runs of empty lines with a single separator.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which chat platforms are supported?",
+        answer:
+          "The tool works on plain text you paste: any conversation formatted with speaker prefixes and timestamps like the ones seen in ChatGPT and Claude copy-overs. It does not import the official export files from any platform — there is no file upload.",
+      },
+      {
+        question: "What exactly is removed?",
+        answer:
+          "Speaker prefixes from a fixed list (user, assistant, human, ai, me, you, bot, chatgpt, system, model) before a colon, lines that are only a timestamp, and leading timestamp prefixes with or without square brackets. Line content is otherwise preserved.",
+      },
+      {
+        question: "Does it keep metadata like dates or roles?",
+        answer:
+          "Speaker labels and timestamps are removed by default, and there is no option to preserve them. The remaining bullet points and text content are kept.",
+      },
+      {
+        question: "Is my conversation uploaded?",
+        answer:
+          "No. All cleaning happens in your browser. The tool is a textarea — you paste text in and a cleaned version appears locally.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the conversation",
+        description:
+          "Copy text from a chat export or history view and paste it into the box.",
+      },
+      {
+        title: "Choose what to strip",
+        description:
+          "Toggle speaker removal, timestamp removal, and blank-line collapsing. All three are on by default.",
+      },
+      {
+        title: "Copy or download the clean text",
+        description:
+          "The cleaned conversation appears in the output box for copying, or download it as cleaned-chat.txt.",
+      },
+    ],
+    workedExample: {
+      input:
+        "User: Hi, how do I create a podcast?\n12:34\nAssistant: Great question! First you need a mic.\n3:45 You then record in a quiet room.\n[10:12] Finally, edit and publish.",
+      output:
+        "Hi, how do I create a podcast?\n\nGreat question! First you need a mic.\nYou then record in a quiet room.\nFinally, edit and publish.",
+      note: "Speaker prefixes (User:, Assistant:) are stripped, the standalone 12:34 line disappears, and the 3:45 and [10:12] prefixes are removed from the start of their lines. The single blank line from collapsing is preserved.",
+    },
+    limits: [
+      "This is a text-focused cleaner, not an export-file parser: paste text in, get text out. No .json or platform-export files are accepted.",
+      "Only the fixed speaker list is stripped; prefixes like So: or Steve: are left in place.",
+      "Timestamp removal targets whole-line timestamps and leading prefixes. A time further into a line, outside a prefix position, is not removed.",
+      "Removal is order-sensitive: speaker stripping runs before timestamp stripping, so a line like 10:00 User: note only drops its leading timestamp, not the User: label. Blank-line collapsing keeps one blank separator between paragraphs.",
+    ],
+    privacyNote:
+      "Cleaning runs entirely in your browser. The conversation text is never uploaded, and no file reader or network call is involved.",
+    related: [
+      {
+        slug: "ai-prompt-translator",
+        note: "Translate cleaned dialogue into another language's prompt vocabulary.",
+      },
+      {
+        slug: "ai-prompt-shortener",
+        note: "Condense the cleaned text into a tighter prompt.",
+      },
+    ],
+  },
+  "ai-prompt-shortener": {
+    examples: [
+      {
+        title: "Tighten a wordy prompt",
+        description:
+          "Condense verbose phrasing like due to the fact that and it is important to note that into shorter equivalents.",
+      },
+      {
+        title: "Drop filler words",
+        description:
+          "Remove weak intensifiers such as very, really, quite, and basically when they appear mid-sentence.",
+      },
+      {
+        title: "Watch the savings",
+        description:
+          "The stats show characters before and after, how many were saved, and an estimated token count for each version.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this AI-powered?",
+        answer:
+          "No. Shortening is a fixed, deterministic set of phrase replacements and filler-word removals applied with regular expressions. No model is involved.",
+      },
+      {
+        question: "What actually gets changed?",
+        answer:
+          "Ten verbose phrases are swapped for shorter ones (for example in order to becomes to and due to the fact that becomes because), and filler words like very and basically are deleted when surrounded by whitespace. Multiple spaces are then collapsed and the text trimmed.",
+      },
+      {
+        question: "Does it guarantee the meaning is preserved?",
+        answer:
+          "No. The substitutions are mechanical, so phrasing that relies on the removed words can read differently. Review the output before sending it.",
+      },
+      {
+        question: "What if no phrases or fillers match?",
+        answer:
+          "The output equals the input (including whitespace collapsing and trimming), and the Saved stat reads 0 because the original text is unchanged except for that normalization.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste a long prompt",
+        description:
+          "Anything wordy works — the replacements target phrasing, not topics.",
+      },
+      {
+        title: "Read the four stats",
+        description:
+          "Chars before, Chars after, Saved, and an estimated Tokens count (chars ÷ 4) for both versions.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Take the shortened prompt into your AI chat app, or download shortened-prompt.txt. Check that the trimmed wording still says what you meant.",
+      },
+    ],
+    workedExample: {
+      input:
+        "Due to the fact that this guide exists basically to help you, it is important to note that brevity helps.",
+      output: "because this guide exists to help you, note that brevity helps.",
+      note: "Due to the fact that becomes because and it is important to note that becomes note that, then basically is removed. The stats show 105 chars in, 63 out, 42 saved, and an estimated 26 → 16 tokens. The replacement is verbatim, so the sentence now starts lowercase.",
+    },
+    limits: [
+      "Removal is whitespace-sensitive: a filler word at the very start of a line is not matched, and a filler directly before punctuation can leave a stray space in the output.",
+      "The phrase-to-replacement mapping is fixed and literal, so matches keep the replacement wording exactly (case-insensitive replace, lowercase replacement).",
+      "No meaning guarantee and no model-specific tuning. Token numbers are estimates from character counts, not real tokenization.",
+      "Inputs with nothing to shorten come out essentially unchanged aside from whitespace collapsing.",
+    ],
+    privacyNote:
+      "Shortening runs locally in your browser using built-in word and phrase lists. Your prompt is never uploaded to a server or AI service.",
+    related: [
+      {
+        slug: "prompt-optimizer",
+        note: "Expand a short prompt with structure and constraints.",
+      },
+      {
+        slug: "ai-token-calculator",
+        note: "Estimate token counts across specific models.",
+      },
+    ],
+  },
+  "json-compare": {
+    examples: [
+      {
+        title: "Diff two config files",
+        description:
+          "Paste the old and new contents of a JSON config to see exactly which keys were added, removed, or changed.",
+      },
+      {
+        title: "Compare API responses",
+        description:
+          "Run the same endpoint's response from two environments and find the fields that moved.",
+      },
+      {
+        title: "Check empty versus missing",
+        description:
+          "Spot the difference between a field that is absent and one that is present but empty.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is the comparison semantic or structural?",
+        answer:
+          "Structural. Both documents are parsed and flattened into leaf paths like user.name and tags[1]. Key order and whitespace do not matter, and equal leaf values count as matching paths.",
+      },
+      {
+        question: "How are arrays handled?",
+        answer:
+          "Each element becomes an indexed path, so tags[0] and tags[1] are compared separately and appear in the report individually.",
+      },
+      {
+        question: "When is 1 equal to 1.0?",
+        answer:
+          "After parsing, the number 1 and 1.0 are the same JavaScript number, so they match. The string \"1\" is a different type and is reported as changed.",
+      },
+      {
+        question: "What if one input is invalid JSON?",
+        answer:
+          "The tool shows the parser error for the first invalid input and does not produce a comparison report.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste JSON A and JSON B",
+        description:
+          "Enter both documents. The Compare button is enabled once both boxes are non-empty.",
+      },
+      {
+        title: "Read the four stats",
+        description:
+          "Matching paths, Only in A, Only in B, and Changed values summarize the difference.",
+      },
+      {
+        title: "Review the report",
+        description:
+          "The comparison report lists only-in-A keys with - , only-in-B keys with + , and changed paths with both old (A) and new (B) values, and can be downloaded as json-diff.txt.",
+      },
+    ],
+    workedExample: {
+      input:
+        "A: {name: Ada, age: 36, city: London, tags: [dev, math]} · B: {name: Ada, age: 37, country: UK, tags: [dev, music]}",
+      output:
+        "JSON Compare Report\n\n2 matching paths\nOnly in A (1):\n  - city\nOnly in B (1):\n  + country\nDifferent values (2):\n  ~ age\n      A: 36\n      B: 37\n  ~ tags[1]\n      A: \"math\"\n      B: \"music\"",
+      note: "name and tags[0] match, city exists only in A, country only in B, and age plus tags[1] hold different values. String values appear quoted in the changed list because they are stored as JSON text.",
+    },
+    limits: [
+      "The comparison is leaf-value only: identical structures with differently nested paths (for example a vs {b nested deeper}) never match.",
+      "Number-vs-string distinctions are preserved (1 is not \"1\"), but 1 and 1.0 are the same number after parsing.",
+      "Very large documents are flattened synchronously in the browser, so extreme inputs can be slow, and no file input is supported — paste only.",
+      "Result values are compared as JSON text, so an empty object {} versus a missing key is reported structurally rather than semantically.",
+    ],
+    privacyNote:
+      "Both documents are parsed and compared entirely in your browser. Nothing is uploaded, and no server-side processing is involved.",
+    related: [
+      {
+        slug: "json-validator",
+        note: "Validate either document before comparing.",
+      },
+      {
+        slug: "json-formatter",
+        note: "Pretty-print the JSON first to make differences easier to spot.",
+      },
+    ],
+  },
+  "jwt-decoder": {
+    examples: [
+      {
+        title: "Inspect a token's header",
+        description:
+          "Decode the header segment to see the signing algorithm a token claims to use, such as {\"alg\":\"HS256\"}.",
+      },
+      {
+        title: "Read payload claims",
+        description:
+          "View registered and custom claims like sub, exp, or iss as a key-value list, with large numeric values shown as UTC dates.",
+      },
+      {
+        title: "Check whether a signature is present",
+        description:
+          "A two-part token shows Signature: missing, while a full three-part token reports its signature length.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does this tool verify the signature?",
+        answer:
+          "No. It decodes and displays the base64url header and payload only. It never checks the signature, never validates the token, and does not use any cryptographic libraries.",
+      },
+      {
+        question: "Does decoding prove the token is valid or authentic?",
+        answer:
+          "No. Anyone can base64-decode JSON. A readable header and payload mean only that the segments were valid base64url-encoded JSON — not that the token was issued by the signer or is still valid. Always verify on the issuing server before trusting it.",
+      },
+      {
+        question: "How are timestamps shown?",
+        answer:
+          "Numeric claims above 100,000,000 (for example a Unix-seconds exp) are displayed as a UTC date string plus the original number. This is a display convenience only and is not a validity or expiry check.",
+      },
+      {
+        question: "What happens with malformed tokens?",
+        answer:
+          "A token with fewer than two dot-separated parts shows Not a JWT — expected header.payload.signature. If the header or payload is not valid base64url JSON, the parse error is displayed instead.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste a token",
+        description:
+          "Enter a JWT with two or three dot-separated segments. Decoding starts as soon as you type.",
+      },
+      {
+        title: "Read the header and claims",
+        description:
+          "The header JSON and the payload claims render side by side, with the signature reported as present (with its length) or missing.",
+      },
+      {
+        title: "Copy the decoded output",
+        description:
+          "A formatted HEADER / PAYLOAD block is available in the output box for copying or download as decoded-jwt.txt.",
+      },
+    ],
+    workedExample: {
+      input: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0In0.signature",
+      output:
+        'HEADER:\n{\n  "alg": "HS256"\n}\n\nPAYLOAD:\n{\n  "sub": "1234"\n}',
+      note: "The header decodes to {\"alg\":\"HS256\"} and the payload to {\"sub\":\"1234\"}. The signature segment is reported as present (9 chars). None of this means the token is valid — the signature is never checked.",
+    },
+    limits: [
+      "The tool decodes only. It does not verify signatures, expirations, issuers, or audiences — treat any decoded result as unverified data.",
+      "Segments must be base64url with UTF-8 text; binary payloads or unusual encodings fail to decode.",
+      "Large numeric claims (above 100,000,000) are auto-formatted as dates; other claim types are shown as their JSON text.",
+      "Because the payload is displayed in plain text, decoding a live session token can expose sensitive claims on screen.",
+    ],
+    privacyNote:
+      "Decoding happens entirely in your browser — no upload, no network call, and no signature or remote validation. Still, avoid pasting real session or access tokens: their claims appear in plain text in the output.",
+    related: [
+      {
+        slug: "base64-encoder",
+        note: "Encode or decode the base64 segments of a token manually.",
+      },
+      {
+        slug: "uuid-generator",
+        note: "Generate fresh identifiers for test tokens and payloads.",
+      },
+    ],
+  },
+  "html-to-markdown": {
+    examples: [
+      {
+        title: "Convert an email or snippet",
+        description:
+          "Paste HTML from an email or CMS and get a markdown version with headings, bold, and links converted.",
+      },
+      {
+        title: "Turn a list into markdown",
+        description:
+          "Convert ul and ol lists into - and 1. items for pasting into a markdown editor.",
+      },
+      {
+        title: "Extract text from a page fragment",
+        description:
+          "Strip tags down to readable markdown headings, paragraphs, quotes, and code blocks.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it convert arbitrary HTML perfectly?",
+        answer:
+          "No. It is a small rule-based walker that maps a defined subset of tags: h1–h4, p, br, b/strong, i/em, code, a, lists, blockquote, img, and pre. Everything else falls through to its text content.",
+      },
+      {
+        question: "How are text nodes handled?",
+        answer:
+          "Whitespace inside text is collapsed to single spaces and trimmed, then sibling fragments are joined with single spaces. Unsupported nesting can therefore produce flat or empty results.",
+      },
+      {
+        question: "What happens to tables?",
+        answer:
+          "Tables are flattened to their cell text joined with spaces. There are no pipes, headers, or alignment — the column structure is lost.",
+      },
+      {
+        question: "Where does the parsing run?",
+        answer:
+          "In your browser via the DOMParser API. Nothing is sent to a server, and no CSS, layout, or JavaScript is applied.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste HTML",
+        description:
+          "Enter a fragment, a full element, or loosely structured markup. The markdown renders live.",
+      },
+      {
+        title: "Review the converted text",
+        description:
+          "Headings become # prefixes, paragraphs and blocks become separated text, lists become - or 1. items, and links/ images become markdown syntax.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Take the markdown straight into your editor, or download output.md.",
+      },
+    ],
+    workedExample: {
+      input: "<h1>Hello</h1><p>This is <strong>bold</strong> text.</p>",
+      output: "# Hello\n \n\nThis is **bold** text.",
+      note: "The h1 becomes a # heading, strong becomes **bold**, and p wraps its text. Block elements are joined with single spaces, so a whitespace-only separator line appears between the heading and the paragraph — the same compaction happens for any two sibling blocks.",
+    },
+    limits: [
+      "The converter handles a fixed subset of tags; unknown or complex elements are reduced to their text content, so markup like embedded scripts or style blocks in the body can leak raw text into the output.",
+      "Tables and multi-column layouts are flattened to plain text with no structure.",
+      "Attributes that are not used (class, id, style, target, etc.) are dropped; link URLs and image src/alt are copied verbatim.",
+      "It is text-only conversion, not browser-equivalent rendering: no CSS, layout, images, or script execution.",
+    ],
+    privacyNote:
+      "Parsing uses the DOMParser API entirely in your browser. The HTML you paste is never uploaded.",
+    related: [
+      {
+        slug: "html-formatter",
+        note: "Beautify or minify the source HTML before converting.",
+      },
+      {
+        slug: "markdown-preview",
+        note: "Preview the markdown output with proper rendering.",
+      },
+    ],
+  },
+  "timestamp-converter": {
+    examples: [
+      {
+        title: "Decode an epoch from an API",
+        description:
+          "Paste a Unix-seconds value like 1754411234 from a JSON response and read the exact date and time.",
+      },
+      {
+        title: "Check a millisecond timestamp",
+        description:
+          "Millisecond values are detected automatically, so 1754411234000 resolves to the same instant as the seconds form.",
+      },
+      {
+        title: "Parse a date into epoch values",
+        description:
+          "Type an ISO string like 2026-08-07T10:00:00Z and get its Unix seconds and milliseconds for use in code.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How does it tell seconds from milliseconds?",
+        answer:
+          "A simple threshold: a numeric input greater than 1e12 (usually a 13-digit value) is treated as milliseconds; anything smaller is treated as seconds and multiplied by 1000.",
+      },
+      {
+        question: "What date formats are accepted?",
+        answer:
+          "Both numbers and date strings. Date strings are parsed by JavaScript's Date parser, so an ISO string with a Z is read as UTC, while other formats follow the engine's conventions for that format.",
+      },
+      {
+        question: "Which output lines are timezone-dependent?",
+        answer:
+          "Unix seconds, milliseconds, ISO 8601, and UTC are fixed for a given input. The Local line uses the browser's timezone via toLocaleString, so it varies by machine.",
+      },
+      {
+        question: "What happens with invalid input?",
+        answer:
+          "The tool shows Could not parse that as a timestamp or date. and leaves the output empty.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste a timestamp or date",
+        description:
+          "Enter a number (seconds or milliseconds) or a date string. Conversion runs as you type.",
+      },
+      {
+        title: "Read the five lines",
+        description:
+          "Unix seconds, Unix milliseconds, ISO 8601, UTC, and Local cover the common formats you need for code and logs.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Copy the block into your code or docs, or download timestamps.txt.",
+      },
+    ],
+    workedExample: {
+      input: "2026-08-07T10:00:00Z",
+      output:
+        "Unix timestamp (seconds): 1786096800\nUnix timestamp (milliseconds): 1786096800000\nISO 8601: 2026-08-07T10:00:00.000Z\nUTC: 2026-08-07T10:00:00.000Z\nLocal: (your browser's timezone)",
+      note: "For this fixed input, the seconds, milliseconds, ISO, and UTC values are the same on every machine. The Local line renders using the browser's timezone — on a UTC-7 test machine it showed 8/7/2026, 3:00:00 PM.",
+    },
+    limits: [
+      "Seconds-versus-milliseconds is decided by the single 1e12 threshold; unusual values around that boundary can be misread.",
+      "There is no arbitrary timezone field. Only UTC (toISOString) and the browser's local timezone are reported.",
+      "Date strings rely on JavaScript's Date parser, so the interpretation of a format depends on the engine's rules for that format.",
+      "Extremely large or precise inputs are limited by JavaScript number precision.",
+    ],
+    privacyNote:
+      "Conversion is computed locally in your browser with JavaScript Date APIs. The timestamp you enter is not sent anywhere.",
+    related: [
+      {
+        slug: "json-formatter",
+        note: "Pretty-print the JSON payload that contained your timestamp.",
+      },
+      {
+        slug: "uuid-generator",
+        note: "Create identifiers to pair with timestamped events.",
+      },
+    ],
+  },
+  "pdf-to-word": {
+    examples: [
+      {
+        title: "Turn a text PDF into a Word file",
+        description:
+          "Pick a text-based PDF, extract its content, and download it as an editable .docx built from the extracted text.",
+      },
+      {
+        title: "Reuse a report",
+        description:
+          "Convert a whitepaper or export into a Word document you can edit, quote, and re-publish.",
+      },
+      {
+        title: "Preview before converting",
+        description:
+          "An extracted-text preview (first 2,000 characters) shows what the Word file will contain before you save it.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is the downloaded file a real Word document?",
+        answer:
+          "Yes. The tool builds a minimal but valid .docx (OOXML) in your browser with JSZip — a document body with one paragraph per extracted text block plus the standard styles and content-type parts.",
+      },
+      {
+        question: "Does it preserve the PDF layout?",
+        answer:
+          "No. Only text is extracted. Images, tables, columns, fonts, and formatting are not carried into the Word file — each page's extracted text becomes plain paragraphs.",
+      },
+      {
+        question: "Why did a scanned PDF fail?",
+        answer:
+          "The source PDF must contain selectable text. Image-based or scanned PDFs have no text layer, so no content can be extracted and no .docx is produced.",
+      },
+      {
+        question: "Are my files uploaded?",
+        answer:
+          "The PDF bytes are read in your browser and converted locally with PDF.js and JSZip. The PDF.js worker script is fetched from the unpkg CDN on first use, but your file itself is never uploaded.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Pick a PDF",
+        description:
+          "Use the file picker (accepts .pdf) and confirm the file name and size are shown.",
+      },
+      {
+        title: "Click Convert to Word",
+        description:
+          "PDF.js extracts the text page by page, the preview appears, and the .docx builds locally.",
+      },
+      {
+        title: "Save with your browser",
+        description:
+          "The generated file downloads automatically as <original-name>.docx; the status line reports how many paragraphs were converted.",
+      },
+    ],
+    workedExample: {
+      input: "report.pdf — a 3-page text-based PDF",
+      output: "Downloads report.docx · status: Converted 3 paragraphs → report.docx",
+      note: "Each page with selectable text becomes one paragraph in the Word file, joined with blank lines in the preview. A PDF with no text layer instead shows the status No selectable text found — this PDF may be image-based.",
+    },
+    limits: [
+      "This is text extraction, not layout conversion: fonts, images, tables, multi-column structure, and formatting are not preserved in the .docx.",
+      "Scanned or image-only PDFs have no selectable text and cannot be converted.",
+      "The Word file is minimal — a paragraph per extracted block, with the standard Normal style applied; it is not a styled reconstruction of the original design.",
+      "The PDF.js worker is loaded from the unpkg CDN at runtime, so the first conversion needs a network connection to fetch that script (the library itself is bundled and version-pinned).",
+      "Very large PDFs are processed synchronously in the browser and can be slow or memory-heavy.",
+    ],
+    privacyNote:
+      "The PDF is read and converted entirely in your browser: PDF.js extracts text and JSZip packages the .docx, so your document never leaves the device. Note that the PDF.js worker script is pulled from the unpkg CDN on first conversion.",
+    related: [
+      {
+        slug: "word-to-pdf",
+        note: "Go the other way and turn a Word document into a PDF.",
+      },
+      {
+        slug: "ocr",
+        note: "Extract text from scanned or image-only PDFs first.",
+      },
+    ],
+  },
 };
 
 function fallbackExtras(toolSlug: string): ToolExtras | null {
