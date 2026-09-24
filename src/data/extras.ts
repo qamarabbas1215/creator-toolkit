@@ -4750,6 +4750,984 @@ const CURATED: Record<string, ToolExtras> = {
       },
     ],
   },
+  "robots-txt-generator": {
+    examples: [
+      {
+        title: "Gate off private paths",
+        description:
+          "Paste paths like /admin and /private into the Disallow list and the generator emits one Disallow line per path under a User-agent: * group.",
+      },
+      {
+        title: "Block everything at once",
+        description:
+          "Turn on Block everything to replace the whole allow/disallow block with a single Disallow: / fallback.",
+      },
+      {
+        title: "Add per-bot rules",
+        description:
+          "Paste raw directives like User-agent: Googlebot followed by Disallow: /api into Extra rules and they are appended verbatim.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What does this tool generate?",
+        answer:
+          "A complete robots.txt as plain text: always a User-agent: * line, then either Disallow / Allow lines built from your lists or a single Disallow: / when Block everything is on, then your extra rules and a Sitemap line.",
+      },
+      {
+        question: "Does robots.txt guarantee that pages will not be indexed?",
+        answer:
+          "No. robots.txt is an advisory convention that well-behaved crawlers may choose to follow; it does not guarantee that any crawler obeys it, and search engines can still pick up a blocklisted URL through other means. This tool only formats the text — it cannot enforce behavior.",
+      },
+      {
+        question: "Does it understand wildcards, comments, or Crawl-delay?",
+        answer:
+          "No. The input is never parsed or validated: wildcards, $, #-comments, and Crawl-delay are simply copied through in the Extra rules verbatim, and there is no dedicated Crawl-delay field.",
+      },
+      {
+        question: "What happens to the Allow/Disallow fields when Block everything is on?",
+        answer:
+          "They are ignored entirely and replaced by a single Disallow: / line, so nothing else in those lists appears in the output.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Set crawl rules",
+        description:
+          "Type disallowed and allowed paths, one per line. Only non-empty, trimmed lines become rules, with Allow lines placed after Disallow lines.",
+      },
+      {
+        title: "Add a Sitemap entry",
+        description:
+          "Fill the Sitemap URL field; if non-empty it is appended after all rules, separated by a blank line.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Grab the generated robots.txt, or download it as robots.txt and upload it to the root of your site.",
+      },
+    ],
+    workedExample: {
+      input: "Defaults: Disallow /admin and /private, no custom rules, Sitemap https://example.com/sitemap.xml",
+      output:
+        "User-agent: *\nDisallow: /admin\nDisallow: /private\n\nSitemap: https://example.com/sitemap.xml",
+      note: "Each non-empty Disallow line becomes its own directive. The Allow list was empty (so nothing was emitted), Extra rules were empty, and the Sitemap line is appended after a blank line. Toggling Block everything instead yields User-agent: * followed by a single Disallow: /.",
+    },
+    limits: [
+      "Rules are not validated — lines are emitted as typed, so typos, malformed paths, and spaces are passed straight through.",
+      "There is a single fixed structure: one User-agent: * group. There is no UI for multiple full user-agent groups or fine-grained per-bot rules (paste those into Extra rules).",
+      "No wildcard or $ handling, no Crawl-delay field, and no support for comments or sitemap validation.",
+      "Directives are advisory: nothing guarantees indexing results or that every crawler will obey the file.",
+    ],
+    privacyNote:
+      "Generation is a simple text assembly that runs entirely in your browser. The rules and sitemap URL you enter are never uploaded.",
+    related: [
+      {
+        slug: "sitemap-generator",
+        note: "Build the matching sitemap.xml that the Sitemap line points to.",
+      },
+      {
+        slug: "extract-urls",
+        note: "Collect candidate paths from a page or config to feed into Allow/Disallow or sitemap lists.",
+      },
+    ],
+  },
+  "sitemap-generator": {
+    examples: [
+      {
+        title: "Add a homepage-first sitemap",
+        description:
+          "Paste /, /blog, and /about on separate lines to build an XML sitemap where the first URL gets priority 1.0.",
+      },
+      {
+        title: "Toggle lastmod and priority",
+        description:
+          "Uncheck Include lastmod for a fully deterministic file, or leave it on to stamp today's date on every URL.",
+      },
+      {
+        title: "Organize before a redesign",
+        description:
+          "Paste your target paths while restructuring a site and copy the ready-to-host sitemap when you ship.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What exactly does this tool generate?",
+        answer:
+          "An XML sitemap (urlset with the sitemaps.org 0.9 namespace) built from the paths you paste. Each pasted line becomes one <url> entry with a <loc>, an optional <lastmod>, and an optional <priority>. It does not crawl or analyze your site.",
+      },
+      {
+        question: "What is the accepted URL/input format?",
+        answer:
+          "Paths, one per line — they are trimmed and, if missing, get a leading slash, then joined onto the domain. Full URLs pasted as paths are not recognized and simply get appended to the domain (for example blog paths become <loc>https://example.com/blog</loc>).",
+      },
+      {
+        question: "What date does <lastmod> contain?",
+        answer:
+          "Today's date in yyyy-mm-dd form, computed at generation time and applied to every URL. There is no way to set a custom or per-URL date, and enabling the checkbox makes the output time-dependent.",
+      },
+      {
+        question: "How are changefreq and priority handled?",
+        answer:
+          "There is no changefreq field at all. Priority is either omitted or the fixed scheme 1.0 for the first URL and 0.8 for every other URL — there is no per-URL control.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter the domain",
+        description:
+          "Type your site domain. Trailing slashes are stripped, and the rest of each line is prepended unless it already starts with /.",
+      },
+      {
+        title: "Paste the paths",
+        description:
+          "Add one path per line. The URL count stat updates as you type and counts the non-empty, trimmed lines.",
+      },
+      {
+        title: "Copy or download the XML",
+        description:
+          "Copy the generated sitemap.xml or download it into the public folder of your site before submitting it to search engines.",
+      },
+    ],
+    workedExample: {
+      input: "Domain https://example.com · Paths: /, /blog, /about · Include lastmod OFF · Include priority ON",
+      output:
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n<url>\n  <loc>https://example.com/</loc>\n  <priority>1.0</priority>\n</url>\n<url>\n  <loc>https://example.com/blog</loc>\n  <priority>0.8</priority>\n</url>\n<url>\n  <loc>https://example.com/about</loc>\n  <priority>0.8</priority>\n</url>\n</urlset>",
+      note: "With Include lastmod off this output is fully deterministic: the first URL always gets 1.0 and the rest get 0.8. Turning lastmod on adds a <lastmod> line with the current date, which changes daily, so that version cannot be reproduced exactly on another day.",
+    },
+    limits: [
+      "It does not discover, crawl, or validate your site's URLs — it only wraps whatever paths you paste.",
+      "Full URLs are concatenated onto the domain instead of used as-is, so paste paths only.",
+      "No changefreq field, no per-URL priority or lastmod, and duplicate lines are not removed.",
+      "The <loc> value escapes only &, <, and >; there is no URL-length or encoding validation.",
+    ],
+    privacyNote:
+      "XML generation is local to your browser — the domain and paths stay on your device and nothing is submitted to search engines or any server.",
+    related: [
+      {
+        slug: "robots-txt-generator",
+        note: "Generate the robots.txt that points search engines at your sitemap.",
+      },
+      {
+        slug: "extract-urls",
+        note: "Scrape candidate URLs from a page to seed the path list.",
+      },
+    ],
+  },
+  "expand-text": {
+    examples: [
+      {
+        title: "Expand everyday contractions",
+        description:
+          "Paste text containing don't, it's, we're, or can't and the tool rewrites them to do not, it is, we are, and cannot.",
+      },
+      {
+        title: "Spell out abbreviations",
+        description:
+          "Tick Also expand abbreviations so tokens like info, asap, and e.g. become information, as soon as possible, and for example.",
+      },
+      {
+        title: "Watch the word delta",
+        description:
+          "The Words before / Words after stats show exactly how many tokens the expansion added to your copy.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this AI-generated expansion?",
+        answer:
+          "No. Expansion is deterministic and dictionary-driven: a fixed table of 25 contractions is expanded first, and a fixed table of 22 abbreviations can additionally be expanded. No model is called and no text is generated from scratch.",
+      },
+      {
+        question: "What changes when text is expanded?",
+        answer:
+          "Only the exact tokens that appear in the two lookup tables. Contractions are always expanded; abbreviation expansion is off by default. Everything else — wording, order, punctuation — is left untouched, so this is token substitution, not sentence expansion.",
+      },
+      {
+        question: "Is the result deterministic?",
+        answer:
+          "Yes. The same input and same checkbox state always produce the same output. Replacement is case-aware: if the matched token starts with an uppercase letter, the first letter of the replacement is capitalized.",
+      },
+      {
+        question: "Does it understand context or improve writing quality?",
+        answer:
+          "No. It has no context or grammar awareness, and words not in the tables are never changed. It only makes the listed shorthand forms longer.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Enter any text containing contractions like don't, it's, we're, can't, or abbreviations like info or asap.",
+      },
+      {
+        title: "Choose whether to expand abbreviations",
+        description:
+          "Leave the checkbox off for contractions only, or turn it on to also expand the 22-token abbreviation list.",
+      },
+      {
+        title: "Compare and copy",
+        description:
+          "Check the Words before / Words after stats and the live output, then copy the expanded text or download expanded.txt.",
+      },
+    ],
+    workedExample: {
+      input: "I don't think it's ready.",
+      output: "I do not think it is ready.",
+      note: "don't → do not and it's → it is. The words counter changes from 5 to 7. With the abbreviation option on, an input like please send the info asap becomes please send the information as soon as possible (5 → 8 words).",
+    },
+    limits: [
+      "Only the 25 contractions and 22 abbreviations in the lookup tables are expanded; no other tokens change.",
+      "It does not add detail, rephrase, or lengthen sentences beyond those substitutions.",
+      "Case handling inheres in the tables: matches whose first character is uppercase get a capitalized replacement, which can alter sentence flow (e.g., an added mid-sentence capitalized word).",
+      "Replacement inserts a trailing space and runs of spaces are later collapsed, so spacing is normalized even when no expansion matches.",
+    ],
+    privacyNote:
+      "Expansion runs locally in your browser against the bundled tables — your text is never uploaded.",
+    related: [
+      {
+        slug: "shorten-text",
+        note: "Do the reverse and tighten wordy text.",
+      },
+      {
+        slug: "text-statistics",
+        note: "See detailed word, sentence, and reading metrics after expanding.",
+      },
+    ],
+  },
+  "shorten-text": {
+    examples: [
+      {
+        title: "Replace wordy phrases",
+        description:
+          "Paste sentences with in order to, due to the fact that, or a majority of and they become to, because, and most.",
+      },
+      {
+        title: "Strip filler words",
+        description:
+          "Weak intensifiers like basically, very, and actually are removed when they follow a space inside a sentence.",
+      },
+      {
+        title: "Track characters saved",
+        description:
+          "The Chars saved stat reports exactly how many characters the tightening removed from your text.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this semantic summarization?",
+        answer:
+          "No. It applies a fixed set of 14 phrase replacements and removes filler words from a fixed list of 18, then collapses extra whitespace. It is deterministic and has no understanding of the content.",
+      },
+      {
+        question: "Which filler words are removed?",
+        answer:
+          "A fixed list: actually, basically, really, very, quite, just, simply, literally, totally, absolutely, definitely, extremely, pretty, super, honestly, frankly, obviously, and clearly — removed only when they are preceded by whitespace.",
+      },
+      {
+        question: "Is the result deterministic?",
+        answer:
+          "Yes. Same input, same output. Phrase matches are word-boundary and case-insensitive with literal lowercase replacements, so a phrase at the start of a sentence can leave the sentence starting lowercase (In order to → to).",
+      },
+      {
+        question: "What if nothing matches?",
+        answer:
+          "The output is the input with only whitespace collapsed and trimmed, and Chars saved reads 0 or a small number from that normalization.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste wordy text",
+        description:
+          "Enter a draft containing phrases like due to the fact that or filler words like basically.",
+      },
+      {
+        title: "Review the stats",
+        description:
+          "Compare Words before and Words after plus Chars saved to see the tightening each pass performed.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Take the tightened version into your editor or download shortened.txt. Check that the phrase-level cuts still read naturally.",
+      },
+    ],
+    workedExample: {
+      input: "Due to the fact that the meeting was long, we basically decided to cut it short.",
+      output: "because the meeting was long, we decided to cut it short.",
+      note: "due to the fact that → because, and basically is removed from mid-sentence. The stats show Words 16 → 11 and 23 characters saved. Because the replacement is verbatim and lowercase, the sentence now starts with because in lowercase.",
+    },
+    limits: [
+      "Only the 14 wordy phrases and 18 filler words are touched; anything not in those lists is unchanged.",
+      "Filler words are only removed when preceded by whitespace, so one at the very start of the text is not matched.",
+      "It is phrase-level tightening, not a rewrite, and does not preserve emphasis, tone, or rhetorical intent.",
+      "A phrase at the start of a sentence produces a lowercase replacement verbatim (e.g., In order to → to).",
+    ],
+    privacyNote:
+      "Shortening runs fully in your browser against the bundled phrase and filler lists. Your text is never uploaded.",
+    related: [
+      {
+        slug: "expand-text",
+        note: "Reverse the process and expand contractions and abbreviations.",
+      },
+      {
+        slug: "ai-token-calculator",
+        note: "Estimate how much the shorter text saves in model tokens.",
+      },
+    ],
+  },
+  "syllable-counter": {
+    examples: [
+      {
+        title: "Check a poem for 5-7-5",
+        description:
+          "Paste a line and read the Total syllables stat plus the per-word breakdown to judge a haiku structure.",
+      },
+      {
+        title: "Compare near-homophones",
+        description:
+          "Type words like table, alone, and beautiful to see the rule-based counts and spot edge cases such as baked staying at 2.",
+      },
+      {
+        title: "Audit a script's rhythm",
+        description:
+          "Run whole sentences through and use the top-50 per-word list to find heavy or light words before recording.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How does the counting algorithm work?",
+        answer:
+          "It lowercases the word, strips non-letters, counts runs of the letters a, e, i, o, u, and y as vowel groups, then applies a silent-e rule: a trailing e is dropped when the word ends in a consonant-e pattern that is not -le or -ed and the count exceeds one. Every word counts at least 1.",
+      },
+      {
+        question: "Is the count linguistically exact?",
+        answer:
+          "Not always. The rule-based heuristic can differ from dictionary or pronunciation counts — for example baked is scored 2, rhythm scores 1, and created scores 2. Treat results as estimates and verify critical lines.",
+      },
+      {
+        question: "What is the Total syllables number?",
+        answer:
+          "It is countSyllables applied to the entire text after stripping non-letters, which effectively counts the concatenated letters as one stream. Because of that, the total can occasionally differ from adding up the per-word column for the same input.",
+      },
+      {
+        question: "How is the per-word list built?",
+        answer:
+          "Words are tokenized with the shared splitter (letters, digits, apostrophes, and hyphens), lowercased, de-duplicated, sorted by syllable count descending, and the top 50 are shown. Unique words scanned reports how many distinct words that list has.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Type a line, poem, or paragraph. The stats appear as soon as there is non-whitespace text.",
+      },
+      {
+        title: "Read the totals",
+        description:
+          "Total syllables covers the whole text and Unique words scanned counts distinct tokens in the per-word list.",
+      },
+      {
+        title: "Use the per-word table",
+        description:
+          "Scan the top-50 list (descending by count) to find the heaviest words, copy the results, or download them as a file.",
+      },
+    ],
+    workedExample: {
+      input: "The table was beautiful. Hello world.",
+      output:
+        "Total syllables: 10 · Unique words scanned: 6 · Per word: beautiful 3 · table 2 · hello 2 · the 1 · was 1 · world 1",
+      note: "beautiful shows 3 groups (eau, i, u), table 2 (its trailing -le exempts the silent-e rule), and hello 2. Ties keep first-seen order, so table sorts before hello and the, was, world follow. These counts are the literal output of countSyllables.",
+    },
+    limits: [
+      "The vowel-group + silent-e heuristic only approximates pronunciation; words like baked, rhythm, and created differ from dictionary counts.",
+      "Only the top 50 unique words are displayed; longer texts are truncated in the per-word list.",
+      "Not stripped per token for the total: the total syllable value is computed on the concatenated letter stream and can differ from summing the per-word column.",
+      "Non-Latin scripts contribute nothing, because the cleaner strips anything outside a-z and hyphens keep concatenated words joined.",
+    ],
+    privacyNote:
+      "Counting is done locally in your browser with the shared syllable algorithm — your text is not sent anywhere.",
+    related: [
+      {
+        slug: "reading-time",
+        note: "Convert the word and syllable estimates into reading minutes.",
+      },
+      {
+        slug: "haiku-generator",
+        note: "Struggle with 5-7-5 structure? Grab a ready-made haiku instead.",
+      },
+    ],
+  },
+  "acronym-generator": {
+    examples: [
+      {
+        title: "Initials from a phrase",
+        description:
+          "Type Search Engine Optimization and get SEO with the spelled-out form S. E. O. and a count of 3 words.",
+      },
+      {
+        title: "Filter the words it uses",
+        description:
+          "Words that do not start with a letter are dropped, so 3rd Place AI sprint skips 3rd and yields PAS from Place, AI, and sprint.",
+      },
+      {
+        title: "Cycle style variations",
+        description:
+          "Press Vary to shuffle the five templates (joiners, suffixes like System, and prefixes like The) into a new deterministic order for the same initials.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How are words extracted?",
+        answer:
+          "The phrase is split on whitespace, words that do not start with a letter are dropped, non-letter characters are stripped from the survivors, and the first letter of each becomes the acronym — always uppercase. There is no stop-word list and no semantic understanding of the phrase.",
+      },
+      {
+        question: "Why could the acronym look odd?",
+        answer:
+          "Punctuation is stripped before taking the first letter — AI-powered contributes A from AIpowered — and the style templates are mechanical placeholders, so a generated acronym is not guaranteed to be a real or meaningful word.",
+      },
+      {
+        question: "What happens with fewer than two words?",
+        answer:
+          "Nothing is generated. With fewer than two usable words the card and the variant list stay empty.",
+      },
+      {
+        question: "Are the style variants random?",
+        answer:
+          "They are deterministic per seed. A seeded shuffle picks 5 of the 6 fixed templates, so Vary (or any seed change) reorders them rather than choosing new lines. Templates reference up to four letters, so a two-letter acronym fills patterns with blanks.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Type a phrase",
+        description:
+          "Enter two or more words — the initials card appears immediately with the letters, the spelled-out form, and the word count.",
+      },
+      {
+        title: "Press Vary for variants",
+        description:
+          "Click Vary to re-shuffle the five acronym style templates (e.g., S-E, S E O System, The S E Framework).",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Grab the variant lines from the output box or download acronym-variants.txt.",
+      },
+    ],
+    workedExample: {
+      input: "Search Engine Optimization",
+      output: "SEO · S. E. O. · Initials from 3 words",
+      note: "Each word contributes its capitalized first letter, giving the letters SEO and the spellings S. E. O. The style variants below reorder fixed templates around those letters (first variant at the default seed is S-E).",
+    },
+    limits: [
+      "It produces initials only — no dictionary matching and no attempt to make the letters spell a pronounceable or existing word.",
+      "Words must start with a Latin letter and non-letters are stripped before taking initials, so punctuation-heavy or non-Latin phrases produce unexpected output.",
+      "At least two usable words are required; otherwise nothing is generated.",
+      "Style templates assume up to four initials, so shorter phrases leave blank slots and longer phrases are truncated after four positions.",
+    ],
+    privacyNote:
+      "Initials and variants are computed in your browser — the phrase is never sent to a server.",
+    related: [
+      {
+        slug: "case-converter",
+        note: "Normalize the phrase casing before or after abbreviating.",
+      },
+      {
+        slug: "slug-generator",
+        note: "Build URL-safe slugs from the same kind of phrase.",
+      },
+    ],
+  },
+  "word-frequency-counter": {
+    examples: [
+      {
+        title: "Catch case-folded duplicates",
+        description:
+          "Type The fox and the dog — the counts collapse The/the into a single lowercase the, so frequency is case-insensitive.",
+      },
+      {
+        title: "Watch punctuation break tokens",
+        description:
+          "Paste a sentence with words split by punctuation and each side counts separately (hello, and hello count hello twice).",
+      },
+      {
+        title: "Change the top words",
+        description:
+          "Adjust Top words to raise or lower the number of ranked entries shown (clamped between 1 and 100).",
+      },
+    ],
+    faqs: [
+      {
+        question: "How is text tokenized?",
+        answer:
+          "With the shared word splitter: runs of letters, digits, apostrophes, curly apostrophes, and hyphens. Spaces and punctuation split tokens. It is a simple regex tokenizer, not linguistic analysis, so hyphenated words stay as one token while quoted text splits.",
+      },
+      {
+        question: "Is counting case-sensitive?",
+        answer:
+          "No. Every token is lowercased before counting, so The, THE, and the all increment the same key.",
+      },
+      {
+        question: "Are stop words removed?",
+        answer:
+          "There is no stop-word list. The only filter is that tokens of length 1 are skipped, so single-character words like a and I never appear.",
+      },
+      {
+        question: "Is the ordering deterministic?",
+        answer:
+          "Yes. Results are sorted by count descending, and ties keep first-seen order (the first occurrence in the text wins). The list is truncated to the chosen limit.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste or type text",
+        description:
+          "Enter any text — the frequency bars and counts render automatically.",
+      },
+      {
+        title: "Adjust the rank size",
+        description:
+          "Set Top words to the number of rows you want (default 20, clamped to 1–100).",
+      },
+      {
+        title: "Read the bars",
+        description:
+          "Each row shows the word, a bar scaled to the top word, and its count, from most frequent to least.",
+      },
+    ],
+    workedExample: {
+      input: "The quick brown fox jumps over the lazy dog. The fox is quick!",
+      output:
+        "the 3 · quick 2 · fox 2 · brown 1 · jumps 1 · over 1 · lazy 1 · dog 1 · is 1",
+      note: "All three occurrences of the (The, the, The) fold into one lowercase key, punctuation sticks are removed, and ties keep first-seen order: quick before fox, then brown, jumps, over, lazy, dog, is. No stop words are filtered here.",
+    },
+    limits: [
+      "Tokenization is regex-based, so apostrophes and hyphens are kept inside words (don't counts as one token) and non-Latin text splits character-by-character.",
+      "Single-character tokens are always skipped, even when their count would matter.",
+      "Numbers count as words too — for example 2026 counts once with length filter, but 3 never appears because its length is 1.",
+      "Only the top-limit rows are shown (max 100); the underlying full frequency table is not exposed.",
+    ],
+    privacyNote:
+      "Counting is computed locally in your browser. The text you enter is never uploaded.",
+    related: [
+      {
+        slug: "character-frequency-counter",
+        note: "Switch from words to the individual characters that make them up.",
+      },
+      {
+        slug: "text-statistics",
+        note: "Combine frequency with counts, readability, and reading time.",
+      },
+    ],
+  },
+  "character-frequency-counter": {
+    examples: [
+      {
+        title: "Fold case by default",
+        description:
+          "Type Hello World and H and W are counted together with h and w, producing l 3, o 2, and the rest at 1.",
+      },
+      {
+        title: "Split case when you need it",
+        description:
+          "Turn on Case sensitive to keep H separate from h, W from w, and so on.",
+      },
+      {
+        title: "Show that spaces are skipped",
+        description:
+          "Enter text with spaces, tabs, or newlines and confirm they never appear in the tally — only non-whitespace characters are counted.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it count spaces?",
+        answer:
+          "No. Any character whose trimmed form is empty — spaces, tabs, and newlines — is skipped entirely and never appears in the list.",
+      },
+      {
+        question: "Is counting case-sensitive?",
+        answer:
+          "By default no: the text is lowercased before counting, so A and a share one row. The Case sensitive checkbox keeps them separate.",
+      },
+      {
+        question: "How are digits and punctuation handled?",
+        answer:
+          "They are counted like any other non-whitespace character. Only whitespace is excluded — 1 and ! appear as rows with their own counts.",
+      },
+      {
+        question: "How is ordering determined?",
+        answer:
+          "Rows are sorted by count descending and ties keep first-seen order. Only the top 30 characters are displayed.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste or type text",
+        description:
+          "The frequency bar chart renders instantly from whatever text is in the box.",
+      },
+      {
+        title: "Toggle case sensitivity",
+        description:
+          "Leave Case sensitive off to fold cases together, or turn it on to isolate uppercase from lowercase letters.",
+      },
+      {
+        title: "Read the normalized bars",
+        description:
+          "Each bar's width is the count relative to the most frequent character, with the absolute count beside it.",
+      },
+    ],
+    workedExample: {
+      input: "Hello World",
+      output: "l 3 · o 2 · h 1 · e 1 · w 1 · r 1 · d 1",
+      note: "With case sensitivity off, the space is skipped and H/W are folded into h/w, so the tally covers 8 counted characters instead of the 11 typed. With Case sensitive on, the output becomes l 3, o 2, H 1, e 1, W 1, r 1, d 1.",
+    },
+    limits: [
+      "Whitespace is always excluded — there is no option to include spaces, tabs, or newlines in the tally.",
+      "Only the top 30 characters are shown; the remainder of the distribution is not visible.",
+      "Characters are iterated as Unicode code points, so an emoji counts as one entry and combining characters can split a visually single glyph.",
+      "Tie ordering is first-seen, which depends on the order characters first appear in your text.",
+    ],
+    privacyNote:
+      "Counting runs locally in your browser — the text is never sent to a server.",
+    related: [
+      {
+        slug: "word-frequency-counter",
+        note: "Count the words those characters form instead.",
+      },
+      {
+        slug: "case-converter",
+        note: "Normalize casing first to steer the case-sensitive tallies.",
+      },
+    ],
+  },
+  "base64-encoder": {
+    examples: [
+      {
+        title: "Encode and decode text",
+        description:
+          "Encode Hello, World! to SGVsbG8sIFdvcmxkIQ==, switch to Decode, paste it back, and recover the original text.",
+      },
+      {
+        title: "Keep Unicode intact",
+        description:
+          "Non-ASCII text is encoded as its UTF-8 bytes, so héllo café round-trips through aMOpbGxvIGNhZsOp unchanged.",
+      },
+      {
+        title: "Spot the encoding distinction",
+        description:
+          "Compare the readable original with its scrambled-looking Base64 form to see that this is a representation, not obfuscation.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Base64 encryption?",
+        answer:
+          "No. Base64 is a reversible encoding scheme that represents binary or text bytes as ASCII characters. It provides no confidentiality, and anyone can decode it. Do not use it to hide sensitive data.",
+      },
+      {
+        question: "How is Unicode handled?",
+        answer:
+          "Encoding first converts the text to UTF-8 bytes with TextEncoder and then encodes those bytes, so accented letters and other scripts survive a round trip. Decoding reverses the same steps with atob and TextDecoder.",
+      },
+      {
+        question: "Does decoding clean up whitespace?",
+        answer:
+          "The input is trimmed before decoding, so a leading or trailing newline or space does not break it. Invalid characters, bad padding, or a corrupted string raise an error and the tool shows Invalid Base64 string — check your input.",
+      },
+      {
+        question: "Does this tool handle files or binary data?",
+        answer:
+          "No. Working with the device clipboard and history. It only takes and produces text in the textarea — there is no file, image, or binary upload support.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Type or paste text",
+        description:
+          "Enter plain text for encoding, or a Base64 string for decoding, into the input box.",
+      },
+      {
+        title: "Pick a direction",
+        description:
+          "Press Encode to build the Base64 text or Decode to reverse it. Results update instantly.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Grab the output to paste into configs, scripts, or APIs, or download it as base64.txt.",
+      },
+    ],
+    workedExample: {
+      input: "Plain text: Hello, World!",
+      output: "Encoded: SGVsbG8sIFdvcmxkIQ==",
+      note: "The UTF-8 bytes of Hello, World! become SGVsbG8sIFdvcmxkIQ==, and decoding that string returns Hello, World! exactly. The same encode path turns héllo café into aMOpbGxvIGNhZsOp.",
+    },
+    limits: [
+      "Text only — no file, image, or binary upload; browser clipboard text and typed input are the entire interface.",
+      "Decoding requires valid Base64 characters and padding; malformed input errors without partial output.",
+      "Very large text is converted synchronously in the browser and can be slow or memory-heavy.",
+      "It is an encoding, not a security mechanism — the output is trivially reversible by design.",
+    ],
+    privacyNote:
+      "Encoding and decoding use the standard TextEncoder, TextDecoder, btoa, and atob APIs entirely in your browser. Nothing is uploaded.",
+    related: [
+      {
+        slug: "url-encoder",
+        note: "Percent-encode text for URLs instead of Base64.",
+      },
+      {
+        slug: "sha256-generator",
+        note: "Compute a one-way hash rather than a reversible encoding when you need integrity.",
+      },
+    ],
+  },
+  "url-encoder": {
+    examples: [
+      {
+        title: "Encode a query value",
+        description:
+          "Type text with spaces and special characters and get back the percent-encoded form for use as a query parameter value.",
+      },
+      {
+        title: "See component-level output",
+        description:
+          "Paste a full URL and watch : / ? & = get encoded too — proof that this uses component encoding, not whole-URL encoding.",
+      },
+      {
+        title: "Decode an encoded string",
+        description:
+          "Switch to Decode and convert an encoded value like cafe%20porto back into its readable text.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which encoding function is used?",
+        answer:
+          "encodeURIComponent for encoding and decodeURIComponent for decoding. That means the entire input is percent-encoded as one component: reserved characters such as :, /, ?, &, and = are also converted to % sequences.",
+      },
+      {
+        question: "Does it encode an entire URL or a component?",
+        answer:
+          "A component. A full URL passed in comes out fully encoded (https://example.com/search?q=x becomes https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Dx), which is correct for a query value but not for a ready-to-use address bar URL — for that you would keep the scheme and slashes intact.",
+      },
+      {
+        question: "How is Unicode handled?",
+        answer:
+          "Text is encoded to its UTF-8 percent sequences, so café becomes caf%C3%A9 and Japanese text becomes its %E6%9D%B1%… form. Decoding reassembles the original characters.",
+      },
+      {
+        question: "What happens with malformed percent sequences?",
+        answer:
+          "A % not followed by two hex digits (for example %zz) throws a URI error. The tool shows the message Invalid input — could not decode., which is used for both directions.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste your text",
+        description:
+          "Enter a value to encode or an encoded string to decode.",
+      },
+      {
+        title: "Choose the direction",
+        description:
+          "Press Encode for percent-encoding or Decode to reverse it; the result renders live.",
+      },
+      {
+        title: "Copy the result",
+        description:
+          "Use the encoded value inside a URL, an API call, or a data attribute, or download url.txt.",
+      },
+    ],
+    workedExample: {
+      input: "https://example.com/search?q=creator tools&page=1",
+      output:
+        "https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Dcreator%20tools%26page%3D1",
+      note: "encodeURIComponent is used, so the scheme colons, slashes, ?, &, and = are all percent-encoded along with the space (%20). decodeURIComponent restores the original string exactly. The alternative encodeURI would have left ://?&= untouched — that is not what this tool does.",
+    },
+    limits: [
+      "Component-level encoding: the entire input is encoded, so a pasted URL becomes a data string rather than a clickable URL.",
+      "Unsafe characters like ? / = & are always percent-encoded; there is no option to preserve parts of a URL.",
+      "Malformed input throws instead of partial decode, and the same generic error message is shown for either direction.",
+      "It only transforms text — it does not validate or fix real-world URLs.",
+    ],
+    privacyNote:
+      "Both functions run locally in your browser via encodeURIComponent/decodeURIComponent. The input never leaves the page.",
+    related: [
+      {
+        slug: "base64-encoder",
+        note: "Encode text in an ASCII-safe form that keeps more characters intact.",
+      },
+      {
+        slug: "json-formatter",
+        note: "Pretty-print a payload that contains percent-encoded or Base64 values.",
+      },
+    ],
+  },
+  "uuid-generator": {
+    examples: [
+      {
+        title: "Bulk identifiers",
+        description:
+          "Set Count to 10 (the default) and press Generate for a column of UUIDs to use as database keys or test fixtures.",
+      },
+      {
+        title: "Choose random or time-ordered",
+        description:
+          "Default to UUID v4 for pure randomness, or pick UUID v7 to get time-prefixed values that sort chronologically and cluster on a timestamp.",
+      },
+      {
+        title: "Formats for different systems",
+        description:
+          "Toggle No hyphens (compact), Braces, or Uppercase to match the shape a given API, config, or lint rule expects.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which UUID versions are generated?",
+        answer:
+          "Two: v4 via crypto.randomUUID() (random) and v7 from a small custom function built on crypto.getRandomValues + a millisecond timestamp. v4 sets the version nibble to 4; v7 sets it to 7.",
+      },
+      {
+        question: "What is the randomness source?",
+        answer:
+          "The Web Crypto API. v4 delegates to crypto.randomUUID() and v7 fills 16 bytes with crypto.getRandomValues before stamping in the timestamp and version/variant bits. In browsers these are cryptographically strong, but the tool does not add any independent guarantees.",
+      },
+      {
+        question: "Is the output deterministic?",
+        answer:
+          "No — the value itself is random on every run. The only fixed things are the format, the version/variant nibbles, and the option order (compact → braces → uppercase).",
+      },
+      {
+        question: "Are there any limits?",
+        answer:
+          "Count is clamped to 1–100 (default 10), output is never validated or de-duplicated, and crypto.randomUUID() requires a secure context (HTTPS or localhost) in browsers.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Set the count and version",
+        description:
+          "Enter a count from 1–100 and choose v4 or v7.",
+      },
+      {
+        title: "Tune the format",
+        description:
+          "Toggle Uppercase, No hyphens, or Braces — applied in that order — to shape every generated line.",
+      },
+      {
+        title: "Generate and reuse",
+        description:
+          "Press Generate to fill the box, generate again for more, or download the current set as uuids.txt.",
+      },
+    ],
+    workedExample: {
+      input: "Count 2, version v4, defaults (lowercase, hyphenated)",
+      output:
+        "0f8c3d2a-1b4e-4a9f-8c7d-5e6f1a2b3c4d\n9e2a4b6c-7d8f-4e1a-9b3c-2d5f6a7b8c9d",
+      note: "Each line is a fresh random value, so these exact strings will never repeat. The fixed markers are the shape (8-4-4-4-12 hex) and the nibbles: position 15 is 4 for v4, and v7 output carries a 7 there with a variant of 8, 9, a, or b. With No hyphens + Braces + Uppercase the same v4 sample renders as {0F8C3D2A1B4E4A9F8C7D5E6F1A2B3C4D}.",
+    },
+    limits: [
+      "Values are random, so reproducibility is limited to format, version, and variant bits — the strings themselves differ every run.",
+      "Up to 100 per generation, no de-duplication, and no collision detection on the output list.",
+      "crypto.randomUUID() only works in secure contexts such as HTTPS or localhost; the custom v7 path has no such dependency.",
+      "Format toggles combine in a fixed order (compact → braces → uppercase), so braces wrap the hyphenless form when both are on.",
+    ],
+    privacyNote:
+      "UUIDs are generated locally with the browser's Web Crypto API. No network request is made and nothing is stored.",
+    related: [
+      {
+        slug: "url-encoder",
+        note: "Percent-encode these identifiers when embedding them in URLs.",
+      },
+      {
+        slug: "json-formatter",
+        note: "Pretty-print the JSON you paste the generated IDs into.",
+      },
+    ],
+  },
+  "pdf-compress": {
+    examples: [
+      {
+        title: "Strip metadata-heavy bloat",
+        description:
+          "Pick a PDF with a long author/title/keywords footprint and let the default Strip document metadata pass remove those fields before re-saving.",
+      },
+      {
+        title: "Rewrite structure for redundancy",
+        description:
+          "Files with duplicated or scattered objects shrink most, because the pass re-saves the document using cross-reference object streams.",
+      },
+      {
+        title: "Check realistic expectations",
+        description:
+          "Run a compact PDF and watch the status — some files barely shrink, and the percentage is clamped so it never reports a negative value.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How does the compression actually work?",
+        answer:
+          "The PDF is loaded with the client-side pdf-lib library, optionally stripped of its metadata (title, author, subject, keywords, producer, and creator), and re-saved with useObjectStreams: true. It does not recompress images, fonts, or content streams.",
+      },
+      {
+        question: "Will every PDF get smaller?",
+        answer:
+          "No. The size reduction comes from metadata removal plus the structural rewrite. PDFs with little metadata and already-compact objects may shrink only slightly or not at all, and an output that comes out larger is reported as 0% smaller because the percentage is floored at zero.",
+      },
+      {
+        question: "Does the visual content change?",
+        answer:
+          "Page content objects are passed through untouched, so text, images, and layout are preserved. What changes is the document structure and, when enabled, the metadata fields.",
+      },
+      {
+        question: "Is the original file modified?",
+        answer:
+          "No. The compressed file downloads as <name>-compressed.pdf and the source file you picked is never overwritten. The status line reports the before → after sizes and the rounded percentage. Corrupt or unsupported files show Could not compress this PDF.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Choose a PDF",
+        description:
+          "Use the file picker (accepts .pdf). The file name and size are shown before anything is processed.",
+      },
+      {
+        title: "Decide on metadata",
+        description:
+          "Keep Strip document metadata on to clear author/title/keywords, or uncheck it to preserve them along with the rewrite.",
+      },
+      {
+        title: "Compress and download",
+        description:
+          "Press Compress PDF; when done, the rewritten file downloads automatically as <name>-compressed.pdf and the status shows the size delta.",
+      },
+    ],
+    workedExample: {
+      input: "report.pdf (a metadata-heavy, single-file PDF)",
+      output: "Downloads report-compressed.pdf · status reports before → after and % smaller",
+      note: "Sizes depend entirely on the input. As a deterministic illustration, an original of exactly 1,048,576 bytes that re-saves to 943,718 bytes produces the status 1.00 MB → 921.6 KB (10% smaller). A file that re-saves larger still shows 0% smaller. No exact output size can be promised in advance.",
+    },
+    limits: [
+      "This is a structural/optimization pass, not lossy image or font compression — the biggest savings come from stripping metadata and redundant structure.",
+      "Only one PDF at a time, and processing happens synchronously in the browser, so very large documents can be slow or memory-heavy.",
+      "The reduction percentage is floored at 0%, and gains vary from file to file; some PDFs will not shrink noticeably.",
+      "pdf-lib must be able to load the file; unsupported or corrupted inputs hit the generic Could not compress this PDF. error with no partial download.",
+    ],
+    privacyNote:
+      "The PDF is processed entirely in your browser by the bundled pdf-lib library — the file is never uploaded and no external worker or CDN resource is fetched for this tool.",
+    related: [
+      {
+        slug: "pdf-merge",
+        note: "Combine files first, then compress the merged result.",
+      },
+      {
+        slug: "pdf-split",
+        note: "Extract just the pages you need before optimizing size.",
+      },
+    ],
+  },
 };
 
 function fallbackExtras(toolSlug: string): ToolExtras | null {
