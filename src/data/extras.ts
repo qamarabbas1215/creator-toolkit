@@ -5728,6 +5728,1227 @@ const CURATED: Record<string, ToolExtras> = {
       },
     ],
   },
+  "rewrite-tool": {
+    examples: [
+      {
+        title: "Compare four fixed transformations",
+        description:
+          "One Rewrite action returns a random synonym swap, a deterministic phrase restructure, a deterministic recast, and a second random synonym swap followed by the restructure pass.",
+      },
+      {
+        title: "Test the synonym table",
+        description:
+          "Variation 1 considers 25 groups of lowercase ASCII words. A match such as important can become crucial, essential, or vital, while capitalized and uppercase words are not matched by this pass.",
+      },
+      {
+        title: "Test the phrase lists",
+        description:
+          "Variation 2 applies ten phrase substitutions such as In order to → To, while Variation 3 applies six separate substitutions such as You should → It's worth and I think that → In my view,.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this an AI rewriter?",
+        answer:
+          "No. It uses 25 fixed synonym groups, ten restructuring phrases, and six recasting phrases. There is no language model, contextual generation, grammar correction, or meaning-preservation step.",
+      },
+      {
+        question: "Which rewrite modes are random?",
+        answer:
+          "Variations 1 and 4 use Math.random() to choose one synonym for every matching word. They make separate synonym passes, so they can differ from each other and between clicks. Variations 2 and 3 are deterministic phrase substitutions.",
+      },
+      {
+        question: "Why can a phrase survive in Variation 4?",
+        answer:
+          "Variation 4 swaps synonyms before restructuring. If a swap changes a word inside a fixed phrase, that phrase no longer matches and the restructure pass leaves it unchanged.",
+      },
+      {
+        question: "Does it preserve meaning or fix grammar?",
+        answer:
+          "No. Replacements are context-blind and can produce phrases such as utilize of or It's worth always make. Capitalization, articles, tense, and agreement are not repaired, so every result needs proofreading.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter the source text",
+        description: "Type or paste one or more paragraphs into the text area.",
+      },
+      {
+        title: "Generate the variations",
+        description:
+          "Press Rewrite to run the synonym, restructure, recast, and combined synonym-then-restructure passes.",
+      },
+      {
+        title: "Review and copy",
+        description:
+          "Compare all four results, then copy one variation or use Copy all variations to join them with separator lines.",
+      },
+    ],
+    workedExample: {
+      input:
+        "It is important to note that we need to start the project soon. In order to succeed, you should always make good use of this tool.",
+      output:
+        "Variation 1 — It is crucial to note that we require to begin the project soon. In order to succeed, you should invariably create excellent utilize of this tool.\nVariation 2 — Note that we need to start the project soon. To succeed, you should always make good use of this tool.\nVariation 3 — It is important to note that we need to start the project soon. In order to succeed, It's worth always make good use of this tool.\nVariation 4 — It is crucial to note that we require to begin the project soon. To succeed, you should invariably create excellent utilize of this tool.",
+      note: "Executed through the registered rewrite handler with Math.random temporarily fixed to 0 solely for reproducible verification. Normal browser runs can select different synonyms; the fixed substitutions themselves do not change.",
+    },
+    limits: [
+      "This is fixed-rule text substitution, not contextual, semantic, or AI-based rewriting.",
+      "Only 25 synonym groups and 16 phrase substitutions can change the source; ordinary synonym matching is limited to lowercase ASCII words.",
+      "Variations 1 and 4 are not reproducible because they use Math.random(), and mechanical substitutions can change grammar or meaning.",
+      "There are no tone, length, formality, grammar, spelling, or contextual controls.",
+    ],
+    privacyNote:
+      "Browser rewriting is computed locally. The automatic usage request includes only the tool slug; public API calls send the source text to Creator Toolkit for server-side processing.",
+    related: [
+      {
+        slug: "grammar-checker",
+        note: "Check a mechanical rewrite for grammar and writing issues.",
+      },
+      {
+        slug: "summarizer",
+        note: "Condense a preferred variation into its key points.",
+      },
+    ],
+  },
+  "word-to-pdf": {
+    examples: [
+      {
+        title: "Preview a DOCX before printing",
+        description:
+          "Choose a valid .docx and press Read document. Mammoth converts supported Word content into semantic HTML for an on-page preview.",
+      },
+      {
+        title: "Check the browser-rendered result",
+        description:
+          "Review headings, paragraphs, lists, and embedded content in the preview. Table borders, image scaling, margins, and page styling are applied in the separate print window.",
+      },
+      {
+        title: "Save through the browser",
+        description:
+          "Press Print / Save as PDF, allow the new window, then choose the browser's Save as PDF destination and confirm its paper settings.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does this tool generate a PDF directly?",
+        answer:
+          "No. It converts the DOCX to HTML and opens a new window that calls window.print(). Your browser's printing engine creates the PDF; the application does not build PDF bytes or trigger an automatic download.",
+      },
+      {
+        question: "Does the picker really support legacy .doc files?",
+        answer:
+          "Not reliably. The picker lists .doc, but the implementation uses Mammoth's DOCX package reader. Legacy binary .doc files normally fail and should be saved as .docx first.",
+      },
+      {
+        question: "Will the PDF match Word's pagination exactly?",
+        answer:
+          "No. Conversion is semantic rather than page-layout faithful. Fonts, page breaks, headers, footers, footnotes, text boxes, tracked changes, and other Word-specific layout can differ or be omitted.",
+      },
+      {
+        question: "Why might the Print button do nothing?",
+        answer:
+          "The print flow requires a new browser window. If pop-ups are blocked, the function returns without opening the print dialog, and no explanatory error is shown.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Choose a DOCX file",
+        description:
+          "Select a valid .docx. Although .doc appears in the picker, legacy .doc parsing is not implemented by this converter.",
+      },
+      {
+        title: "Read and review the preview",
+        description:
+          "Press Read document, wait for the preview-ready status, and inspect the converted content and browser layout.",
+      },
+      {
+        title: "Print or save as PDF",
+        description:
+          "Press Print / Save as PDF, allow the new window, and select Save as PDF in the browser's print dialog.",
+      },
+    ],
+    workedExample: {
+      input:
+        "brief.docx — one paragraph containing Hello PDF and one Heading1 paragraph containing Report",
+      output:
+        "<p>Hello PDF</p><h1>Report</h1> — Preview ready. Click Print / Save as PDF and choose the target printer.",
+      note: "The HTML was verified with the installed Mammoth 1.12 browser bundle and a generated DOCX. The application does not create the final PDF; browser and print settings determine that output.",
+    },
+    limits: [
+      "The workflow converts DOCX to HTML and invokes the browser print dialog; it does not generate PDF bytes or download a PDF automatically.",
+      "The .doc option is listed by the picker, but only the Mammoth DOCX path is implemented, so legacy .doc files normally fail.",
+      "Word page layout is not reproduced exactly; fonts, page breaks, headers, footers, footnotes, text boxes, and tracked changes can differ or be omitted.",
+      "Mammoth warnings are ignored, popup blocking fails silently, no file-size cap is enforced, and large files can consume substantial browser memory.",
+    ],
+    privacyNote:
+      "The DOCX is read locally by Mammoth and is not uploaded by this tool. The page's automatic usage request includes only the tool slug, and PDF creation happens in the user-controlled browser print dialog.",
+    related: [
+      {
+        slug: "pdf-to-word",
+        note: "Convert a PDF back toward an editable Word document.",
+      },
+      {
+        slug: "image-to-pdf",
+        note: "Create a PDF from images instead of a Word document.",
+      },
+    ],
+  },
+  "color-converter": {
+    examples: [
+      {
+        title: "Convert a six-digit HEX color",
+        description:
+          "Input #3b82f6 to get #3b82f6, rgb(59, 130, 246), hsl(217, 91%, 60%), and the modern CSS form rgb(59 130 246).",
+      },
+      {
+        title: "Expand shorthand HEX",
+        description:
+          "Input #abc to expand it to #aabbcc, then display rgb(170, 187, 204), hsl(210, 25%, 73%), and rgb(170 187 204).",
+      },
+      {
+        title: "Convert comma-separated RGB",
+        description:
+          "Input rgb(59,130,246) for the same result, or rgba(59,130,246,0.5) to see that the fourth value is tolerated but discarded.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which color formats can I enter?",
+        answer:
+          "Three- or six-digit HEX with an optional #, and comma-separated rgb(...) or rgba(...) values with one to three digits in each RGB channel. The leading # is optional, and HEX output is lowercase.",
+      },
+      {
+        question: "Can I enter HSL, HSV, CMYK, or a named color?",
+        answer:
+          "No. HSL is an output only. HSL, HSV, CMYK, named colors, four- or eight-digit alpha HEX, modern slash-alpha RGB, percentages, and decimal RGB channels are not recognized.",
+      },
+      {
+        question: "What happens to rgba() alpha?",
+        answer:
+          "A fourth value is accepted by the pattern but never parsed or returned. The converter uses only the three RGB channels, so the result is treated as opaque.",
+      },
+      {
+        question: "How are invalid and out-of-range values handled?",
+        answer:
+          "Nonempty invalid input shows Invalid color format. RGB channels are not range-checked or clamped, however, so values above 255 can pass through and produce an invalid HEX string or HSL percentages above 100%.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter a supported color",
+        description:
+          "Type or paste three- or six-digit HEX, or a comma-separated rgb()/rgba() value. Conversion updates as the input changes.",
+      },
+      {
+        title: "Review the live result",
+        description:
+          "Read the generated swatch, HEX, comma-separated RGB, HSL, and space-separated CSS RGB values.",
+      },
+      {
+        title: "Select the representation you need",
+        description:
+          "Choose the desired monospace value from the result card and copy it with your browser's normal text selection.",
+      },
+    ],
+    workedExample: {
+      input: "#3b82f6",
+      output: "hex #3b82f6 · rgb(59, 130, 246) · hsl(217, 91%, 60%) · CSS rgb(59 130 246)",
+      note: "Verified through the registered color-converter handler. HSL hue, saturation, and lightness are each rounded to integers with Math.round.",
+    },
+    limits: [
+      "Input is limited to three-/six-digit HEX and comma-separated rgb()/rgba() syntax; HSL, HSV, CMYK, and named colors are unsupported.",
+      "RGBA alpha is tolerated but discarded, and no alpha representation appears in the output.",
+      "RGB channels are not clamped, so out-of-range input can produce invalid HEX or HSL values.",
+      "HSL components are rounded to integers, so distinct colors can share the same displayed HSL string.",
+    ],
+    privacyNote:
+      "Color conversion is computed locally in the browser. The automatic usage request includes only the tool slug; public API calls send the entered color to Creator Toolkit for server-side processing.",
+    related: [
+      {
+        slug: "color-palette-generator",
+        note: "Generate a palette around the converted color.",
+      },
+      {
+        slug: "css-beautifier",
+        note: "Format CSS that uses the converted color values.",
+      },
+    ],
+  },
+  "html-formatter": {
+    examples: [
+      {
+        title: "Expand a compact page",
+        description:
+          "Paste one-line HTML to place the doctype, structural elements, text nodes, and void elements on separate lines with two-space indentation.",
+      },
+      {
+        title: "Make mixed content readable",
+        description:
+          "Input <p>Hello <strong>world</strong>!</p> becomes separate lines for the paragraph, text, strong element, nested text, exclamation text, and closing tags.",
+      },
+      {
+        title: "Format without validating",
+        description:
+          "HTML mode accepts mismatched, unclosed, and stray closing tags, prints them, adjusts indentation, and does not return a formatting error.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does the formatter validate HTML?",
+        answer:
+          "No. It uses a custom tokenizer and indentation stack rather than a DOM or standards-compliant HTML parser. It does not report mismatched or unclosed elements and does not repair optional tags.",
+      },
+      {
+        question: "Does it preserve all whitespace?",
+        answer:
+          "No. Each text node is trimmed, and every internal whitespace run is collapsed to one space before the node is printed on its own line. This can alter preformatted or whitespace-sensitive content.",
+      },
+      {
+        question: "What happens to attributes and special sections?",
+        answer:
+          "Tag attributes, doctypes, comments, processing instructions, and recognized CDATA sections are emitted raw. They are not reordered, respaced, or normalized.",
+      },
+      {
+        question: "Can a greater-than sign inside an attribute break it?",
+        answer:
+          "Yes. The tokenizer finds the next > without tracking quotes, so an attribute such as title=\"a > b\" is split at that character. The formatter has no quote-aware fallback.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste or type HTML",
+        description:
+          "Enter a snippet or complete document in the HTML input area. Formatting updates as the input changes.",
+      },
+      {
+        title: "Review the expanded structure",
+        description:
+          "Read the two-space-indented output and check any whitespace-sensitive text or attributes containing >.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Use the output controls to copy the text, download formatted.html, or explicitly save the generated output to a project.",
+      },
+    ],
+    workedExample: {
+      input:
+        "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title> Test </title></head><body><main><h1>Hello</h1><p>World   from\n  text</p><img src=\"a.png\" alt=\"A\"><br></main></body></html>",
+      output:
+        "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <title>\n      Test\n    </title>\n  </head>\n  <body>\n    <main>\n      <h1>\n        Hello\n      </h1>\n      <p>\n        World from text\n      </p>\n      <img src=\"a.png\" alt=\"A\">\n      <br>\n    </main>\n  </body>\n</html>",
+      note: "Executed through the registered HTML formatter. It confirms separate text-node lines, two-space indentation, preserved void tags, and collapsed source whitespace.",
+    },
+    limits: [
+      "There is no minify mode, configurable indentation, DOM-based formatting, or browser-equivalent normalization.",
+      "There is no HTML validation or repair; mismatched, stray, and unclosed tags are accepted without an error.",
+      "The tokenizer is not quote-aware, so > inside a quoted attribute can split a tag incorrectly.",
+      "Text whitespace is collapsed, attributes and special sections remain raw, and only a fixed list of void HTML names avoids opening an indentation level.",
+    ],
+    privacyNote:
+      "Browser formatting is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the source HTML to Creator Toolkit.",
+    related: [
+      {
+        slug: "xml-formatter",
+        note: "Format XML and inspect its limited tag-balance checks.",
+      },
+      {
+        slug: "html-to-markdown",
+        note: "Convert HTML content into Markdown after formatting it.",
+      },
+    ],
+  },
+  "xml-formatter": {
+    examples: [
+      {
+        title: "Indent a nested document",
+        description:
+          "A compact document such as <root><item>A</item><empty/></root> is expanded with two-space indentation while preserving attributes and self-closing tags.",
+      },
+      {
+        title: "Detect a mismatched close",
+        description:
+          "Input <root><item>x</root> returns the partial formatted output and Mismatched closing tag </root> (expected </item>).",
+      },
+      {
+        title: "Detect an unclosed tag",
+        description:
+          "If input ends while the tag stack is nonempty, the formatter reports the most recently opened unclosed tag as Unclosed tag <name>.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this a complete XML validator?",
+        answer:
+          "No. It performs only limited opening/closing tag-stack checks. It does not validate namespaces, attributes, entities, DTDs, encoding, schema rules, comments, or the single-root requirement.",
+      },
+      {
+        question: "What happens when an error is found?",
+        answer:
+          "The browser keeps the partial formatted output and shows the error. The public API returns the same output and error inside a successful response rather than throwing an XML error.",
+      },
+      {
+        question: "Is XML tag matching case-sensitive?",
+        answer:
+          "No. Both names are lowercased before comparison, so <Root><Item>x</item></Root> is accepted even though conforming XML names are case-sensitive.",
+      },
+      {
+        question: "Can the formatter change text or misread attributes?",
+        answer:
+          "Text-node whitespace is collapsed and trimmed. The tokenizer is not quote-aware, so > inside a quoted attribute can split a tag even though attributes are otherwise emitted raw.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste XML",
+        description:
+          "Enter an XML document or fragment in the input area. Formatting updates as the type changes.",
+      },
+      {
+        title: "Review indentation and errors",
+        description:
+          "Inspect the two-space-indented result and any mismatched or unclosed tag message.",
+      },
+      {
+        title: "Fix the reported tag",
+        description:
+          "Correct the named closing or unclosed element, then confirm the error is gone before copying or downloading the result.",
+      },
+    ],
+    workedExample: {
+      input: "<?xml version=\"1.0\"?><root><item id=\"1\"> A &amp; B </item><empty/></root>",
+      output:
+        "<?xml version=\"1.0\"?>\n<root>\n  <item id=\"1\">\n    A &amp; B\n  </item>\n  <empty/>\n</root>",
+      note: "Executed through the registered XML handler with error: null. Attributes and the entity remain raw, while surrounding text whitespace is collapsed.",
+    },
+    limits: [
+      "Validation is limited to a custom tag stack and is not XML-spec compliant; it does not parse the full document.",
+      "Tag names are compared case-insensitively, and multiple roots or a declaration after the root are accepted.",
+      "Namespaces, attributes, entities, DTDs, encoding, comments, and schemas are not validated.",
+      "A > inside a quoted attribute can break tokenization, text whitespace is collapsed, and errors retain partial output.",
+    ],
+    privacyNote:
+      "Browser formatting is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the source XML to Creator Toolkit.",
+    related: [
+      {
+        slug: "html-formatter",
+        note: "Format HTML with the shared tokenizer in lenient mode.",
+      },
+      {
+        slug: "json-formatter",
+        note: "Pretty-print JSON configuration alongside XML.",
+      },
+    ],
+  },
+  "css-beautifier": {
+    examples: [
+      {
+        title: "Untangle minified rules",
+        description:
+          "Input .card{color:#333;margin:0 auto;padding:1rem} becomes a selector line followed by three declarations, each indented by two spaces.",
+      },
+      {
+        title: "Follow nested at-rules",
+        description:
+          "Any { opens a block and any } closes one, so @media (min-width:600px){.card{...}} is indented recursively without special at-rule parsing.",
+      },
+      {
+        title: "Inspect string-sensitive values",
+        description:
+          "The scanner is not string-aware: content:\"a;b\" is split at the semicolon, and text containing /* inside a quoted value can be treated as a comment and removed.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Does it validate CSS?",
+        answer:
+          "No. It is a character scanner that rearranges lines, braces, and semicolons. There is no syntax validation, error message, property sorting, selector sorting, or minify mode.",
+      },
+      {
+        question: "How are comments handled?",
+        answer:
+          "A recognized comment is moved to its own line before the current buffered declaration, with the current indentation prepended to the original comment text. It is not guaranteed to remain in its source position, and an unterminated /* consumes the rest of the input.",
+      },
+      {
+        question: "Does it understand strings and nesting?",
+        answer:
+          "No. Semicolons or braces inside quoted values and data URLs can split declarations or open extra blocks. At-rules and ordinary rules both use the same brace stack, with two spaces per level.",
+      },
+      {
+        question: "What happens to whitespace and missing punctuation?",
+        answer:
+          "Whitespace inside the current buffer is collapsed to single spaces, a space is inserted before an opening brace, and no space is added after a property colon unless one existed. A declaration at EOF is emitted without indentation or an added semicolon.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste the CSS",
+        description: "Enter minified CSS or an irregularly indented stylesheet.",
+      },
+      {
+        title: "Review the layout",
+        description:
+          "Read the two-space-indented selectors and declarations, and check strings, data URLs, custom properties, and comments for scanner artifacts.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Use the output controls to copy the result or download beautified.css, then parse it with a real CSS tool before shipping it.",
+      },
+    ],
+    workedExample: {
+      input: "@media (min-width:600px){.card{color:#333;margin:0 auto}}",
+      output:
+        "@media (min-width:600px) {\n  .card {\n    color:#333;\n    margin:0 auto;\n  }\n}",
+      note: "Executed through the registered CSS formatter. A space is added before each opening brace, while color:#333 remains unchanged because the scanner does not insert a space after a property colon.",
+    },
+    limits: [
+      "The scanner is not string-aware, so ;, {, }, and /* */ inside quoted values or data URLs can split or remove text.",
+      "Comments are relocated before the current buffer, their interior indentation is unchanged, and an unterminated comment consumes the rest of the file.",
+      "There is no validation, error reporting, configurable indent, property or selector sorting, or minify mode.",
+      "Unbalanced braces are accepted, indentation is floored at zero, and a final unterminated declaration can lose indentation and its semicolon.",
+    ],
+    privacyNote:
+      "Browser beautification is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the source CSS to Creator Toolkit.",
+    related: [
+      {
+        slug: "html-formatter",
+        note: "Pretty-print the markup that the CSS styles.",
+      },
+      {
+        slug: "json-formatter",
+        note: "Apply a similar readable layout to JSON configuration.",
+      },
+    ],
+  },
+  "sql-formatter": {
+    examples: [
+      {
+        title: "Break a simple query into lines",
+        description:
+          "Recognized top-level keywords such as SELECT, FROM, WHERE, GROUP BY, ORDER BY, and LIMIT start new lines. AND, OR, ON, JOIN, and WHEN start indented sub-clause lines.",
+      },
+      {
+        title: "Choose keyword casing",
+        description:
+          "Uppercase keywords is on by default. Turning it off emits recognized keywords in lowercase, but every output token is still joined with one space.",
+      },
+      {
+        title: "See the heuristic limitations",
+        description:
+          "Multi-word clauses can echo their second keyword, such as ORDER BY by, while punctuation becomes spaced tokens such as u . id and id , name.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is this a SQL parser or validator?",
+        answer:
+          "No. It is a tokenizer plus a finite keyword line-breaker. It performs no grammar or syntax validation, and arbitrary text such as garbage!!! is formatted without an error.",
+      },
+      {
+        question: "Which SQL dialects are supported?",
+        answer:
+          "No dialect is selected or inferred. One fixed keyword set is applied to all input, so dialect-specific syntax is treated as ordinary tokens rather than parsed according to its database.",
+      },
+      {
+        question: "Why does ORDER BY become ORDER BY by?",
+        answer:
+          "The multi-word lookahead leaves the second token for the next loop iteration, where it is emitted again as ordinary input. This affects ORDER BY, GROUP BY, INSERT INTO, DELETE FROM, and the four JOIN variants; the echoed token keeps its original case.",
+      },
+      {
+        question: "Are string literals and comments preserved safely?",
+        answer:
+          "Quoted and backtick-delimited runs are kept as single tokens, but whitespace inside a literal is collapsed. Comments are not protected: -- becomes - - and /* ... */ becomes / * ... * /, which can break a query if the output is pasted back.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste a statement",
+        description:
+          "Enter one SQL statement. A plain SELECT exposes the line-breaking rules most clearly than a query with subqueries or comments.",
+      },
+      {
+        title: "Choose keyword casing",
+        description:
+          "Leave Uppercase keywords checked for capital clauses or uncheck it for lowercase clauses.",
+      },
+      {
+        title: "Review before reuse",
+        description:
+          "Read clause by clause, check duplicated multi-word keywords and spaced punctuation, and re-check literals that contained repeated whitespace or comments.",
+      },
+    ],
+    workedExample: {
+      input: "select id,name from users where plan='pro' and active=true order by created_at desc",
+      output:
+        "SELECT id , name\nFROM users\nWHERE plan = 'pro'\n  AND active = true\nORDER BY by created_at desc",
+      note: "Executed through the registered SQL handler with its default uppercase setting. The output shows the comma spacing, indented AND line, and duplicated by token from ORDER BY exactly as implemented.",
+    },
+    limits: [
+      "Formatting is heuristic rather than SQL parsing: parentheses, subqueries, CTEs, CREATE or ALTER, window syntax, and dialect rules are not modeled.",
+      "Multi-word clauses duplicate their second token, including ORDER BY by, GROUP BY BY, INSERT INTO into, DELETE FROM plus FROM, and JOIN variants.",
+      "All emitted tokens are space-separated, and whitespace inside quoted string literals is collapsed, which can change literal data.",
+      "Comments are not supported, keywords used as identifiers still trigger line breaks, and there is no validation, error state, or dialect selector.",
+    ],
+    privacyNote:
+      "Browser formatting is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the SQL to Creator Toolkit.",
+    related: [
+      {
+        slug: "json-formatter",
+        note: "Pretty-print JSON payloads used with a query.",
+      },
+      {
+        slug: "csv-to-json",
+        note: "Turn exported tabular data into JSON.",
+      },
+    ],
+  },
+  "json-to-yaml": {
+    examples: [
+      {
+        title: "Convert a configuration object",
+        description:
+          "Input {\"name\":\"Creator Toolkit\",\"count\":150} becomes two YAML mapping entries, with nested objects indented by two spaces per level.",
+      },
+      {
+        title: "Render arrays as block lists",
+        description:
+          "A string array becomes indented - items, while an array of objects uses a bare - followed by nested mapping keys on the following lines.",
+      },
+      {
+        title: "Inspect minimal quoting",
+        description:
+          "Reserved characters can trigger JSON-style double quotes, but mapping keys are never quoted and plain number-, boolean-, or date-looking strings remain bare.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which JSON and YAML types are supported?",
+        answer:
+          "Input can be any value accepted by JSON.parse: objects, arrays, strings, numbers, true, false, and null. Very large numeric literals can overflow to Infinity during parsing and are then emitted as Infinity. The custom writer supports mappings and block-style arrays, an empty object as {}, and null as null.",
+      },
+      {
+        question: "Which YAML library or algorithm is used?",
+        answer:
+          "No YAML library is used. The tool calls JSON.parse and then walks the value recursively, emitting YAML-like text with two-space indentation. It does not support YAML input, anchors, aliases, comments, block scalars, or multiple documents.",
+      },
+      {
+        question: "When are string values quoted?",
+        answer:
+          "A value is passed through JSON.stringify when it is empty, starts with whitespace or a hyphen, or contains any of these characters: colon, hash, brackets, braces, comma, ampersand, asterisk, exclamation point, pipe, greater-than sign, apostrophe, double quote, percent, at sign, or backtick. Otherwise it is emitted bare, even when it looks numeric, Boolean, null-like, or date-like.",
+      },
+      {
+        question: "Does the YAML always parse back to the same JSON value?",
+        answer:
+          "No. The output is not re-parsed or validated. For example, an empty array under a key emits only the key with no items and can re-read as null, while bare number- or date-looking strings can change type. Unquoted newlines and control characters can even make the document invalid.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste valid JSON",
+        description:
+          "Enter an object, array, or scalar accepted by JSON.parse. Invalid nonempty input shows the JSON.parse error in the browser or returns an API error.",
+      },
+      {
+        title: "Review the emitted YAML",
+        description:
+          "Read mappings, lists, scalar values, null, and the tool's limited quoting behavior. The generated text is not checked with a YAML parser.",
+      },
+      {
+        title: "Validate specialized input",
+        description:
+          "Before using the result, parse it with a real YAML implementation, especially when it contains empty arrays, type-like strings, mapping keys, newlines, or large numbers.",
+      },
+    ],
+    workedExample: {
+      input:
+        "{\"name\":\"Creator Toolkit\",\"count\":150,\"tags\":[\"tools\",\"api\"],\"url\":\"https://example.com\",\"meta\":{}}",
+      output:
+        "name: Creator Toolkit\ncount: 150\ntags:\n  - tools\n  - api\nurl: \"https://example.com\"\nmeta: {}",
+      note: "Executed through the registered JSON-to-YAML handler. The array becomes a block list, the empty object stays {}, and the URL is quoted because it contains a colon.",
+    },
+    limits: [
+      "The custom output is not YAML-validated or round-trip checked; empty arrays and minimal quoting can lose types or container structure.",
+      "Newlines and control characters in otherwise-unquoted strings are emitted raw and can produce an invalid YAML document.",
+      "Mapping keys are never quoted, and bare numeric-, Boolean-, null-, or date-looking strings can be interpreted as non-string YAML types.",
+      "Numbers use JavaScript String conversion after JSON.parse, so formatting can change and integers beyond Number.MAX_SAFE_INTEGER have already lost precision.",
+    ],
+    privacyNote:
+      "Browser conversion is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the source JSON to Creator Toolkit.",
+    related: [
+      {
+        slug: "json-formatter",
+        note: "Pretty-print the source JSON before converting it.",
+      },
+      {
+        slug: "json-to-csv",
+        note: "Send the same JSON to a tabular CSV workflow instead.",
+      },
+    ],
+  },
+  "html-entity-encoder": {
+    examples: [
+      {
+        title: "Encode markup-sensitive text",
+        description:
+          "Input Don't <b>stop</b> & keep \"going\" becomes Don&#39;t &lt;b&gt;stop&lt;/b&gt; &amp; keep &quot;going&quot; in one pass.",
+      },
+      {
+        title: "Decode the six supported forms",
+        description:
+          "Decode reverses &lt;, &gt;, &amp;, &quot;, &#39;, and the hexadecimal apostrophe alias &#x27; using fixed literal replacements.",
+      },
+      {
+        title: "Inspect already-encoded text",
+        description:
+          "Encoding &lt; produces &amp;lt;, and decoding that once returns &lt;. A second decode pass is needed to reach the original < character.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which characters does Encode change?",
+        answer:
+          "Exactly five characters: < becomes &lt;, > becomes &gt;, & becomes &amp;, \" becomes &quot;, and ' becomes &#39;. Slashes, equals signs, backticks, non-ASCII characters, and every other character pass through unchanged.",
+      },
+      {
+        question: "Which entities does Decode recognize?",
+        answer:
+          "Only &lt;, &gt;, &amp;, &quot;, &#39;, and &#x27;. Named entities such as &nbsp;, &copy;, and &apos;, uppercase spellings, and other numeric or Unicode references are not decoded.",
+      },
+      {
+        question: "Is encoding the same as sanitizing HTML?",
+        answer:
+          "No. This tool performs text encoding, not security sanitization. It does not strip tags, neutralize attributes, remove scripts, or make untrusted HTML safe to insert in any context.",
+      },
+      {
+        question: "Is matching case-sensitive or idempotent?",
+        answer:
+          "Entity matching is case-sensitive, and Encode is not idempotent because every & becomes &amp;. Decode uses one ordered pass: because &amp; is replaced first, &amp;quot; becomes &quot; and then \" in the same pass, while &amp;lt; becomes &lt; but is no longer reprocessed. A second Decode is needed for the latter.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter text or entities",
+        description: "Type plain text to encode it, or enter supported entity forms to decode them.",
+      },
+      {
+        title: "Choose Encode or Decode",
+        description:
+          "Encode applies the five-character map; Decode reverses its five forms plus the &#x27; alias.",
+      },
+      {
+        title: "Review and copy",
+        description:
+          "Check the result in the browser, then copy or download it. The download is named encoded.txt in both directions.",
+      },
+    ],
+    workedExample: {
+      input: "Don't <b>stop</b> & keep \"going\"",
+      output: "Don&#39;t &lt;b&gt;stop&lt;/b&gt; &amp; keep &quot;going&quot;",
+      note: "Executed through the registered entity encoder. Each of the five supported characters maps exactly once, and decoding this output returns the original string.",
+    },
+    limits: [
+      "Encode changes only <, >, &, \", and '; it does not encode slashes, backticks, control characters, or arbitrary Unicode.",
+      "Decode recognizes only the five emitted forms plus &#x27;; other named, uppercase, numeric, and Unicode entities pass through literally.",
+      "Encoding is text conversion, not HTML sanitization, URL encoding, or an XSS defense.",
+      "Encode is not idempotent, and Decode is a single case-sensitive fixed-order pass rather than a general entity parser.",
+    ],
+    privacyNote:
+      "Browser encoding and decoding are computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the text to Creator Toolkit.",
+    related: [
+      {
+        slug: "html-formatter",
+        note: "Pretty-print the HTML around the encoded text.",
+      },
+      {
+        slug: "html-to-markdown",
+        note: "Convert entity-escaped HTML into Markdown.",
+      },
+    ],
+  },
+  "regex-escape": {
+    examples: [
+      {
+        title: "Escape a price pattern",
+        description:
+          "Input 2.50 (USD) [2026] becomes 2\\.50 \\(USD\\) \\[2026\\], which matches that literal when compiled with new RegExp(output).",
+      },
+      {
+        title: "Escape a Windows path",
+        description:
+          "Input C:\\Users\\test\\file.txt becomes C:\\\\Users\\\\test\\\\file\\.txt, escaping every backslash and the dot in file.txt.",
+      },
+      {
+        title: "Inspect the exact escape set",
+        description:
+          "Only . * + ? ^ $ { } ( ) | [ ] and backslash are changed. A slash, hyphen, hash, at sign, space, or non-ASCII character remains untouched.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which characters are escaped?",
+        answer:
+          "Exactly 14 characters: . * + ? ^ $ { } ( ) | [ ] and the backslash. Each receives one leading backslash; all other characters are preserved.",
+      },
+      {
+        question: "Is the result safe inside a /pattern/ literal?",
+        answer:
+          "Not by itself. A slash is not escaped because this is pattern text intended for contexts such as new RegExp(output). If you paste it between / delimiters, escape every / in the input yourself.",
+      },
+      {
+        question: "Is it safe inside a character class?",
+        answer:
+          "No. The transformation is generic rather than context-aware. A hyphen remains bare, so text such as a-b can become a range inside [...] rather than two literal characters.",
+      },
+      {
+        question: "Does it add delimiters, anchors, or flags?",
+        answer:
+          "No. The output is only escaped pattern text. It does not add / delimiters, ^ or $, groups, quantifiers, or flags, and it does not compile or validate the result.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter literal text",
+        description: "Type or paste the exact string that the regex should match.",
+      },
+      {
+        title: "Copy the escaped pattern",
+        description:
+          "Use the output as the string passed to new RegExp(...), adding your own anchors, flags, or delimiters when needed.",
+      },
+      {
+        title: "Test the context",
+        description:
+          "Run the pattern against sample text, and manually handle slash delimiters or character-class characters that this generic escaper leaves unchanged.",
+      },
+    ],
+    workedExample: {
+      input: "2.50 (USD) [2026]",
+      output: "2\\.50 \\(USD\\) \\[2026\\]",
+      note: "Executed through the registered regex escaper, then compiled with new RegExp(...). The compiled expression matches the original input literally; spaces and digits are unchanged.",
+    },
+    limits: [
+      "Only 14 regex metacharacters are escaped; /, -, #, @, punctuation outside that set, whitespace, and all non-ASCII characters pass through unchanged.",
+      "The result is pattern text, not a complete expression: no delimiters, anchors, groups, quantifiers, or flags are added.",
+      "Escaping is not context-aware, so / in a regex literal and - or other class-sensitive characters inside [...] still need manual handling.",
+      "There is no validation, error state, compilation check, seed, or guarantee for surrounding pattern syntax.",
+    ],
+    privacyNote:
+      "Browser escaping is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the input to Creator Toolkit.",
+    related: [
+      {
+        slug: "regex-tester",
+        note: "Run the escaped pattern against sample text and inspect matches.",
+      },
+      {
+        slug: "find-and-replace",
+        note: "Apply literal replacement patterns to longer text.",
+      },
+    ],
+  },
+  "random-number-generator": {
+    examples: [
+      {
+        title: "Roll an integer range",
+        description:
+          "With Min 1 and Max 6, the browser computes value % 6 + 1 for a 32-bit source word, so ordinary results cover the inclusive integer range from 1 through 6.",
+      },
+      {
+        title: "Create a batch",
+        description:
+          "Set Count to 5 to request five comma-separated values in one Generate action. Repeated values are allowed and are not removed.",
+      },
+      {
+        title: "Normalize the controls",
+        description:
+          "Reversed minimum and maximum values are swapped. The browser clamps Count to 1–1000 before creating its Uint32Array, and fractional counts are truncated by typed-array construction.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Where do the browser values come from?",
+        answer:
+          "crypto.getRandomValues fills a Uint32Array with 32-bit values, then each value is reduced with modulo and shifted by the lower bound. The source words are cryptographic, but the final modulo mapping can be biased, so this is not a security-grade unbiased-number guarantee.",
+      },
+      {
+        question: "Are both endpoints included?",
+        answer:
+          "For an integer range no wider than 2^32, the browser range size is max - min + 1, making both endpoints mathematically reachable. A wider interval cannot be covered by 32-bit source words, and there is no safe-integer validation.",
+      },
+      {
+        question: "Can I use decimal bounds?",
+        answer:
+          "Use integers. The browser accepts decimal controls but does not round them, so IEEE-754 remainder arithmetic can produce long fractions and even values above the requested maximum. The public API rounds both bounds, then Node randomInt requires safe integers and a range width no greater than 2^48; the largest possible generated result is 2^48 - 1.",
+      },
+      {
+        question: "Can numbers repeat or be reproduced?",
+        answer:
+          "Numbers can repeat because draws are not deduplicated. There is no seed or reproducible mode, so pressing Generate again produces a new batch rather than replaying the same values.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter integer bounds",
+        description:
+          "Set Min and Max. Either order is accepted and the implementation reorders the two values automatically.",
+      },
+      {
+        title: "Choose the batch size",
+        description:
+          "Use a whole-number Count from 1 through 1000 for predictable array construction.",
+      },
+      {
+        title: "Generate and copy",
+        description:
+          "Press Generate, then copy or download the comma-separated result. Every run is random and can differ.",
+      },
+    ],
+    workedExample: {
+      input: "Min 10, Max 20, Count 3",
+      output: "20, 16, 12 (one observed run; not a fixed result)",
+      note: "Recorded from an actual run of the browser formula using Web Crypto. The next Generate action can produce a different batch; the example does not claim reproducibility.",
+    },
+    limits: [
+      "The browser uses 32-bit source words with modulo reduction, which is biased unless the range divides 2^32 and is not an unbiased security-grade generator.",
+      "Decimal browser bounds are not rounded, so floating-point artifacts and values above the requested maximum are possible. The public API rounds bounds but rejects unsafe or out-of-range values with HTTP 400; Node randomInt supports ranges up to 2^48 values.",
+      "Browser ranges wider than the 32-bit source space are incomplete, and the browser performs no safe-integer validation.",
+      "Browser count clamping, fractional-count truncation, and decimal handling differ from the API, which rounds and clamps count. The API uses Node randomInt rejection sampling rather than the browser's modulo mapping; duplicates are allowed and no output can be reproduced from a seed.",
+    ],
+    privacyNote:
+      "Generation is computed locally in the browser. The automatic usage request includes only the tool slug; explicit project saves store the result, while public API calls send the bounds and count to Creator Toolkit.",
+    related: [
+      {
+        slug: "uuid-generator",
+        note: "Generate random identifiers when a UUID fits the task better.",
+      },
+      {
+        slug: "password-generator",
+        note: "Generate random strings instead of standalone numbers.",
+      },
+    ],
+  },
+  "text-to-csv": {
+    examples: [
+      {
+        title: "Convert pipe-delimited rows",
+        description:
+          "Input id|name|city is split on each pipe, its cells are trimmed, and the row is rejoined with commas as id,name,city.",
+      },
+      {
+        title: "Quote a comma-bearing cell",
+        description:
+          "When pipe mode leaves Denver, CO as one post-split cell, the output wraps it in double quotes as \"Denver, CO\".",
+      },
+      {
+        title: "Split whitespace-separated data",
+        description:
+          "Whitespace mode splits on one or more whitespace characters, including a single space, so an individual value cannot contain spaces.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which input delimiters are supported?",
+        answer:
+          "Comma, tab, pipe, and whitespace. The chosen delimiter splits each line, but every output row is always joined with commas. An unknown API delimiter string falls back to comma.",
+      },
+      {
+        question: "Does it parse quoted CSV input?",
+        answer:
+          "No. Splitting happens before escaping, so a delimiter inside quotes still creates another field and existing quote characters are treated as literal data rather than CSV syntax.",
+      },
+      {
+        question: "How are blank and ragged rows handled?",
+        answer:
+          "Lines that are empty after trimming are removed. Each remaining line is split and trimmed independently; rows with different cell counts are neither padded nor reported, so the output can remain ragged.",
+      },
+      {
+        question: "How are quotes and newlines emitted?",
+        answer:
+          "After splitting, a cell containing a comma, double quote, or newline is wrapped in double quotes and embedded quotes are doubled. Because lines are split first, quoted multiline CSV fields are not supported.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste one record per line",
+        description:
+          "Use unquoted source columns and avoid putting the selected delimiter inside an individual value.",
+      },
+      {
+        title: "Choose the source delimiter",
+        description:
+          "Select comma, tab, pipe, or whitespace to match the pasted text. Blank lines will be discarded.",
+      },
+      {
+        title: "Review and copy",
+        description:
+          "Check row widths and quoted cells, then copy or download the comma-delimited result as data.csv.",
+      },
+    ],
+    workedExample: {
+      input: "id|name|city\n1|Alice|Austin\n2|Bob|Denver, CO",
+      output: "id,name,city\n1,Alice,Austin\n2,Bob,\"Denver, CO\"",
+      note: "Executed through the registered text-to-CSV handler with delimiter=pipe. Cells are trimmed and the post-split Denver, CO value is quoted.",
+    },
+    limits: [
+      "This is a line splitter and simple serializer, not a standards-compliant CSV parser: existing quotes, escaped delimiters, and quoted multiline fields are not parsed.",
+      "Rows can remain ragged because cell counts are not checked or padded, and blank lines plus leading or trailing cell whitespace are discarded.",
+      "Whitespace mode uses /\\s+/, so even one space separates fields; a standalone carriage return is not included in the post-split quote test.",
+      "The data.csv download uses a text/plain MIME type, and there is no BOM, type inference, formula neutralization, or spreadsheet-compatibility guarantee.",
+    ],
+    privacyNote:
+      "Browser conversion is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the pasted text and delimiter to Creator Toolkit.",
+    related: [
+      {
+        slug: "column-aligner",
+        note: "Tidy row-oriented text before converting its columns.",
+      },
+      {
+        slug: "csv-to-json",
+        note: "Continue by converting CSV text to JSON.",
+      },
+    ],
+  },
+  "column-aligner": {
+    examples: [
+      {
+        title: "Align pipe-separated rows",
+        description:
+          "Pipe mode removes whitespace around each |, trims every cell, and pads each column to its widest value with a two-space gap between columns.",
+      },
+      {
+        title: "Align tab-separated data",
+        description:
+          "A literal tab becomes a column boundary. Every cell is still left-aligned, including numeric-looking values.",
+      },
+      {
+        title: "Align multiple-space text",
+        description:
+          "Runs of at least two whitespace characters separate columns. A single space remains inside a cell in this mode.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which separators are supported?",
+        answer:
+          "Pipe, tab, and two or more consecutive whitespace characters. Pipe mode also consumes whitespace around pipes; tab mode splits only on a literal tab; Multiple spaces mode does not split on one space.",
+      },
+      {
+        question: "How are columns aligned?",
+        answer:
+          "All cells are left-aligned with String.padEnd to the maximum JavaScript string length in that column. Columns are then joined with exactly two spaces, and trailing whitespace is removed from each row.",
+      },
+      {
+        question: "What happens to blank or ragged rows?",
+        answer:
+          "Blank and whitespace-only lines are removed. Cells are trimmed, but missing cells are not inserted or padded, so a short row simply ends earlier and can leave the grid ragged.",
+      },
+      {
+        question: "Are quotes and Unicode display width supported?",
+        answer:
+          "No quoting or escape syntax is applied, so a separator inside a value creates another column. Width uses JavaScript UTF-16 code-unit length rather than rendered character width, which can make emoji, combining marks, tabs, and wide characters look uneven.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Paste one row per line",
+        description: "Enter raw, unquoted values with one record on each nonempty line.",
+      },
+      {
+        title: "Select the actual separator",
+        description:
+          "Choose pipe, tab, or Multiple spaces to match the source. In multiple-spaces mode, use at least two whitespace characters between columns.",
+      },
+      {
+        title: "Copy the aligned text",
+        description:
+          "Review the left-aligned grid, then copy or download aligned.txt. Check Unicode widths and short rows before relying on visual alignment.",
+      },
+    ],
+    workedExample: {
+      input: "Name | Age | City\nAlice | 28 | Austin\nBob | 34 | Denver",
+      output: "Name   Age  City\nAlice  28   Austin\nBob    34   Denver",
+      note: "Executed through the registered column aligner in pipe mode. The first column has width 5, the second width 3, and the two-space column gap makes the gap after Name appear as three spaces.",
+    },
+    limits: [
+      "Alignment is left-only; numeric, right, center, and decimal-point alignment are unavailable.",
+      "There is no quoting or escape syntax, so an embedded separator always creates another column.",
+      "Width uses JavaScript UTF-16 .length rather than visual display width, so Unicode and tab-containing cells can appear uneven.",
+      "Blank rows are removed, all cells are trimmed, and short rows end early without missing-cell padding.",
+    ],
+    privacyNote:
+      "Browser alignment is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the text and delimiter to Creator Toolkit.",
+    related: [
+      {
+        slug: "text-to-csv",
+        note: "Convert separated row data into comma-delimited output.",
+      },
+      {
+        slug: "line-sorter",
+        note: "Sort the aligned rows as line-oriented text.",
+      },
+    ],
+  },
+  "number-to-words": {
+    examples: [
+      {
+        title: "Spell a three-digit number",
+        description: "Input 150 becomes one hundred and fifty in lowercase English.",
+      },
+      {
+        title: "Spell scale values",
+        description:
+          "Input 1,000,000 becomes one million, and 123,456,789 expands across the million, thousand, and final three-digit groups.",
+      },
+      {
+        title: "Check zero and invalid values",
+        description:
+          "Input 0 becomes zero. Negatives, decimals, and values above 999,999,999,999 show the supported-range guidance in the browser.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What range is supported?",
+        answer:
+          "Whole numbers from 0 through 999,999,999,999, inclusive. The implementation has a hard maximum and does not provide unlimited-number support.",
+      },
+      {
+        question: "Why does the output use and and hyphens?",
+        answer:
+          "A nonzero remainder below one hundred is introduced with and, so 123 becomes one hundred and twenty-three. Tens plus ones use an ASCII hyphen, and separate billion, million, or thousand groups are joined with spaces rather than another and.",
+      },
+      {
+        question: "Which number types and languages are supported?",
+        answer:
+          "Only nonnegative whole-number values and lowercase English are supported. There is no decimal, fraction, negative, currency, ordinal, or localized-number mode.",
+      },
+      {
+        question: "How are empty and invalid values handled?",
+        answer:
+          "The browser converts input with Number(value), so an empty field becomes zero. Other out-of-range or non-integer values display Enter a whole number between 0 and 999,999,999,999. The public API applies its own numeric coercion and returns HTTP 400 when the resulting value is not an integer in range.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter a whole number",
+        description:
+          "Type a value from 0 through 999,999,999,999 in the numeric field, which starts at 0.",
+      },
+      {
+        title: "Read the live result",
+        description:
+          "The lowercase English words update immediately as the numeric value changes.",
+      },
+      {
+        title: "Copy or download",
+        description:
+          "Review the exact range and style, then copy the result or download number-in-words.txt.",
+      },
+    ],
+    workedExample: {
+      input: "123456789",
+      output:
+        "one hundred and twenty-three million four hundred and fifty-six thousand seven hundred and eighty-nine",
+      note: "Executed through the registered number-to-words handler. The number is decomposed in order from billion to million to thousand to the final remainder.",
+    },
+    limits: [
+      "The supported range is hard-limited to integers from 0 through 999,999,999,999.",
+      "Negatives, decimals, fractions, currency, ordinals, and other numeric systems are unsupported.",
+      "Output is lowercase English, with and inside hundreds and hyphens for tens-plus-ones combinations.",
+      "The browser and public API report invalid values differently; an empty browser field becomes zero, while API coercion turns null, false, and an empty string into 0 and true into 1 before range validation.",
+    ],
+    privacyNote:
+      "Browser conversion is computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the number to Creator Toolkit.",
+    related: [
+      {
+        slug: "extract-numbers",
+        note: "Extract numeric values from text before spelling selected values.",
+      },
+      {
+        slug: "word-counter",
+        note: "Measure the length of the generated written form.",
+      },
+    ],
+  },
+  "morse-code-converter": {
+    examples: [
+      {
+        title: "Encode a message",
+        description:
+          "Input SOS becomes ... --- ...; letters within an encoded word use one space and input words are joined with three spaces.",
+      },
+      {
+        title: "Decode a transmission",
+        description:
+          "Input .... . .-.. .-.. ---   .-- --- .-. .-.. -.. decodes to hello world. A pipe can also separate decoded words.",
+      },
+      {
+        title: "Inspect unsupported characters",
+        description:
+          "An unmapped encode character such as an accent, emoji, #, or % becomes ?, and an unrecognized Morse token normally decodes to ? as well.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Which characters are in the mapping?",
+        answer:
+          "The built-in table contains a-z, digits 0-9, and the punctuation . , ? ! ' / ( ) & : ; = + - _ \" $ @. Encode lowercases its input first; this specific table is not a universal implementation of every Morse standard or symbol.",
+      },
+      {
+        question: "How are words and letters separated?",
+        answer:
+          "Encode splits only on literal ASCII spaces, joins coded characters with one space, and joins word segments with three spaces. Decode treats three or more whitespace characters or a pipe as a word boundary, while one or two spaces separate letters inside a word.",
+      },
+      {
+        question: "How are case and unknown values handled?",
+        answer:
+          "Both directions return lowercase characters. An unmapped source character or unknown code normally becomes the literal ?, so ? is ambiguous between a real mapped question mark and a failure placeholder.",
+      },
+      {
+        question: "Does it interpret timing, prosigns, or slash notation?",
+        answer:
+          "No. It performs textual token lookup only. Dot and dash duration is not measured, prosigns are not implemented, and / is treated as a mapped punctuation character rather than a word separator.",
+      },
+    ],
+    howTo: [
+      {
+        title: "Enter text or Morse",
+        description: "Type plain text in Encode mode or dot/dash tokens in Decode mode.",
+      },
+      {
+        title: "Choose the direction",
+        description:
+          "Encode lowercases and maps plain text; Decode maps tokens and returns lowercase text without letter separators in its output.",
+      },
+      {
+        title: "Review and copy",
+        description:
+          "Check unsupported placeholders and spacing, then copy or download the result as morse.txt.",
+      },
+    ],
+    workedExample: {
+      input: "Hello World",
+      output: ".... . .-.. .-.. ---   .-- --- .-. .-.. -..",
+      note: "Executed in encode mode through the registered Morse handler. Decoding this exact value returned hello world.",
+    },
+    limits: [
+      "Only the letters, digits, and punctuation in the built-in table are supported; other characters normally become ?.",
+      "Encode recognizes only literal ASCII spaces as word boundaries, so tabs and newlines are unmapped characters and repeated spaces create extra empty segments.",
+      "Decode uses three-or-more whitespace or a pipe for words; one- or two-space boundaries are treated as letters and can merge intended words.",
+      "Unknown codes are ambiguous with the real Morse for ?, / is punctuation rather than a separator, and timing or prosigns are not interpreted.",
+      "The reverse lookup uses a normal object, so token names such as constructor or toString can hit inherited properties instead of the normal unknown-code fallback.",
+    ],
+    privacyNote:
+      "Browser encoding and decoding are computed locally. The automatic usage request includes only the tool slug; explicit project saves store the output, while public API calls send the message to Creator Toolkit.",
+    related: [
+      {
+        slug: "reverse-text",
+        note: "Reverse a plain or decoded message line.",
+      },
+      {
+        slug: "text-repeater",
+        note: "Repeat a word or transmission fragment into a longer sequence.",
+      },
+    ],
+  },
 };
 
 function fallbackExtras(toolSlug: string): ToolExtras | null {
